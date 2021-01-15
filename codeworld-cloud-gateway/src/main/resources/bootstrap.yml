@@ -1,0 +1,14 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: codeworld-cloud-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        service: ${spring.application.name}
+        enabled: true
+        register-enabled: true
+        weight: 1
+

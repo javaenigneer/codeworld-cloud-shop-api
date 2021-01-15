@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.system.menu.mapper.MenuMapper">
+
+    <resultMap id="BaseMenuMap" type="com.codeworld.fc.system.menu.entity.Menu">
+
+        <id property="id" column="t_menu_id"/>
+
+        <result property="parentId" column="t_parent_id"/>
+
+        <result property="url" column="t_menu_url"/>
+
+        <result property="title" column="t_menu_name"/>
+
+        <result property="resources" column="t_menu_resources"/>
+
+        <result property="type" column="t_menu_type"/>
+
+        <result property="remarks" column="t_menu_remarks"/>
+
+        <result property="sortNo" column="t_menu_sort_no"/>
+
+        <result property="createTime" column="t_create_time"/>
+
+        <result property="updateTime" column="t_update_time"/>
+
+    </resultMap>
+
+<!--     查询语句-->
+<!--     查询全部菜单-->
+    <select id="getAllMenu" resultMap="BaseMenuMap">
+        select * from codeworld_menu
+    </select>
+
+    <!-- 根据角色Id获取菜单权限 -->
+    <select id="getMenuByRoleId" parameterType="java.lang.Long" resultMap="BaseMenuMap">
+        select
+        cm.t_menu_id,
+        cm.t_parent_id,
+        cm.t_menu_url,
+        cm.t_menu_resources,
+        cm.t_menu_name,
+        cm.t_menu_type,
+        cm.t_menu_remarks,
+        cm.t_menu_sort_no,
+        cm.t_create_time,
+        cm.t_update_time
+        from codeworld_menu cm
+        left join codeworld_role_menu crm on crm.t_menu_id = cm.t_menu_id
+        where crm.t_role_id = #{roleId}
+    </select>
+
+    <!-- 根据id获取menu信息 -->
+    <select id="getMenuById" parameterType="java.lang.Long" resultMap="BaseMenuMap">
+
+        select cm.t_menu_id,cm.t_menu_type  from codeworld_menu AS cm where t_menu_id = #{id}
+    </select>
+
+    <!-- 根据id获取子集菜单 -->
+    <select id="getChildMenuById" parameterType="java.lang.Long" resultMap="BaseMenuMap">
+
+        select cm.t_menu_id from codeworld_menu cm where t_parent_id = #{id}
+    </select>
+
+    <!-- 修改语句 -->
+    <!-- 修改菜单 -->
+    <update id="updateMenu" parameterType="com.codeworld.fc.system.menu.entity.Menu">
+
+        update codeworld_menu
+        set
+        t_menu_url = #{url},
+        t_menu_resources = #{resources},
+        t_menu_name = #{title},
+        t_menu_type = #{type},
+        t_menu_remarks = #{remarks},
+        t_menu_sort_no = #{sortNo},
+        t_update_time = #{updateTime}
+        where t_menu_id = #{id}
+    </update>
+
+    <!-- 添加语句 -->
+    <!-- 添加菜单 -->
+    <insert id="addMenu" parameterType="com.codeworld.fc.system.menu.entity.Menu">
+        insert into codeworld_menu (
+        t_menu_id,
+        t_parent_id ,
+        t_menu_url ,
+        t_menu_resources,
+        t_menu_name ,
+        t_menu_type,
+        t_menu_remarks ,
+        t_menu_sort_no ,
+        t_create_time ,
+        t_update_time
+        ) values (#{id},#{parentId},#{url},#{resources},#{title},#{type},#{remarks},#{sortNo},#{createTime},#{updateTime});
+
+    </insert>
+
+    <!-- 添加角色菜单 -->
+    <insert id="addRoleMenu" parameterType="com.codeworld.fc.system.menu.entity.RoleMenu">
+        insert into codeworld_role_menu (
+        t_role_menu_id,
+        t_role_id,
+        t_menu_id,
+        t_create_time,
+        t_update_time
+        ) values (#{roleMenuId},#{roleId},#{menuId},#{createTime},#{updateTime});
+    </insert>
+
+    <!-- 删除语句 -->
+    <!-- 删除角色菜单 -->
+    <delete id="deleteRoleMenu" parameterType="java.util.List">
+
+        delete from codeworld_role_menu
+        where t_menu_id in
+        <foreach collection="list" index="index" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <!-- 删除菜单信息 -->
+    <delete id="deleteMenuById" parameterType="java.lang.Long">
+        delete from codeworld_menu where t_menu_id = #{id}
+    </delete>
+
+    <!-- 删除子集菜单 -->
+    <delete id="deleteChildMenu" parameterType="java.lang.Long">
+        delete from codeworld_menu where t_parent_id = #{id}
+    </delete>
+
+    <!-- 删除角色菜单 -->
+    <delete id="deleteRoleMenuByRoleId" parameterType="java.lang.Long">
+        delete from codeworld_role_menu where t_role_id = #{roleId}
+    </delete>
+</mapper>

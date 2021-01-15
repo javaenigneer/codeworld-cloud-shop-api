@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.goods.param.mapper.ParamMapper">
+
+    <resultMap id="BaseParamMap" type="com.codeworld.fc.goods.param.entity.Param">
+        <id property="id" column="t_param_id"/>
+        <result property="name" column="t_param_name"/>
+        <result property="specialParam" column="t_special_param"/>
+        <result property="attributeId" column="t_attribute_id"/>
+        <result property="createTime" column="t_category_create_time"/>
+        <result property="updateTime" column="t_category_update_time"/>
+    </resultMap>
+
+    <!-- 分页获取参数 -->
+    <select id="getPageParam" parameterType="com.codeworld.fc.goods.param.request.ParamSearchRequest"
+            resultType="com.codeworld.fc.goods.param.response.ParamResponse">
+        select
+        cp.t_param_id AS id,
+        cp.t_param_name AS name,
+        cp.t_special_param AS specialParam,
+        cp.t_create_time AS createTime,
+        cp.t_update_time AS updateTime,
+        ca.t_attribute_name AS attributeName
+        from codeworld_param AS cp
+        left join codeworld_attribute AS ca on cp.t_attribute_id = ca.t_attribute_id
+        <where>
+            <if test="name != null">
+                and cp.t_param_name = #{name}
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[
+                    and   cp.t_create_time >= #{createTime}
+                 ]]>
+            </if>
+            <if test="updateTime != null ">
+                <![CDATA[
+                   and  cp.t_update_time <= #{updateTime}
+                 ]]>
+            </if>
+            and cp.t_attribute_id = #{attributeId}
+        </where>
+        order by cp.t_create_time DESC
+    </select>
+
+    <!-- 根据属性Id查询参数信息 -->
+    <select id="getParamByAttributeId" resultType="com.codeworld.fc.goods.param.response.ParamResponse">
+        select
+        cp.t_param_id AS id,
+        cp.t_param_name AS name
+        from
+        codeworld_param AS cp
+        where cp.t_attribute_id in
+        <foreach collection="list" index="index" item="attributeId" open="(" close=")" separator=",">
+            #{attributeId}
+        </foreach>
+        and cp.t_special_param = 0
+    </select>
+
+    <!-- 根据属性id查询特殊参数 -->
+    <select id="getSpecialParamByCategoryId" resultType="com.codeworld.fc.goods.param.response.ParamResponse">
+        select
+        cp.t_param_id AS id,
+        cp.t_param_name AS name
+        from
+        codeworld_param AS cp
+        where cp.t_attribute_id in
+        <foreach collection="list" index="index" item="attributeId" open="(" close=")" separator=",">
+            #{attributeId}
+        </foreach>
+        and cp.t_special_param = 1
+    </select>
+
+    <!-- 添加参数 -->
+    <insert id="addParam" parameterType="com.codeworld.fc.goods.param.entity.Param">
+        insert into codeworld_param
+        (
+        t_param_id,
+        t_param_name,
+        t_special_param,
+        t_attribute_id,
+        t_create_time,
+        t_update_time
+        )
+        values
+        (
+        #{id},
+        #{name},
+        #{specialParam},
+        #{attributeId},
+        #{createTime},
+        #{updateTime}
+        );
+    </insert>
+
+    <!-- 根据属性id删除参数 -->
+    <delete id="deleteParamByAttributeIds">
+
+        delete
+        from
+        codeworld_param
+        where
+        t_attribute_id in
+        <foreach collection="list" index="index" item="attributeId" open="(" close=")" separator=",">
+            #{attributeId}
+        </foreach>
+    </delete>
+</mapper>

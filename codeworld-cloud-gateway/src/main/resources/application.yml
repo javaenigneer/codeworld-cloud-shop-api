@@ -1,0 +1,89 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedHeaders: "*"
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+                POST
+                DELETE
+                PUT
+                OPTION
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: cloud-system # 系统
+          uri: lb://codeworld-cloud-system
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-system/**
+        - id: cloud-auth # 认证
+          uri: lb://codeworld-cloud-auth
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-auth/**
+        - id: code-goods # 商品
+          uri: lb://codeworld-cloud-goods
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-goods/**
+        - id: code-upload # 上传
+          uri: lb://codeworld-cloud-upload
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-upload/**
+        - id: code-search # 搜索
+          uri: lb://codeworld-cloud-search
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-search/**
+        - id: code-sms # 短信
+          uri: lb://codeworld-cloud-sms
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-sms/**
+        - id: code-member # 会员
+          uri: lb://codeworld-cloud-member
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-member/**
+        - id: code-cart # 购物车
+          uri: lb://codeworld-cloud-cart
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-cart/**
+        - id: code-order # 订单
+          uri: lb://codeworld-cloud-order
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-order/**
+        - id: code-merchant # 商户
+          uri: lb://codeworld-cloud-merchant
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-merchant/**
+        - id: code-marketing # 营销
+          uri: lb://codeworld-cloud-marketing
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-marketing/**
+
+
+
+

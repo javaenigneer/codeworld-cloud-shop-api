@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.merchant.mapper.MerchantMapper">
+
+    <resultMap id="BaseMerchantMap" type="com.codeworld.fc.merchant.entity.Merchant">
+
+        <id property="id" column="t_merchant_id"/>
+        <result property="nickName" column="t_merchant_nick_name"/>
+        <result property="password" column="t_merchant_password"/>
+        <result property="phone" column="t_merchant_phone"/>
+        <result property="createTime" column="t_merchant_create_time"/>
+    </resultMap>
+
+    <!-- 商户注册 -->
+    <insert id="registerMerchant" parameterType="com.codeworld.fc.merchant.entity.Merchant">
+
+        insert into
+        codeworld_merchant
+        (
+        t_merchant_id,
+        t_merchant_number,
+        t_merchant_nick_name,
+        t_merchant_phone,
+        t_merchant_password,
+        t_merchant_create_time
+        )
+        values
+        (
+        #{id},
+        #{number},
+        #{nickName},
+        #{phone},
+        #{password},
+        #{createTime}
+        )
+    </insert>
+
+    <!-- 根据手机号判断是否被注册 -->
+    <select id="checkMerchantByPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(t_merchant_id) from codeworld_merchant where t_merchant_phone = #{phone}
+    </select>
+
+    <!-- 根据商户号判断是否存在 -->
+    <select id="checkMerchantByMerchantNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(t_merchant_id) from codeworld_merchant where t_merchant_number = #{merchantNumber}
+    </select>
+
+    <!-- 根据手机号获取商户信息 -->
+    <select id="getMerchantByPhone" parameterType="java.lang.String"
+            resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+
+        select
+        t_merchant_id AS id,
+        t_merchant_nick_name AS nickName,
+        t_merchant_phone AS phone,
+        t_merchant_password AS password
+        from codeworld_merchant
+        where
+        t_merchant_phone = #{phone}
+    </select>
+
+    <!-- 根据商户号获取商户信息 -->
+    <select id="getMerchantByMerchantNumber" parameterType="java.lang.String"
+            resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+         select
+        cm.t_merchant_id AS id,
+        cm.t_merchant_number AS number,
+        cm.t_merchant_nick_name AS nickName,
+        cm.t_merchant_phone AS phone,
+        cm.t_merchant_password AS password
+        from codeworld_merchant AS cm
+        where
+        t_merchant_number = #{merchantNumber}
+    </select>
+
+    <!-- 分页查询商户 -->
+    <select id="getPageMerchant" parameterType="com.codeworld.fc.merchant.request.MerchantSearchRequest"
+            resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+
+        select
+        cm.t_merchant_id AS id,
+        cm.t_merchant_number AS number,
+        cm.t_merchant_nick_name AS nickName,
+        cm.t_merchant_phone AS phone,
+        cm.t_merchant_create_time AS createTime,
+        cmd.t_merchant_status AS status,
+        cmd.t_merchant_name AS merchantName,
+        cmd.t_merchant_id_card_front AS idCardFront,
+        cmd.t_merchant_id_card_back AS idCardBack,
+        cmd.t_merchant_license AS license,
+        cmd.t_merchant_type AS type,
+        cmd.t_merchant_set_create_time AS setCreateTime
+        from
+        codeworld_merchant AS cm
+        left join codeworld_merchant_detail As cmd on cmd.t_merchant_number = cm.t_merchant_number
+        <where>
+            <if test="nickName != null and nickName != ''">
+                and cm.t_merchant_nick_name like "%"#{nickName}"%"
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[
+                    and   cm.t_merchant_create_time >= #{createTime}
+                 ]]>
+            </if>
+            <if test="updateTime != null ">
+                <![CDATA[
+                   and  cm.t_merchant_create_time <= #{updateTime}
+                 ]]>
+            </if>
+        </where>
+        order by cm.t_merchant_create_time DESC
+    </select>
+
+    <!-- 根据商户id获取商户号 -->
+    <select id="getMerchantByMerchantId" parameterType="java.lang.Long" resultType="java.lang.String">
+        select
+        t_merchant_number
+        from
+        codeworld_merchant
+        where
+        t_merchant_id = #{id}
+    </select>
+
+    <!-- 根据商户id获取商户信息 -->
+    <select id="getMerchantNumberAndNameById" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+           select
+           cm.t_merchant_number AS number,
+           cm.t_merchant_id AS id,
+           cm.t_merchant_phone AS phone,
+           cm.t_merchant_nick_name AS nickName,
+           cmd.t_merchant_name AS merchantName
+           from
+           codeworld_merchant AS cm
+           left join codeworld_merchant_detail AS cmd on cmd.t_merchant_number = cm.t_merchant_number
+           where
+           cm.t_merchant_id = #{merchantId}
+
+       <!-- select
+        t_merchant_number AS number,
+        t_merchant_name AS merchantName
+        from
+        codeworld_merchant_detail AS cmd
+        where
+        cmd.t_merchant_number =
+        (
+        select
+         t_merchant_number AS number
+        from
+        codeworld_merchant AS cm
+        where cm.t_merchant_id = #{merchantId}
+        ) -->
+    </select>
+
+    <!-- 查询商户注册7天后，未进行入驻 -->
+    <select id="getAllNoMerchantSet" resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+
+        select
+        cm.t_merchant_number AS number
+        from
+        codeworld_merchant AS cm
+        left join codeworld_merchant_detail AS cmd on cm.t_merchant_number = cmd.t_merchant_number
+        where
+        cmd.t_merchant_status = 3
+        and
+        datediff(now(),cm.t_merchant_create_time) > 7
+    </select>
+
+    <!-- 删除商户注册未入驻信息 -->
+    <delete id="deleteNoMerchantSet">
+        delete
+        from
+        codeworld_merchant
+        where
+        t_merchant_number
+        in
+        <foreach collection="list" index="index" item="number" separator="," open="(" close=")">
+            #{number}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.goods.category.mapper.CategoryMapper">
+
+    <resultMap id="BaseCategoryMap" type="com.codeworld.fc.goods.category.entity.Category">
+
+        <id property="id" column="t_category_id"/>
+        <result property="parentId" column="t_category_parent_id"/>
+        <result property="name" column="t_category_name"/>
+        <result property="type" column="t_category_type"/>
+        <result property="image" column="t_category_image"/>
+        <result property="sortNo" column="t_category_sort_no"/>
+        <result property="createTime" column="t_category_create_time"/>
+        <result property="updateTime" column="t_category_update_time"/>
+
+    </resultMap>
+
+<!--     查询语句-->
+<!--     查询全部分类-->
+    <select id="getAllCategory" resultMap="BaseCategoryMap">
+        select * from codeworld_category
+    </select>
+
+    <!-- 根据分类id获取子集分类 -->
+    <select id="getChildCategoryById" parameterType="java.lang.Long" resultMap="BaseCategoryMap">
+        select
+        cc.t_category_id
+        from
+        codeworld_category AS cc
+        where cc.t_category_parent_id = #{categoryId}
+    </select>
+
+    <!-- 根据分类id查询分类信息 -->
+    <select id="getCategoryById" parameterType="java.lang.Long" resultType="com.codeworld.fc.goods.category.entity.Category">
+        select
+        t_category_name AS name
+        from
+        codeworld_category
+        where
+        t_category_id = #{categoryId}
+    </select>
+
+    <!-- 添加分类 -->
+    <insert id="addCategory" parameterType="com.codeworld.fc.goods.category.entity.Category">
+        insert into codeworld_category
+        (t_category_id,
+        t_category_name,
+        t_category_parent_id,
+        t_category_sort_no,
+        t_category_type,
+        t_category_image,
+        t_category_create_time,
+        t_category_update_time)
+        values (
+        #{id},
+        #{name},
+        #{parentId},
+        #{sortNo},
+        #{type},
+        #{image},
+        #{createTime},
+        #{updateTime}
+        );
+    </insert>
+
+    <!-- 修改分类 -->
+    <update id="updateCategory" parameterType="com.codeworld.fc.goods.category.entity.Category">
+        update codeworld_category
+        set
+        t_category_name = #{name},
+        t_category_sort_no = #{sortNo},
+        t_category_type = #{type},
+        t_category_image = #{image},
+        t_category_update_time = #{updateTime}
+        where t_category_id = #{id}
+    </update>
+
+</mapper>

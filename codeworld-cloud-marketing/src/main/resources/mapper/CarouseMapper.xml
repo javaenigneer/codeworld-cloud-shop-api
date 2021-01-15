@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.marketing.carouse.mapper.CarouseMapper">
+
+    <resultMap id="BaseCarouseMap" type="com.codeworld.fc.marketing.carouse.entity.Carouse">
+        <id property="id" column="t_carouse_id"/>
+        <result property="title" column="t_carouse_title"/>
+        <result property="image" column="t_carouse_image"/>
+        <result property="status" column="t_carouse_status"/>
+        <result property="startTime" column="t_carouse_start_time"/>
+        <result property="endTime" column="t_carouse_end_time"/>
+    </resultMap>
+
+    <!-- 分页查询轮播图 -->
+    <select id="getPageCarouse" parameterType="com.codeworld.fc.marketing.carouse.request.CarouseSearchRequest"
+            resultMap="BaseCarouseMap">
+
+        select
+        t_carouse_id,
+        t_carouse_title,
+        t_carouse_image,
+        t_carouse_status,
+        t_carouse_start_time,
+        t_carouse_end_time
+        from
+        codeworld_carouse
+        <where>
+            <if test="status != null">
+                and t_carouse_status = #{status}
+            </if>
+            <if test="startTime != null ">
+                <![CDATA[
+                    and   t_carouse_start_time >= #{startTime}
+                 ]]>
+            </if>
+            <if test="endTime != null ">
+                <![CDATA[
+                   and  t_carouse_end_time <= #{endTime}
+                 ]]>
+            </if>
+        </where>
+        order by t_carouse_start_time DESC
+    </select>
+
+    <!-- 查询已上线的轮播图 -->
+    <select id="getCarouseEnable" resultMap="BaseCarouseMap">
+
+        select
+        t_carouse_id,
+        t_carouse_title,
+        t_carouse_image,
+        t_carouse_status,
+        t_carouse_start_time,
+        t_carouse_end_time
+        from
+        codeworld_carouse
+        where
+        t_carouse_status = 1
+    </select>
+
+    <!-- 查询结束时间大于当前日期一天的轮播图 -->
+    <select id="getCarouseEndTimeGtNow" resultType="java.lang.Long">
+        select
+        t_carouse_id
+        from
+        codeworld_carouse
+        where
+        t_carouse_status = 0
+        and
+        datediff(now(),t_carouse_end_time) > 1
+    </select>
+    <!-- 添加轮播图 -->
+    <insert id="addCarouse" parameterType="com.codeworld.fc.marketing.carouse.entity.Carouse">
+
+        insert into codeworld_carouse
+        (
+        t_carouse_id,
+        t_carouse_title,
+        t_carouse_image,
+        t_carouse_status,
+        t_carouse_start_time,
+        t_carouse_end_time
+        )
+        values
+        (
+        #{id},
+        #{title},
+        #{image},
+        #{status},
+        #{startTime},
+        #{endTime}
+        )
+    </insert>
+
+    <!-- 改变轮播图状态 -->
+    <update id="updateCarouseStatus" parameterType="com.codeworld.fc.marketing.carouse.entity.Carouse">
+
+        update
+        codeworld_carouse
+        set
+        t_carouse_status = #{status}
+        where
+        t_carouse_id = #{id}
+    </update>
+
+    <!-- 定时删除结束时间大于于当前时间1天的数据 -->
+    <update id="deleteCarouseTime">
+
+        update
+        codeworld_carouse
+        set
+        t_carouse_status = -1
+        where t_carouse_id in
+        <foreach collection="list" index="index" item="carouseId" open="(" close=")" separator=",">
+            #{carouseId}
+        </foreach>
+    </update>
+</mapper>

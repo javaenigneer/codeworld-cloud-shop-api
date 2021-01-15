@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.goods.stock.mapper.StockMapper">
+
+    <resultMap id="BaseStockMap" type="com.codeworld.fc.goods.stock.entity.Stock">
+
+        <id property="productSkuId" column="t_product_sku_id"/>
+        <result property="stock" column="t_product_stock"/>
+
+    </resultMap>
+    <!-- 库存添加 -->
+    <insert id="addStock" parameterType="com.codeworld.fc.goods.stock.entity.Stock">
+
+        insert into codeworld_stock
+        (
+        t_product_sku_id,
+        t_product_stock
+        )
+        values
+        (
+        #{productSkuId},
+        #{stock}
+        )
+    </insert>
+</mapper>

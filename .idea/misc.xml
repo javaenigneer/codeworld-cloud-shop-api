@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-register/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-system/codeworld-cloud-user/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-system/codeworld-cloud-role/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-system/codeworld-cloud-menu/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-common/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-auth/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-system/codeworld-cloud-dept/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-goods/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-upload/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-search/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-member/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-send/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-cart/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-order/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-merchant/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-xxl/pom.xml" />
+        <option value="$PROJECT_DIR$/codeworld-cloud-marketing/pom.xml" />
+        <option value="$PROJECT_DIR$/xxl-job/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

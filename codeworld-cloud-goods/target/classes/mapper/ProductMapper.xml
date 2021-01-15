@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.goods.product.mapper.ProductMapper">
+
+    <resultMap id="BaseProductMap" type="com.codeworld.fc.goods.product.entity.Product">
+
+        <id property="id" column="t_product_id"/>
+        <result property="title" column="t_product_title"/>
+        <result property="subTitle" column="t_product_sub_title"/>
+        <result property="categoryId" column="t_product_category_id"/>
+        <result property="brandId" column="t_product_brand_id"/>
+        <result property="saleAble" column="t_product_saleable"/>
+        <result property="createTime" column="t_create_time"/>
+        <result property="updateTime" column="t_update_time"/>
+
+    </resultMap>
+
+    <!-- 查询语句 -->
+    <!-- 查询全部商品 -->
+    <select id="getPageProduct" resultType="com.codeworld.fc.goods.product.response.ProductResponse"
+            parameterType="com.codeworld.fc.goods.product.request.ProductSearchRequest">
+
+        select
+        cp.t_product_id AS id,
+        cp.t_product_title AS title,
+        cp.t_product_category_id AS categoryId,
+        cp.t_product_sub_title AS subTitle,
+        cp.t_product_saleable AS saleAble,
+        cp.t_product_create_time AS createTime,
+        cp.t_product_update_time AS updateTime,
+        cp.t_product_merchant_id AS merchantId,
+        cc.t_category_name AS categoryName
+        from codeworld_product AS cp
+        left join codeworld_category AS cc on cp.t_product_category_id = cc.t_category_id
+        <where>
+            <if test="title != null and title != ''">
+                and t_product_title like "%"#{title}"%"
+            </if>
+            <if test="saleAble != null">
+                and t_product_saleable = #{saleAble}
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[
+                    and   t_product_create_time >= #{createTime}
+                 ]]>
+            </if>
+            <if test="updateTime != null ">
+                <![CDATA[
+                   and  t_product_update_time <= #{updateTime}
+                 ]]>
+            </if>
+            <if test="merchantId != null">
+                and t_product_merchant_id = #{merchantId}
+            </if>
+        </where>
+        order by t_product_create_time DESC
+    </select>
+
+    <!-- 获取最新商品 -->
+    <select id="getNewProduct" resultType="com.codeworld.fc.goods.product.response.ProductResponse">
+        select
+        cp.t_product_id AS id,
+        cp.t_product_title AS title,
+        cp.t_product_saleable AS saleAble,
+        cp.t_product_create_time AS createTime,
+        cp.t_product_update_time AS updateTime
+        from codeworld_product AS cp
+        order by cp.t_product_create_time DESC
+    </select>
+
+    <!-- 根据分类id查询是否关联商品 -->
+    <select id="getBindProductByCategoryId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+
+        select
+        count(t_product_id)
+        from
+        codeworld_product
+        where
+        t_product_category_id = #{categoryId}
+    </select>
+
+    <!-- 修改商品状态 -->
+    <update id="updateProductStatus" parameterType="com.codeworld.fc.goods.product.entity.Product">
+        update codeworld_product
+        set
+        t_product_saleable = #{saleAble},
+        t_product_update_time = #{updateTime}
+        where t_product_id = #{id}
+    </update>
+
+    <!-- 添加商品 -->
+    <insert id="addProduct" parameterType="com.codeworld.fc.goods.product.entity.Product">
+        insert into codeworld_product
+        (t_product_id,
+        t_product_title,
+        t_product_category_id,
+        t_product_saleable,
+        t_product_merchant_id,
+        t_product_create_time,
+        t_product_update_time)
+        values (
+        #{id},
+        #{title},
+        #{categoryId},
+        #{saleAble},
+        #{merchantId},
+        #{createTime},
+        #{updateTime}
+        );
+    </insert>
+</mapper>

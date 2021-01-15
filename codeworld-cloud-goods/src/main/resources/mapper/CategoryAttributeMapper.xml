@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.goods.attribute.mapper.CategoryAttributeMapper">
+
+    <resultMap id="BaseCategoryAttributeMap" type="com.codeworld.fc.goods.attribute.entity.CategoryAttribute">
+
+        <id property="id" column="t_category_attribute_id"/>
+        <result property="categoryId" column="t_category_id"/>
+        <result property="attributeId" column="t_attribute_id"/>
+        <result property="createTime" column="t_category_create_time"/>
+        <result property="updateTime" column="t_category_update_time"/>
+    </resultMap>
+
+    <!-- 分页获取分类属性 -->
+    <select id="getPageCategoryAttribute" parameterType="com.codeworld.fc.goods.attribute.request.CategoryAttributeSearchRequest"
+    resultType="com.codeworld.fc.goods.attribute.response.CategoryAttributeResponse">
+
+        select
+        cca.t_category_id AS categoryId,
+        cca.t_create_time AS createTime,
+        cca.t_update_time AS updateTime,
+        cc.t_category_name AS categoryName
+        from
+        codeworld_category_attribute AS cca
+        left join codeworld_category AS cc on cca.t_category_id = cc.t_category_id
+        <where>
+            <if test="categoryId != null">
+                and cca.t_category_id = #{categoryId}
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[
+                    and   cca.t_create_time >= #{createTime}
+                 ]]>
+            </if>
+            <if test="updateTime != null ">
+                <![CDATA[
+                   and  cca.t_update_time <= #{updateTime}
+                 ]]>
+            </if>
+        </where>
+        group by cca.t_category_id
+        order by cca.t_create_time DESC
+    </select>
+
+    <!-- 查询分类状态是否已设置属性 -->
+    <select id="getCategoryStatus" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        select
+        count(t_category_id)
+        from codeworld_category_attribute
+        where t_category_id = #{categoryId}
+    </select>
+
+    <!-- 查询已设置的分类属性 -->
+    <select id="getCategoryAttribute" resultType="com.codeworld.fc.goods.attribute.response.CategoryAttributeResponse">
+
+        select
+        distinct
+        cc.t_category_name AS categoryName,
+        cca.t_category_id AS categoryId
+        from
+        codeworld_category_attribute AS cca
+        left join codeworld_category AS cc on cca.t_category_id = cc.t_category_id
+    </select>
+
+    <!-- 添加分类属性 -->
+    <insert id="addCategoryAttribute" parameterType="com.codeworld.fc.goods.attribute.entity.CategoryAttribute">
+        insert into codeworld_category_attribute
+        (t_category_attribute_id,
+        t_category_id,
+        t_attribute_id,
+        t_create_time,
+        t_update_time)
+        values
+        (
+        #{id},
+        #{categoryId},
+        #{attributeId},
+        #{createTime},
+        #{updateTime}
+        );
+    </insert>
+</mapper>

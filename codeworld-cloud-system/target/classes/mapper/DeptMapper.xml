@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.system.dept.mapper.DeptMapper">
+
+    <resultMap id="BaseDeptMap" type="com.codeworld.fc.system.dept.entity.Dept">
+
+        <id property="id" column="t_dept_id"/>
+
+        <result property="parentId" column="t_parent_id"/>
+
+        <result property="title" column="t_dept_name"/>
+
+        <result property="type" column="t_dept_type"/>
+
+        <result property="remarks" column="t_dept_remarks"/>
+
+        <result property="sortNo" column="t_dept_sort_no"/>
+
+        <result property="createTime" column="t_create_time"/>
+
+        <result property="updateTime" column="t_update_time"/>
+
+    </resultMap>
+
+    <!-- 查询语句 -->
+    <!-- 查询全部部门 -->
+    <select id="getAllDept" resultMap="BaseDeptMap">
+        select * from codeworld_dept
+    </select>
+
+    <!-- 添加语句 -->
+    <!-- 添加部门 -->
+    <insert id="addDept" parameterType="com.codeworld.fc.system.dept.entity.Dept">
+        insert into codeworld_dept
+        (t_dept_id,
+        t_parent_id,
+        t_dept_name,
+        t_dept_remarks,
+        t_dept_sort_no,
+        t_create_time,
+        t_update_time)
+        values
+        (#{id},
+        #{parentId},
+        #{title},
+        #{remarks},
+        #{sortNo},
+        #{createTime},
+        #{updateTime})
+    </insert>
+
+    <!-- 修改语句 -->
+    <!-- 修改部门 -->
+    <update id="updateDept" parameterType="com.codeworld.fc.system.dept.entity.Dept">
+        update codeworld_dept set
+        t_dept_name = #{title},
+        t_dept_remarks = #{remarks},
+        t_dept_sort_no = #{sortNo},
+        t_update_time = #{updateTime}
+        where t_dept_id = #{id}
+    </update>
+</mapper>

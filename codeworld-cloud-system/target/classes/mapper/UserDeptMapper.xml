@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.system.user.mapper.UserDeptMapper">
+
+        <resultMap id="BaseUserDeptMap" type="com.codeworld.fc.system.user.entity.UserDept">
+
+            <id property="userDeptId" column="t_user_dept_id"/>
+
+            <result property="userId" column="t_user_id"/>
+
+            <result property="deptId" column="t_dept_id"/>
+
+            <result property="createTime" column="t_create_time"/>
+
+            <result property="updateTime" column="t_update_time"/>
+
+        </resultMap>
+    <!-- 查询语句 -->
+    <!-- 根据用户Id获取部门Id -->
+    <select id="getDeptIdByUserId" parameterType="java.lang.Long" resultMap="BaseUserDeptMap">
+        select * from codeworld_user_dept where t_user_id = #{userId}
+    </select>
+
+    <!-- 添加语句 -->
+    <!-- 添加部门 -->
+    <insert id="addUserDept" parameterType="com.codeworld.fc.system.user.entity.UserDept">
+       insert into codeworld_user_dept
+       (t_user_dept_id,t_user_id,t_dept_id,t_create_time,t_update_time)
+       values
+       (#{userDeptId},#{userId},#{deptId},#{createTime},#{updateTime});
+    </insert>
+
+    <!-- 删除语句 -->
+    <!-- 根据用户Id删除部门信息 -->
+    <delete id="deleteUserDeptByUserId" parameterType="java.lang.Long">
+        delete from codeworld_user_dept where t_user_id = #{userId}
+    </delete>
+
+</mapper>

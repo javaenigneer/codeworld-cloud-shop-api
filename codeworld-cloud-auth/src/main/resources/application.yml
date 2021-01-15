@@ -1,0 +1,23 @@
+server:
+  port: 8004
+
+spring:
+  application:
+    name: codeworld-cloud-auth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        register-enabled: true
+        weight: 1
+  main:
+    allow-bean-definition-overriding: true
+
+codeworld:
+  jwt:
+    secret: codeworld@Login(Auth}*^31)&codeworld% # 用于生存rsa公钥和私钥的密文,越复杂越好
+    pubKeyPath: D:\\temp\\rsa\\rsa.pub # 公钥地址
+    priKeyPath: D:\\temp\\rsa\\rsa.pri # 私钥地址
+    expire: 30   # 过期时间,单位分钟
+    cookieMaxAge: 180000
+    cookieName: token

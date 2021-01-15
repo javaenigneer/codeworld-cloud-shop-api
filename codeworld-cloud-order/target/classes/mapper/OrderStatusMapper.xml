@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.order.mapper.OrderStatusMapper">
+
+    <resultMap id="BaseOrderStatusMap" type="com.codeworld.fc.order.entity.OrderStatus">
+
+        <id property="orderId" column="t_order_id"/>
+        <result property="orderStatus" column="t_order_status"/>
+        <result property="createTime" column="t_order_create_time"/>
+        <result property="payTime" column="t_order_pay_time"/>
+        <result property="consignTime" column="t_order_consign_time"/>
+        <result property="endTime" column="t_order_end_time"/>
+        <result property="closeTime" column="t_order_close_time"/>
+    </resultMap>
+
+    <!-- 保存订单状态 -->
+    <insert id="saveOrderStatus" parameterType="com.codeworld.fc.order.entity.OrderStatus">
+
+        insert into
+         codeworld_order_status
+         (
+         t_order_id,
+         t_order_status,
+         t_order_create_time
+         )
+         values
+         (
+         #{orderId},
+         #{orderStatus},
+         #{createTime}
+         )
+    </insert>
+
+    <!-- 修改订单状态 -->
+    <update id="updateOrderStatus" parameterType="com.codeworld.fc.order.entity.OrderStatus">
+
+        update
+        codeworld_order_status
+        set
+        t_order_status = #{orderStatus},
+        <if test="payTime != null">
+        t_order_pay_time = #{payTime}
+        </if>
+        <if test="closeTime != null">
+        t_order_close_time = #{closeTime}
+        </if>
+        where
+        t_order_id = #{orderId}
+    </update>
+
+    <!-- 根据订单id查询订单状态信息 -->
+    <select id="getOrderStatusByOrderId" parameterType="com.codeworld.fc.order.entity.OrderStatus"
+            resultType="com.codeworld.fc.order.entity.OrderStatus">
+        select
+        cos.t_order_status AS orderStatus,
+        cos.t_order_id AS orderId
+        from
+        codeworld_order_status AS cos
+        where
+        cos.t_order_id = #{orderId}
+    </select>
+
+</mapper>

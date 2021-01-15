@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="codeworld-cloud-goods" />
+        <module name="xxl-job-executor-sample-springboot" />
+        <module name="codeworld-cloud-gateway" />
+        <module name="codeworld-cloud-order" />
+        <module name="codeworld-cloud-auth" />
+        <module name="codeworld-cloud-sms" />
+        <module name="codeworld-cloud-merchant" />
+        <module name="codeworld-cloud-marketing" />
+        <module name="codeworld-cloud-xxl" />
+        <module name="codeworld-cloud-member" />
+        <module name="xxl-job-core" />
+        <module name="xxl-job-admin" />
+        <module name="codeworld-cloud-system" />
+        <module name="codeworld-cloud-common" />
+        <module name="xxl-job-executor-sample-frameless" />
+        <module name="codeworld-cloud-upload" />
+        <module name="codeworld-cloud-cart" />
+        <module name="codeworld-cloud-search" />
+        <module name="xxl-job-executor-sample-spring" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="codeworld-cloud-auth" options="" />
+      <module name="codeworld-cloud-cart" options="" />
+      <module name="codeworld-cloud-common" options="" />
+      <module name="codeworld-cloud-gateway" options="" />
+      <module name="codeworld-cloud-goods" options="" />
+      <module name="codeworld-cloud-marketing" options="" />
+      <module name="codeworld-cloud-member" options="" />
+      <module name="codeworld-cloud-merchant" options="" />
+      <module name="codeworld-cloud-order" options="" />
+      <module name="codeworld-cloud-search" options="" />
+      <module name="codeworld-cloud-sms" options="" />
+      <module name="codeworld-cloud-upload" options="" />
+    </option>
+  </component>
+</project>

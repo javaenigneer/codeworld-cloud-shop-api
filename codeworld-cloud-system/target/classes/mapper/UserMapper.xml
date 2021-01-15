@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.system.user.mapper.UserMapper">
+
+    <resultMap id="BaseUserMap" type="com.codeworld.fc.system.user.entity.User">
+
+        <id property="userId" column="t_user_id"/>
+
+        <result property="userName" column="t_user_name"/>
+
+        <result property="userEmail" column="t_user_email"/>
+
+        <result property="userPhone" column="t_user_phone"/>
+
+        <result property="userStatus" column="t_user_status"/>
+
+        <result property="createTime" column="t_create_time"/>
+
+        <result property="updateTime" column="t_update_time"/>
+
+    </resultMap>
+
+    <!-- 查询语句 -->
+    <!-- 查询全部用户 -->
+    <select id="getAllUser" resultType="com.codeworld.fc.system.user.dto.UserResponse" parameterType="com.codeworld.fc.system.user.request.UserSearchRequest">
+
+        select
+        cu.t_user_id AS userId,
+        cu.t_user_name AS userName,
+        cu.t_user_email AS userEmail,
+        cu.t_user_phone AS userPhone,
+        cu.t_user_status AS userStatus,
+        cu.t_create_time AS createTime,
+        cu.t_update_time AS updateTime,
+        cr.t_role_name AS userRole,
+        cd.t_dept_name AS userDept
+        from codeworld_user AS cu
+        left join codeworld_user_role AS cur on cur.t_user_id = cu.t_user_id
+        left join codeworld_role AS cr on cr.t_role_id = cur.t_role_id
+        left join codeworld_user_dept AS cud on cud.t_user_id = cu.t_user_id
+        left join codeworld_dept AS cd on cd.t_dept_id = cud.t_dept_id
+        <where>
+            <if test="userName != null and userName != ''">
+             and   cu.t_user_name like "%"#{userName}"%"
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                and cu.t_user_email like "%"#{userEmail}"%"
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                and  cu.t_user_phone like "%"#{userPhone}"%"
+            </if>
+            <if test="userStatus != null">
+                and  cu.t_user_status = #{userStatus}
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[
+                    and   cu.t_create_time >= #{createTime}
+                 ]]>
+            </if>
+            <if test="updateTime != null ">
+                <![CDATA[
+                   and  cu.t_update_time <= #{updateTime}
+                 ]]>
+            </if>
+        </where>
+        order by cu.t_create_time DESC
+    </select>
+
+    <!-- 根据用户名查询用户-->
+    <select id="getUserByName" parameterType="java.lang.String" resultMap="BaseUserMap">
+        select
+        u.t_user_id,
+        u.t_user_name,
+        u.t_user_status,
+        u.t_user_email
+        from codeworld_user u
+        where t_user_name = #{userName}
+    </select>
+
+    <!-- 根据部门id获取用户数据 -->
+    <select id="getUserByDeptId" parameterType="java.lang.Long" resultType="com.codeworld.fc.system.user.dto.UserDeptResponse">
+select
+cu.t_user_id AS userId,
+cu.t_user_name As userName,
+cu.t_user_email AS userEmail,
+cu.t_user_phone AS userPhone,
+cu.t_user_status AS userStatus,
+cu.t_create_time AS createTime,
+cu.t_update_time AS updateTime,
+cd.t_dept_name AS deptName
+from codeworld_user_dept cud
+left join codeworld_user cu on cud.t_user_id = cu.t_user_id
+left join codeworld_dept cd on cud.t_dept_id = cd.t_dept_id
+where cud.t_dept_id = #{deptId}
+order by cu.t_create_time DESC
+    </select>
+
+<!--&lt;!&ndash;    &lt;!&ndash; 获取全部用户数量 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <select id="getAllUserCount" resultType="java.lang.Long">&ndash;&gt;-->
+<!--&lt;!&ndash;        select count(t_user_id) from codeworld_user&ndash;&gt;-->
+<!--&lt;!&ndash;    </select>&ndash;&gt;-->
+    <!-- 修改语句 -->
+    <!-- 修改用户状态 -->
+    <update id="updateUserStatus" parameterType="com.codeworld.fc.system.user.entity.User">
+        update codeworld_user
+        set
+        t_user_status = #{userStatus}
+        where t_user_id = #{userId}
+
+    </update>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="com.codeworld.fc.system.user.entity.User">
+        update codeworld_user set
+        t_user_name = #{userName},
+        t_user_email = #{userEmail},
+        t_user_phone = #{userPhone},
+        t_user_status = #{userStatus},
+        t_update_time = #{updateTime}
+        where t_user_id = #{userId}
+    </update>
+
+    <!-- 删除语句 -->
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="java.lang.Long">
+        delete from codeworld_user where t_user_id = #{userId}
+    </delete>
+
+    <!-- 添加语句 -->
+    <!-- 添加用户 -->
+    <insert id="addUser" parameterType="com.codeworld.fc.system.user.entity.User">
+        insert into codeworld_user
+        (t_user_id,
+        t_user_name,
+        t_user_email,
+        t_user_phone,
+        t_user_status,
+        t_create_time,
+        t_update_time)
+        values (
+        #{userId},
+        #{userName},
+        #{userEmail},
+        #{userPhone},
+        #{userStatus},
+        #{createTime},
+        #{updateTime}
+        );
+
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.order.mapper.OrderDetailMapper">
+
+    <resultMap id="BaseOrderDetailMap" type="com.codeworld.fc.order.entity.OrderDetail">
+
+        <id property="detailId" column="t_order_detail_id"/>
+        <result property="orderId" column="t_order_id"/>
+        <result property="productSkuId" column="t_product_sku_id"/>
+        <result property="productCount" column="t_product_count"/>
+        <result property="productTitle" column="t_product_title"/>
+        <result property="productSkuDetail" column="t_product_sku_detail"/>
+        <result property="productPrice" column="t_product_price"/>
+        <result property="productImage" column="t_product_image"/>
+        <result property="createTime" column="t_order_create_time"/>
+    </resultMap>
+
+   <!-- 添加订单明细 -->
+    <insert id="saveOrderDetail" parameterType="com.codeworld.fc.order.entity.OrderDetail">
+
+        insert into
+        codeworld_order_detail
+        (
+        t_order_detail_id,
+        t_order_id,
+        t_product_sku_id,
+        t_product_count,
+        t_product_title,
+        t_product_sku_detail,
+        t_product_price,
+        t_product_image,
+        t_order_create_time,
+        t_merchant_number
+        )
+        values
+        (
+        #{detailId},
+        #{orderId},
+        #{productSkuId},
+        #{productCount},
+        #{productTitle},
+        #{productSkuDetail},
+        #{productPrice},
+        #{productImage},
+        #{createTime},
+        #{merchantNumber}
+        )
+    </insert>
+
+    <!-- 根据订单编号查询订单下的商品详细信息 -->
+    <select id="getOrderDetailByOrderId" parameterType="java.lang.Long" resultMap="BaseOrderDetailMap">
+
+        select
+        *
+        from
+        codeworld_order_detail
+        where t_order_id = #{orderId}
+    </select>
+
+    <!-- 根据订单号和商户号查询订单详情 -->
+    <select id="getOrderDetailByOrderIdAndMerchantNumber" parameterType="hashmap" resultMap="BaseOrderDetailMap">
+
+        select
+        *
+        from
+        codeworld_order_detail
+        where
+        t_order_id = #{orderId}
+        <if test="merchantNumber != null">
+            and  t_merchant_number = #{merchantNumber}
+        </if>
+    </select>
+</mapper>

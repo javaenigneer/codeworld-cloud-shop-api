@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.cart.mapper.CartMapper">
+
+    <resultMap id="BaseCartMap" type="com.codeworld.fc.cart.entity.Cart">
+
+        <id property="id" column="t_member_id"/>
+        <result property="memberId" column="t_cart_member_id"/>
+        <result property="productId" column="t_cart_product_id"/>
+        <result property="productSkuId" column="t_cart_product_sku_id"/>
+        <result property="productTitle" column="t_cart_product_title"/>
+        <result property="productCount" column="t_cart_product_count"/>
+        <result property="productStatus" column="t_cart_product_status"/>
+        <result property="productImage" column="t_cart_product_image"/>
+        <result property="productSku" column="t_cart_product_sku"/>
+        <result property="createTime" column="t_cart_create_time"/>
+    </resultMap>
+
+    <!-- 查询会员购物车 -->
+    <select id="getCartByMemberId" parameterType="com.codeworld.fc.cart.request.CartRequest"
+            resultType="com.codeworld.fc.cart.response.CartResponse">
+
+        select
+        cc.t_cart_id AS id,
+        cc.t_cart_member_id AS memberId,
+        cc.t_cart_product_id AS productId,
+        cc.t_cart_product_sku_id As productSkuId,
+        cc.t_cart_product_title AS productTitle,
+        cc.t_cart_product_count AS productCount,
+        cc.t_cart_product_status AS productStatus,
+        cc.t_cart_product_image AS productImage,
+        cc.t_cart_product_sku AS productSku,
+        cc.t_cart_merchant_number AS merchantNumber
+        from
+        codeworld_cart AS cc
+        where cc.t_cart_member_id = #{memberId} and cc.t_cart_product_status = #{status}
+        and cc.t_cart_status = 1
+        order by cc.t_cart_create_time DESC
+    </select>
+
+    <!-- 添加到购物车 -->
+    <insert id="addCart" parameterType="com.codeworld.fc.cart.entity.Cart">
+
+        insert into codeworld_cart
+        (
+        t_cart_id,
+        t_cart_member_id,
+        t_cart_product_id,
+        t_cart_product_sku_id,
+        t_cart_product_title,
+        t_cart_product_price,
+        t_cart_product_count,
+        t_cart_product_status,
+        t_cart_product_image,
+        t_cart_product_sku,
+        t_cart_create_time,
+        t_cart_merchant_number
+        )
+        values
+        (
+        #{id},
+        #{memberId},
+        #{productId},
+        #{productSkuId},
+        #{productTitle},
+        #{productPrice},
+        #{productCount},
+        #{productStatus},
+        #{productImage},
+        #{productSku},
+        #{createTime},
+        #{merchantNumber}
+        );
+    </insert>
+
+    <!-- 删除购物车 -->
+    <update id="deleteCartByIds">
+
+        update
+        codeworld_cart
+        set
+        t_cart_status = 0
+        where
+        t_cart_id
+        in
+        <foreach collection="list" index="index" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

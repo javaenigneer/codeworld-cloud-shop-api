@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.member.mapper.MemberMapper">
+
+    <resultMap id="BaseMemberMap" type="com.codeworld.fc.member.entity.Member">
+
+        <id property="id" column="t_member_id"/>
+        <result property="name" column="t_member_name"/>
+        <result property="password" column="t_member_password"/>
+        <result property="phone" column="t_member_phone"/>
+        <result property="createTime" column="t_member_create_time"/>
+        <result property="updateTime" column="t_member_update_time"/>
+    </resultMap>
+
+    <!-- 会员注册 -->
+    <insert id="registerMember" parameterType="com.codeworld.fc.member.entity.Member">
+        insert into codeworld_member
+        (
+        t_member_id,
+        t_member_password,
+        t_member_phone,
+        t_member_create_time,
+        t_member_update_time
+        )
+        values
+        (
+        #{id},
+        #{password},
+        #{phone},
+        #{createTime},
+        #{updateTime}
+        );
+    </insert>
+
+    <!-- 根据手机号查询用户 -->
+    <select id="checkMemberByPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+
+        select
+        count(t_member_id)
+        from
+        codeworld_member AS cm
+        where cm.t_member_phone = #{phone}
+    </select>
+
+    <!-- 根据手机号获取会员 -->
+    <select id="getMemberByPhone" parameterType="java.lang.String" resultType="com.codeworld.fc.member.response.MemberResponse">
+
+        select
+        t_member_id AS id,
+        t_member_name AS name,
+        t_member_password AS password,
+        t_member_phone AS phone
+        from
+        codeworld_member AS cm
+        where cm.t_member_phone = #{phone}
+    </select>
+
+    <!-- 根据会员id获取会员基本信息和地址信息 -->
+    <select id="getMemberReceiverAddressByMemberId" parameterType="java.lang.Long" resultType="com.codeworld.fc.member.response.MemberReceiverAddressInfo">
+        select
+        cm.t_member_id AS id,
+        cm.t_member_name AS name,
+        cm.t_member_phone AS phone,
+        cmrd.t_address_id AS addressId,
+        cmrd.t_receiver_name AS receiverName,
+        cmrd.t_receiver_phone AS receiverPhone,
+        cmrd.t_receiver_address AS receiverAddress,
+        t_address_status AS addressStatus
+        from
+        codeworld_member AS cm
+        left join codeworld_member_receiver_address AS cmrd on cm.t_member_id = cmrd.t_member_id
+        where cm.t_member_id = #{memberId}
+    </select>
+
+    <!-- 根据会员id查询会员信息 -->
+    <select id="getMemberById" parameterType="java.lang.Long" resultType="com.codeworld.fc.member.entity.Member">
+
+        select
+        cm.t_member_id AS id,
+        cm.t_member_name AS name,
+        cm.t_member_phone AS phone
+        from
+        codeworld_member AS cm
+        where cm.t_member_id = #{memberId}
+    </select>
+
+</mapper>

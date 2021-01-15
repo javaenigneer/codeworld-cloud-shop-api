@@ -1,0 +1,17 @@
+server:
+  port: 4001
+
+spring:
+  application:
+    name: codeworld-cloud-sms
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        register-enabled: true
+        weight: 1
+  redis:
+    host: 192.168.2.4
+    database: 4
+
+

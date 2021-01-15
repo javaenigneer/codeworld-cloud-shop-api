@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.member.mapper.ReceiverAddressMapper">
+
+    <resultMap id="BaseReceiverAddressMap" type="com.codeworld.fc.member.entity.ReceiverAddress">
+
+        <id property="id" column="t_address_id"/>
+        <result property="memberId" column="t_member_id"/>
+        <result property="name" column="t_receiver_name"/>
+        <result property="phone" column="t_receiver_phone"/>
+        <result property="area" column="t_address_area"/>
+        <result property="detailed" column="t_address_detailed"/>
+        <result property="houseNumber" column="t_receiver_house_number"/>
+        <result property="status" column="t_address_status"/>
+        <result property="createTime" column="t_address_create_time"/>
+        <result property="updateTime" column="t_address_update_time"/>
+    </resultMap>
+
+    <!-- 根据会员id查询收货地址 -->
+    <select id="getReceiverAddressByMemberId" parameterType="java.lang.Long" resultType="com.codeworld.fc.member.entity.ReceiverAddress">
+
+        select
+        cmrd.t_address_id AS id,
+        cmrd.t_member_id AS memberId,
+        cmrd.t_receiver_name AS name,
+        cmrd.t_receiver_phone AS phone,
+        cmrd.t_address_area AS area,
+        cmrd.t_address_detailed AS detailed,
+        cmrd.t_receiver_house_number AS houseNumber,
+        cmrd.t_address_status AS status
+        from
+        codeworld_member_receiver_address AS cmrd
+        where cmrd.t_member_id = #{memberId}
+    </select>
+
+    <!-- 根据地址id获取地址信息 -->
+    <select id="getReceiverAddressByAddressId" parameterType="java.lang.Long" resultType="com.codeworld.fc.member.entity.ReceiverAddress">
+
+       select
+        cmrd.t_receiver_name AS name,
+        cmrd.t_receiver_phone AS phone,
+        cmrd.t_address_area AS area,
+        cmrd.t_address_detailed AS detailed,
+        cmrd.t_receiver_house_number AS houseNumber
+        from
+        codeworld_member_receiver_address AS cmrd
+        where cmrd.t_address_id = #{addressId}
+
+    </select>
+
+    <!-- 添加地址信息 -->
+    <insert id="addReceiverAddress" parameterType="com.codeworld.fc.member.entity.ReceiverAddress">
+        insert into codeworld_member_receiver_address
+        (
+        t_address_id,
+        t_member_id,
+        t_receiver_name,
+        t_receiver_phone,
+        t_address_area,
+        t_address_detailed,
+        t_receiver_house_number,
+        t_address_create_time,
+        t_address_update_time
+        )
+        values
+        (
+        #{id},
+        #{memberId},
+        #{name},
+        #{phone},
+        #{area},
+        #{detailed},
+        #{houseNumber},
+        #{createTime},
+        #{updateTime}
+        )
+    </insert>
+
+    <!-- 修改地址信息 -->
+    <update id="updateReceiverAddress" parameterType="com.codeworld.fc.member.entity.ReceiverAddress">
+
+        update codeworld_member_receiver_address
+        set
+        t_receiver_name = #{name},
+        t_receiver_phone = #{phone},
+        t_address_area = #{area},
+        t_address_detailed = #{detailed},
+        t_receiver_house_number = #{houseNumber},
+        t_address_status = #{status},
+        t_address_update_time = #{updateTime}
+        where t_address_id = #{id}
+    </update>
+</mapper>
