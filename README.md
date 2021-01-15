@@ -178,3 +178,49 @@ xxl-job-marketing ----> 9004
 ###### 添加轮播图
 
 ![添加轮播图](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/system-shop/carouse-add.png)
+
+#### App端截图
+
+##### 登录页面
+
+![登录页面](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-login.png)	
+
+##### 注册页面
+
+![注册页面](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-register.png)
+
+##### App首页
+
+![App首页](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-index.png)
+
+##### 分类页面
+
+![分类页面](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-category.png)
+
+##### 商品详情
+
+![商品详情](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-goods-detail.png)
+
+##### 购物车
+
+![购物车](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-cart.png)
+
+##### 结算页面
+
+![结算页面](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-cart-settlement.png)
+
+##### 支付页面
+
+![支付页面](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-pay.png)
+
+##### 订单列表
+
+![订单列表](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-order.png)
+
+##### 个人界面
+
+![个人界面](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-user.png)
+
+##### 收货地址
+
+![收货地址](https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/app/app-address.png)
