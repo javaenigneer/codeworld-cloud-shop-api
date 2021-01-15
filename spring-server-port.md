@@ -15,5 +15,5 @@ codeworld-cloud-marketing----> 9003
 #任务调度中心
 xxl-job-admin----> 9999
 merchant----> 5003
-product---->9002
-marketing---->9004
+product----> 9002
+marketing----> 9004
