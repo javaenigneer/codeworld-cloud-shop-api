@@ -19,9 +19,9 @@ Codeworld-Cloud-shop是一套比较完整的商城系统，采用的是目前流
 |       RabbitMQ       |      消息队列       |              https://www.rabbitmq.com/               |
 |      OpenFeign       |      远程调用       |  https://spring.io/projects/spring-cloud-openfeign   |
 |    ElasticSearch     |      搜索引擎       | https://spring.io/projects/spring-data-elasticsearch |
-|                      |      任务调度       |           https://www.xuxueli.com/xxl-job/           |
+|       XXL-JOB        |      任务调度       |           https://www.xuxueli.com/xxl-job/           |
 |         JWT          |     JWT登录支持     |             https://github.com/jwtk/jjwt             |
-|                      |    简化对象封装     |        https://github.com/rzwitserloot/lombok        |
+|        Lombok        |    简化对象封装     |        https://github.com/rzwitserloot/lombok        |
 |        Hutool        |     Java工具类      |           https://github.com/looly/hutool            |
 |      PageHelper      | MyBatis物理分页插件 |    http://git.oschina.net/free/Mybatis_PageHelper    |
 |      Swagger-UI      |    文档生成工具     |      https://github.com/swagger-api/swagger-ui       |
