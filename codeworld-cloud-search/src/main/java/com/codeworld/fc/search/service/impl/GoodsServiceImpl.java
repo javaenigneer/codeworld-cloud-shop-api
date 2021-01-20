@@ -27,6 +27,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -222,6 +223,35 @@ public class GoodsServiceImpl implements GoodsService {
         Long endTime = System.currentTimeMillis();
         log.info("定时导入商品完成，耗时{}", endTime - startTime);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_IMPORT_SUCCESS.getMsg());
+    }
+
+    /**
+     * 根据分类id查询商品
+     *
+     * @param productSearchRequest
+     * @return
+     */
+    @Override
+    public FCResponse<List<ProductResponse>> getProductByCategoryId(ProductSearchRequest productSearchRequest) {
+
+        if (StringUtils.isEmpty(productSearchRequest.getSubCateId())){
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.category.CATEGORY_ID_ERROR.getMsg());
+        }
+        // 自定义查询构建器
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        // 添加查询条件
+        queryBuilder.withQuery(QueryBuilders.termQuery("categoryId", productSearchRequest.getSubCateId()));
+        // 添加分页
+        queryBuilder.withPageable(PageRequest.of(productSearchRequest.getPage(), productSearchRequest.getLimit()));
+        Page<SearchItem> searchResponse = this.searchRepository.search(queryBuilder.build());
+        if (CollectionUtils.isEmpty(searchResponse.getContent())) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.product.PRODUCT_DATA_EMPTY.getMsg(), null);
+        }
+        List<SearchItem> searchItems = searchResponse.getContent();
+        List<ProductResponse> productResponses = searchItems.stream().map(searchItem -> {
+            return this.buildProductResponse(searchItem);
+        }).collect(Collectors.toList());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_GET_SUCCESS.getMsg(), productResponses);
     }
 
     /**

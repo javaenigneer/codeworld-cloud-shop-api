@@ -32,4 +32,11 @@ public class ProductSearchRequest extends PageQuery {
     @ApiModelProperty("更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8", locale = "zh")
     private Date updateTime;
+
+    @ApiModelProperty("父级分类Id")
+    private Long cateId;
+
+    @ApiModelProperty("下级分类Id")
+    private Long subCateId;
+
 }
