@@ -27,6 +27,7 @@ import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.OrderDetailResponse;
 import com.codeworld.fc.order.response.OrderPageResponse;
 import com.codeworld.fc.order.response.OrderResponse;
+import com.codeworld.fc.order.response.OrderStatusCount;
 import com.codeworld.fc.order.service.OrderService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -340,7 +341,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public FCResponse<DataResponse<List<OrderPageResponse>>> getSystemPageOrder(OrderSearchRequest orderSearchRequest) {
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (org.springframework.util.ObjectUtils.isEmpty(loginInfoData)){
+        if (ObjectUtils.isEmpty(loginInfoData)){
             throw new FCException("登录失效，请重新登录");
         }
         MerchantResponse merchantResponse = null;
@@ -454,5 +455,53 @@ public class OrderServiceImpl implements OrderService {
         });
         orderDetailResponse.setProductModels(productModels);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), orderDetailResponse);
+    }
+
+    /**
+     * 获取订单状态下的数量
+     *
+     * @return
+     */
+    @Override
+    public FCResponse<OrderStatusCount> getOrderStatusCount() {
+
+        // 获取当前登录用户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            throw new FCException("登录失效，请重新登录");
+        }
+        // 获取登录会员的id
+        Long memberId = loginInfoData.getId();
+        // 根据会员id查询订单状态下的数量
+        List<OrderCount> orderCounts = this.orderMapper.OrderStatusCount(memberId);
+        if (CollectionUtils.isEmpty(orderCounts)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        }
+        OrderStatusCount orderStatusCount = new OrderStatusCount();
+        orderCounts.forEach(orderCount -> {
+            switch (orderCount.getOrderStatus()){
+                // 待付款
+                case 1:
+                    orderStatusCount.setPendingPaymentCount(orderCount.getOrderCount());
+                    break;
+                // 未发货
+                case 2:
+                    orderStatusCount.setToBeDeliveredCount(orderCount.getOrderCount());
+                    break;
+                // 待收货
+                case 3:
+                    orderStatusCount.setToBeReceivedCount(orderCount.getOrderCount());
+                    break;
+                // 已完成
+                case 4:
+                    orderStatusCount.setCompletedCount(orderCount.getOrderCount());
+                    break;
+                // 待评价
+                case 6:
+                    orderStatusCount.setComment(orderCount.getOrderCount());
+                    break;
+            }
+        });
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),orderStatusCount);
     }
 }

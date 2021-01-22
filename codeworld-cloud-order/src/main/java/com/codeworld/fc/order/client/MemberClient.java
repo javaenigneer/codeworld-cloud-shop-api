@@ -1,6 +1,7 @@
 package com.codeworld.fc.order.client;
 
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.order.client.impl.MemberClientFallBack;
 import com.codeworld.fc.order.domain.MemberInfo;
 import com.codeworld.fc.order.domain.ReceiverAddress;
 import io.swagger.annotations.ApiOperation;
@@ -8,7 +9,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("codeworld-cloud-member")
+@FeignClient(name = "codeworld-cloud-member")
 public interface MemberClient {
 
     @PostMapping("/codeworld-member/member/get-member-id")

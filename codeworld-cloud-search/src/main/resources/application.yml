@@ -15,14 +15,14 @@ spring:
       cluster-nodes: 192.168.2.7:9300
   main:
     allow-bean-definition-overriding: true
-#feign:
-#  hystrix:
-#    enabled: true
-#ribbon:
-#  ReadTimeOut: 5000
-#  ConnectTimeOut: 5000
-#
-#
+feign:
+  hystrix:
+    enabled: true
+ribbon:
+  ReadTimeOut: 5000
+  ConnectTimeOut: 5000
+
+
 #hystrix:
 #  command:
 #    default:

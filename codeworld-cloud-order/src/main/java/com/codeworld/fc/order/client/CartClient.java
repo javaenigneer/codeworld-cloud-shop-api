@@ -1,6 +1,7 @@
 package com.codeworld.fc.order.client;
 
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.order.client.impl.CartClientFallBack;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

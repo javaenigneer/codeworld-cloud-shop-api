@@ -1,5 +1,6 @@
 package com.codeworld.fc.auth.client;
 
+import com.codeworld.fc.auth.client.impl.MemberClientFallBack;
 import com.codeworld.fc.auth.domain.MemberReceiverAddressInfo;
 import com.codeworld.fc.auth.domain.MemberResponse;
 import com.codeworld.fc.common.response.FCResponse;
@@ -8,7 +9,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("codeworld-cloud-member")
+@FeignClient(name = "codeworld-cloud-member")
 public interface MemberClient {
 
     @PostMapping("/codeworld-member/member/check-member-phone")

@@ -19,6 +19,6 @@ import java.util.List;
 public class ParamClientFallback implements ParamClient {
     @Override
     public FCResponse<List<ParamResponse>> getParamByCategoryId(Long categoryId) {
-        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请稍后再试",null);
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
     }
 }

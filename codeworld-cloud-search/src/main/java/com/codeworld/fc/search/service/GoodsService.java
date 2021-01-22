@@ -2,6 +2,7 @@ package com.codeworld.fc.search.service;
 
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.search.domain.ProductResponse;
+import com.codeworld.fc.search.domain.ProductSearchRequest;
 import com.codeworld.fc.search.request.ProductIndexSearchRequest;
 
 import java.util.List;
@@ -39,4 +40,11 @@ public interface GoodsService {
      * @return
      */
     FCResponse<Void> importGoodsToElasticSearchTime();
+
+    /**
+     * 根据分类id查询商品
+     * @param productSearchRequest
+     * @return
+     */
+    FCResponse<List<ProductResponse>> getProductByCategoryId(ProductSearchRequest productSearchRequest);
 }

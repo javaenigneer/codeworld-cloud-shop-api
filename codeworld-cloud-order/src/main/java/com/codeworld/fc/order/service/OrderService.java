@@ -8,6 +8,7 @@ import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.OrderDetailResponse;
 import com.codeworld.fc.order.response.OrderPageResponse;
 import com.codeworld.fc.order.response.OrderResponse;
+import com.codeworld.fc.order.response.OrderStatusCount;
 
 import java.util.List;
 
@@ -60,4 +61,10 @@ public interface OrderService {
      * @return
      */
     FCResponse<OrderDetailResponse> getOrderInfoById(Long orderId);
+
+    /**
+     * 获取订单状态下的数量
+     * @return
+     */
+    FCResponse<OrderStatusCount> getOrderStatusCount();
 }

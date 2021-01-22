@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="codeworld-cloud-goods" />
-        <module name="xxl-job-executor-sample-springboot" />
         <module name="codeworld-cloud-gateway" />
         <module name="codeworld-cloud-order" />
         <module name="codeworld-cloud-auth" />
@@ -17,18 +16,22 @@
         <module name="codeworld-cloud-marketing" />
         <module name="codeworld-cloud-xxl" />
         <module name="codeworld-cloud-member" />
-        <module name="xxl-job-core" />
-        <module name="xxl-job-admin" />
         <module name="codeworld-cloud-system" />
         <module name="codeworld-cloud-common" />
-        <module name="xxl-job-executor-sample-frameless" />
         <module name="codeworld-cloud-upload" />
         <module name="codeworld-cloud-cart" />
         <module name="codeworld-cloud-search" />
-        <module name="xxl-job-executor-sample-spring" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8" />
+    <bytecodeTargetLevel target="8">
+      <module name="xxl-job" target="1.8" />
+      <module name="xxl-job-admin" target="1.8" />
+      <module name="xxl-job-core" target="1.8" />
+      <module name="xxl-job-executor-sample-frameless" target="1.8" />
+      <module name="xxl-job-executor-sample-spring" target="1.8" />
+      <module name="xxl-job-executor-sample-springboot" target="1.8" />
+      <module name="xxl-job-executor-samples" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

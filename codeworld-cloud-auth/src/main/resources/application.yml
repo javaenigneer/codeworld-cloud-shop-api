@@ -13,6 +13,13 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+#ribbon:
+#  ReadTimeout: 200000 #处理请求的超时时间，默认为1秒
+#  ConnectTimeout: 200000 #连接建立的超时时长，默认1秒
+#  MaxAutoRetries: 1 #同一台实例的最大重试次数，但是不包括首次调用，默认为1次
+#feign:
+#  hystrix:
+#    enabled: true
 codeworld:
   jwt:
     secret: codeworld@Login(Auth}*^31)&codeworld% # 用于生存rsa公钥和私钥的密文,越复杂越好

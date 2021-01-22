@@ -1,10 +1,12 @@
 package com.codeworld.fc.order.mapper;
 
+import com.codeworld.fc.order.domain.OrderCount;
 import com.codeworld.fc.order.entity.Order;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.response.OrderDetailResponse;
 import com.codeworld.fc.order.response.OrderPageResponse;
 import com.codeworld.fc.order.response.OrderResponse;
+import com.codeworld.fc.order.response.OrderStatusCount;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -61,4 +63,11 @@ public interface OrderMapper {
      * @return
      */
     OrderDetailResponse getOrderInfoById(Long orderId);
+
+    /**
+     * 根据会员id查询订单状态下的数量
+     * @param memberId
+     * @return
+     */
+    List<OrderCount> OrderStatusCount(Long memberId);
 }

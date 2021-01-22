@@ -81,6 +81,11 @@
             <artifactId>xxl-job-core</artifactId>
             <version>2.2.0</version>
         </dependency>
+        <!--hystrix依赖，主要是用  @HystrixCommand -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.codeworld.fc</groupId>
             <artifactId>codeworld-cloud-common</artifactId>

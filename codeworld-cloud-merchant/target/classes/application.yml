@@ -47,3 +47,11 @@ xxl:
       logpath: /data/applogs/xxl-job/jobhandler
       logretentiondays: 30
       port: 5003
+
+#ribbon:
+#  ReadTimeout: 10000 #处理请求的超时时间，默认为1秒
+#  ConnectTimeout: 10000 #连接建立的超时时长，默认1秒
+#  MaxAutoRetries: 1 #同一台实例的最大重试次数，但是不包括首次调用，默认为1次
+#feign:
+#  hystrix:
+#    enabled: true

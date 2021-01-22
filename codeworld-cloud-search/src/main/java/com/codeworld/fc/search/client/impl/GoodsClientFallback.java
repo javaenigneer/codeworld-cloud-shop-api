@@ -23,21 +23,21 @@ import java.util.List;
 public class GoodsClientFallback implements GoodsClient {
     @Override
     public FCResponse<DataResponse<List<ProductResponse>>> getPageProduct(ProductSearchRequest productSearchRequest) {
-        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请稍后再试",null);
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
     }
 
     @Override
     public FCResponse<List<ProductSku>> getProductSkuByProductId(Long productId) {
-        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请稍后再试",null);
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
     }
 
     @Override
     public FCResponse<ProductDetail> getProductDetailByProductId(Long productId) {
-        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请稍后再试",null);
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
     }
 
     @Override
     public FCResponse<DataResponse<List<ProductResponse>>> getPageProductTime(ProductSearchRequest productSearchRequest) {
-        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请稍后再试",null);
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
     }
 }

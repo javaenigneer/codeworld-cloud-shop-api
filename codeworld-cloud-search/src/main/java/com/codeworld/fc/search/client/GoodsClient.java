@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "codeworld-cloud-goods")
+@FeignClient(name = "codeworld-cloud-goods",fallbackFactory = GoodsClientFallback.class)
 public interface GoodsClient {
 
     @PostMapping("/codeworld-goods/product/get-page-product")

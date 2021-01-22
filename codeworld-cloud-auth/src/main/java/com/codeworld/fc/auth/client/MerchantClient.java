@@ -1,6 +1,7 @@
 package com.codeworld.fc.auth.client;
 
 
+import com.codeworld.fc.auth.client.impl.MerchantClientFallBack;
 import com.codeworld.fc.auth.domain.MerchantResponse;
 import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.FCResponse;
@@ -9,7 +10,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("codeworld-cloud-merchant")
+@FeignClient(name = "codeworld-cloud-merchant")
 public interface MerchantClient {
 
     @PostMapping("/codeworld-merchant/check-merchant-phone")

@@ -8,6 +8,7 @@ import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.OrderDetailResponse;
 import com.codeworld.fc.order.response.OrderPageResponse;
 import com.codeworld.fc.order.response.OrderResponse;
+import com.codeworld.fc.order.response.OrderStatusCount;
 import com.codeworld.fc.order.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +40,7 @@ public class OrderController {
     }
 
     @PostMapping("get-page-member-order")
-    @ApiOperation("分页查询当前用户订单信息")
+    @ApiOperation("分页查询当前会员订单信息")
     public FCResponse<List<OrderResponse>> getPageMemberOrder(@RequestBody OrderSearchRequest orderSearchRequest){
         return this.orderService.getPageMemberOrder(orderSearchRequest);
     }
@@ -69,4 +70,9 @@ public class OrderController {
         return this.orderService.getOrderInfoById(orderId);
     }
 
+    @PostMapping("get-order-status-count")
+    @ApiOperation("获取订单状态下的数量")
+    public FCResponse<OrderStatusCount> getOrderStatusCount(){
+        return this.orderService.getOrderStatusCount();
+    }
 }

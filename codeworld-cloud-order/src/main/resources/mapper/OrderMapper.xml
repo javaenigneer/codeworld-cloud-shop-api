@@ -152,6 +152,20 @@
         co.t_order_id = #{orderId}
     </select>
 
+    <!-- 根据会员id查询订单状态下的数量 -->
+    <select id="OrderStatusCount" parameterType="java.lang.Long" resultType="com.codeworld.fc.order.domain.OrderCount">
+
+        select
+        cos.t_order_status AS orderStatus,
+        count(co.t_order_id) AS orderCount
+        from
+        codeworld_order AS co
+        left join codeworld_order_status AS cos on co.t_order_id = cos.t_order_id
+        where
+        cos.t_order_status != 7 and co.t_order_member_id = #{memberId}
+        group by cos.t_order_status
+    </select>
+
     <!-- 修改订单信息 -->
     <update id="updatePayOrder" parameterType="com.codeworld.fc.order.entity.Order">
         update

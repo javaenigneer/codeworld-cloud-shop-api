@@ -1,6 +1,7 @@
 package com.codeworld.fc.order.client;
 
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.order.client.impl.MemberClientFallBack;
 import com.codeworld.fc.order.domain.MerchantResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
