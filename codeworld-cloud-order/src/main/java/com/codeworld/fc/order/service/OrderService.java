@@ -2,6 +2,7 @@ package com.codeworld.fc.order.service;
 
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.order.domain.OrderDeliveryMessage;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
@@ -67,4 +68,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<OrderStatusCount> getOrderStatusCount();
+
+    /**
+     * 订单发货
+     * @param orderDeliveryMessage
+     * @return
+     */
+    FCResponse<Void> orderDelivery(OrderDeliveryMessage orderDeliveryMessage);
 }

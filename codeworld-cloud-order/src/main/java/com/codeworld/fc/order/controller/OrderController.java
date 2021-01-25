@@ -2,6 +2,7 @@ package com.codeworld.fc.order.controller;
 
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.order.domain.OrderDeliveryMessage;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
@@ -74,5 +75,11 @@ public class OrderController {
     @ApiOperation("获取订单状态下的数量")
     public FCResponse<OrderStatusCount> getOrderStatusCount(){
         return this.orderService.getOrderStatusCount();
+    }
+
+    @PostMapping("order-delivery")
+    @ApiOperation("订单发货")
+    public FCResponse<Void> orderDelivery(@RequestBody @Valid OrderDeliveryMessage orderDeliveryMessage){
+        return this.orderService.orderDelivery(orderDeliveryMessage);
     }
 }

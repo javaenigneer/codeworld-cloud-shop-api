@@ -2,11 +2,13 @@ package com.codeworld.fc.order.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.codeworld.fc.common.domain.LoginInfoData;
+import com.codeworld.fc.common.enums.DeliveryEnum;
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.enums.HttpMsg;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.common.utils.DeliveryNumberUtil;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
 import com.codeworld.fc.common.utils.IdWorker;
 import com.codeworld.fc.common.utils.JsonUtils;
@@ -147,10 +149,10 @@ public class OrderServiceImpl implements OrderService {
         // 将map进行序列化
         String json = JsonUtils.serialize(map);
         assert json != null;
-        this.stringRedisTemplate.opsForValue().set(String.valueOf(order.getId()), json, 60 * 10 , TimeUnit.SECONDS);
+        this.stringRedisTemplate.opsForValue().set(String.valueOf(order.getId()), json, 60 * 10, TimeUnit.SECONDS);
         log.info("订单加入Redis缓存，订单编号：{}，用户id：{}，将在10分钟后过期", order.getId(), memberInfo.getMemberId());
         // 异步删除购物车中对应的数据（使用RabbitMQ消息队列）
-        this.amqpTemplate.convertAndSend("cart.delete",orderAddRequest.getCartIds());
+        this.amqpTemplate.convertAndSend("cart.delete", orderAddRequest.getCartIds());
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_CREATE_SUCCESS.getMsg(), String.valueOf(order.getId()));
     }
 
@@ -251,19 +253,19 @@ public class OrderServiceImpl implements OrderService {
         // 根据订单号查询订单是否存在,且属于未付款订单
         OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderId(orderId);
         // 订单不存在
-        if (ObjectUtil.isEmpty(orderStatus)){
-            log.error("订单不存在：{}",orderId);
+        if (ObjectUtil.isEmpty(orderStatus)) {
+            log.error("订单不存在：{}", orderId);
         }
         // 订单状态不正确,只有状态为1才能自动取消订单
-        if (orderStatus.getOrderStatus() != 1){
-            log.error("订单状态错误，{}",orderId);
+        if (orderStatus.getOrderStatus() != 1) {
+            log.error("订单状态错误，{}", orderId);
         }
         // 执行修改订单状态
         orderStatus.setCloseTime(new Date());
         orderStatus.setOrderId(orderId);
         orderStatus.setOrderStatus(7);
         this.orderStatusMapper.updateOrderStatus(orderStatus);
-        log.error("订单已关闭，订单号：{}",orderId);
+        log.error("订单已关闭，订单号：{}", orderId);
     }
 
     /**
@@ -276,12 +278,12 @@ public class OrderServiceImpl implements OrderService {
     public FCResponse<List<OrderResponse>> getPageMerchantOrder(OrderSearchRequest orderSearchRequest) {
         // 从Token获取信息
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (ObjectUtils.isEmpty(loginInfoData) || !StringUtils.equals("merchant",loginInfoData.getResources())){
+        if (ObjectUtils.isEmpty(loginInfoData) || !StringUtils.equals("merchant", loginInfoData.getResources())) {
             throw new FCException("登录失效，请重新登录");
         }
         // 根据id获取商户号
         FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
-        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
+        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
             throw new FCException(merchantFcResponse.getMsg());
         }
         MerchantResponse merchantResponse = merchantFcResponse.getData();
@@ -292,15 +294,15 @@ public class OrderServiceImpl implements OrderService {
         map.put("orderStatus", orderSearchRequest.getOrderStatus());
         List<OrderResponse> orderResponses = this.orderMapper.getPageMerchantOrder(map);
         // 无订单信息
-        if (CollectionUtils.isEmpty(orderResponses)){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg(),orderResponses);
+        if (CollectionUtils.isEmpty(orderResponses)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg(), orderResponses);
         }
         PageInfo<OrderResponse> pageInfo = new PageInfo<>(orderResponses);
         // 循环查询订单下的商品信息
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
             Map<String, Object> orderDetailMap = new HashMap<>();
-            orderDetailMap.put("orderId",orderResponse.getOrderId());
+            orderDetailMap.put("orderId", orderResponse.getOrderId());
             orderDetailMap.put("merchantNumber", merchantResponse.getNumber());
             List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderIdAndMerchantNumber(orderDetailMap);
             if (CollectionUtils.isEmpty(orderDetails)) {
@@ -341,27 +343,27 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public FCResponse<DataResponse<List<OrderPageResponse>>> getSystemPageOrder(OrderSearchRequest orderSearchRequest) {
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (ObjectUtils.isEmpty(loginInfoData)){
+        if (ObjectUtils.isEmpty(loginInfoData)) {
             throw new FCException("登录失效，请重新登录");
         }
         MerchantResponse merchantResponse = null;
         // 判断属于那种标识--商户标识
-        if ("merchant".equals(loginInfoData.getResources())){
+        if ("merchant".equals(loginInfoData.getResources())) {
             // 根据商户id获取商户信息
             FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
-            if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
-                return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),merchantFcResponse.getMsg());
+            if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+                return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), merchantFcResponse.getMsg());
             }
             merchantResponse = merchantFcResponse.getData();
             orderSearchRequest.setMerchantNumber(merchantResponse.getNumber());
-        }else {
+        } else {
             // 系统标识
             orderSearchRequest.setMerchantNumber(null);
         }
         PageHelper.startPage(orderSearchRequest.getPage(), orderSearchRequest.getLimit());
         List<OrderPageResponse> orderPageResponses = this.orderMapper.getSystemPageOrder(orderSearchRequest);
-        if (CollectionUtils.isEmpty(orderPageResponses)){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg(),DataResponse.dataResponse(orderPageResponses,0L));
+        if (CollectionUtils.isEmpty(orderPageResponses)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg(), DataResponse.dataResponse(orderPageResponses, 0L));
         }
         PageInfo<OrderPageResponse> pageInfo = new PageInfo<>(orderPageResponses);
         // 循环查询订单下的商品信息
@@ -369,11 +371,11 @@ public class OrderServiceImpl implements OrderService {
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
             Map<String, Object> orderDetailMap = new HashMap<>();
-            orderDetailMap.put("orderId",orderResponse.getOrderId());
+            orderDetailMap.put("orderId", orderResponse.getOrderId());
             // 若merchantResponse为Null，则为系统查询
-            if (ObjectUtils.isEmpty(finalMerchantResponse)){
-                orderDetailMap.put("merchantNumber",null);
-            }else {
+            if (ObjectUtils.isEmpty(finalMerchantResponse)) {
+                orderDetailMap.put("merchantNumber", null);
+            } else {
                 // 否则为商户查询
                 orderDetailMap.put("merchantNumber", finalMerchantResponse.getNumber());
             }
@@ -401,7 +403,7 @@ public class OrderServiceImpl implements OrderService {
             orderResponse.setCount(count.get());
             orderResponse.setProductModels(productModels);
         });
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(),pageInfo.getTotal()));
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
     }
 
     /**
@@ -412,21 +414,21 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public FCResponse<OrderDetailResponse> getOrderInfoById(Long orderId) {
-        if (ObjectUtils.isEmpty(orderId) || orderId <= 0){
-            log.error("订单ID错误：{}",orderId);
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.order.ORDER_ID_ERROR.getMsg());
+        if (ObjectUtils.isEmpty(orderId) || orderId <= 0) {
+            log.error("订单ID错误：{}", orderId);
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
         }
         // 根据订单号查询订单基本信息
         OrderDetailResponse orderDetailResponse = this.orderMapper.getOrderInfoById(orderId);
-        if (ObjectUtils.isEmpty(orderDetailResponse)){
-            log.error("订单数据为空，订单号：{}",orderId);
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        if (ObjectUtils.isEmpty(orderDetailResponse)) {
+            log.error("订单数据为空，订单号：{}", orderId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         // 根据地址Id获取地收货人信息
         FCResponse<ReceiverAddress> receiverAddressFCResponse = this.memberClient.getReceiverAddressByAddressId(orderDetailResponse.getAddressId());
 
-        if (!receiverAddressFCResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),receiverAddressFCResponse.getMsg());
+        if (!receiverAddressFCResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), receiverAddressFCResponse.getMsg());
         }
         ReceiverAddress receiverAddress = receiverAddressFCResponse.getData();
         // 设置收货信息
@@ -435,9 +437,9 @@ public class OrderServiceImpl implements OrderService {
         orderDetailResponse.setReceiverAddress(receiverAddress.getArea() + receiverAddress.getDetailed() + receiverAddress.getHouseNumber());
         // 根据订单号查询查询商品信息
         List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderId);
-        if (CollectionUtils.isEmpty(orderDetails)){
-            log.error("订单下无商品信息：{}",orderId);
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        if (CollectionUtils.isEmpty(orderDetails)) {
+            log.error("订单下无商品信息：{}", orderId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         List<ProductModel> productModels = new ArrayList<>();
         // 循环设置商品信息
@@ -467,19 +469,19 @@ public class OrderServiceImpl implements OrderService {
 
         // 获取当前登录用户
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (ObjectUtils.isEmpty(loginInfoData)){
+        if (ObjectUtils.isEmpty(loginInfoData)) {
             throw new FCException("登录失效，请重新登录");
         }
         // 获取登录会员的id
         Long memberId = loginInfoData.getId();
         // 根据会员id查询订单状态下的数量
-        List<OrderCount> orderCounts = this.orderMapper.OrderStatusCount(memberId);
-        if (CollectionUtils.isEmpty(orderCounts)){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        List<OrderCount> orderCounts = this.orderMapper.getOrderStatusCount(memberId);
+        if (CollectionUtils.isEmpty(orderCounts)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         OrderStatusCount orderStatusCount = new OrderStatusCount();
         orderCounts.forEach(orderCount -> {
-            switch (orderCount.getOrderStatus()){
+            switch (orderCount.getOrderStatus()) {
                 // 待付款
                 case 1:
                     orderStatusCount.setPendingPaymentCount(orderCount.getOrderCount());
@@ -502,6 +504,41 @@ public class OrderServiceImpl implements OrderService {
                     break;
             }
         });
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),orderStatusCount);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), orderStatusCount);
+    }
+
+    /**
+     * 订单发货
+     *
+     * @param orderDeliveryMessage
+     * @return
+     */
+    @Override
+    public FCResponse<Void> orderDelivery(OrderDeliveryMessage orderDeliveryMessage) {
+
+        String name = DeliveryEnum.getDeliveryNameByKey(orderDeliveryMessage.getLogisticsCompany());
+        if (StringUtils.isEmpty(name)){
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.delivery.DELIVERY_SN_ERROR.getMsg());
+        }
+
+        Order order = new Order();
+        order.setId(orderDeliveryMessage.getOrderId());
+        order.setOrderDeliveryCompany(name);
+        order.setOrderDeliverySn(orderDeliveryMessage.getLogisticsCompany());
+        order.setOrderDeliveryNumber(DeliveryNumberUtil.getDeliveryNumber(orderDeliveryMessage.getLogisticsCompany()));
+        // 修改订单
+        try {
+            this.orderMapper.orderDelivery(order);
+            // 修改订单状态
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrderId(order.getId());
+            orderStatus.setOrderStatus(3);
+            orderStatus.setConsignTime(new Date());
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.delivery.DELIVERY_ORDER_SUCCESS.getMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

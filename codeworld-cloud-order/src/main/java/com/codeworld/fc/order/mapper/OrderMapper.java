@@ -69,5 +69,11 @@ public interface OrderMapper {
      * @param memberId
      * @return
      */
-    List<OrderCount> OrderStatusCount(Long memberId);
+    List<OrderCount> getOrderStatusCount(Long memberId);
+
+    /**
+     * 订单发货
+     * @param order
+     */
+    void orderDelivery(Order order);
 }

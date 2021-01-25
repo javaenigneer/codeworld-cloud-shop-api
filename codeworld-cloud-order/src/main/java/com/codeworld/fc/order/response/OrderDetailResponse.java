@@ -48,5 +48,11 @@ public class OrderDetailResponse {
     @ApiModelProperty("商品信息")
     private List<ProductModel> productModels;
 
+    @ApiModelProperty("物流公司")
+    private String orderDeliveryCompany;
+
+    @ApiModelProperty("订单物流单号")
+    private String orderDeliveryNumber;
+
 
 }

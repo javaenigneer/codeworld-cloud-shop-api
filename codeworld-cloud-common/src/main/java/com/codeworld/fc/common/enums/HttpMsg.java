@@ -353,8 +353,7 @@ public class HttpMsg {
         MEMBER_DATA_EXPIRE("身份已过期，请重新登录"),
         MEMBER_ID_ERROR("会员Id错误"),
         MEMBER_DATA_EMPTY("会员信息为空"),
-        MEMBER_PHONE_REGISTER("该手机号已注册")
-        ;
+        MEMBER_PHONE_REGISTER("该手机号已注册");
 
         member(String msg) {
             this.msg = msg;
@@ -377,8 +376,7 @@ public class HttpMsg {
         ADDRESS_ID_ERROR("地址ID错误"),
         ADDRESS_UPDATE_SUCCESS("地址修改成功"),
         ADDRESS_DATA_SUCCESS("地址查询成功"),
-        ADDRESS_DATA_EMPTY("地址信息为空")
-        ;
+        ADDRESS_DATA_EMPTY("地址信息为空");
 
         address(String msg) {
             this.msg = msg;
@@ -400,8 +398,7 @@ public class HttpMsg {
         CART_DATA_SUCCESS("购物车查询成功"),
         CART_ADD_SUCCESS("购物车添加成功"),
         CART_ID_ERROR("购物车ID错误"),
-        CART_DELETE_SUCCESS("购物车删除成功")
-        ;
+        CART_DELETE_SUCCESS("购物车删除成功");
 
         cart(String msg) {
             this.msg = msg;
@@ -424,8 +421,7 @@ public class HttpMsg {
         ORDER_DATA_SUCCESS("订单查询成功"),
         ORDER_PAY_SUCCESS("订单支付成功"),
         ORDER_MONEY_ERROR("订单金额错误"),
-        ORDER_ID_ERROR("订单ID无效")
-        ;
+        ORDER_ID_ERROR("订单ID无效");
 
         order(String msg) {
             this.msg = msg;
@@ -455,8 +451,7 @@ public class HttpMsg {
         MERCHANT_NUMBER_ERROR("商户号错误"),
         MERCHANT_EXAMINE_SUCCESS("审核成功"),
         MERCHANT_NO_REGISTER("该商户未注册"),
-        MERCHANT_PHONE_REGISTER("该手机号已注册")
-        ;
+        MERCHANT_PHONE_REGISTER("该手机号已注册");
 
         merchant(String msg) {
             this.msg = msg;
@@ -478,10 +473,28 @@ public class HttpMsg {
         CAROUSE_DATA_SUCCESS("轮播图数据查询成功"),
         CAROUSE_ADD_SUCCESS("轮播图添加成功"),
         CAROUSE_END_DATE_ERROR("结束时间不能小于开始时间"),
-        CAROUSE_DATE_ERROR("开始时间或结束时间不能小于当前时间")
-        ;
+        CAROUSE_DATE_ERROR("开始时间或结束时间不能小于当前时间");
 
         carouse(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 物流
+     */
+    public enum delivery {
+        DELIVERY_SN_ERROR("物流编号错误"),
+        DELIVERY_ORDER_SUCCESS("订单发货成功");
+
+        delivery(String msg) {
             this.msg = msg;
         }
 

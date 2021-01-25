@@ -144,6 +144,8 @@
         co.t_order_member_id AS memberId,
         co.t_order_address_id AS addressId,
         co.t_order_buyer_name AS buyerName,
+        co.t_order_delivery_company AS orderDeliveryCompany,
+        co.t_order_delivery_number AS orderDeliveryNumber,
         cos.t_order_status AS orderStatus
         from
         codeworld_order AS co
@@ -153,7 +155,7 @@
     </select>
 
     <!-- 根据会员id查询订单状态下的数量 -->
-    <select id="OrderStatusCount" parameterType="java.lang.Long" resultType="com.codeworld.fc.order.domain.OrderCount">
+    <select id="getOrderStatusCount" parameterType="java.lang.Long" resultType="com.codeworld.fc.order.domain.OrderCount">
 
         select
         cos.t_order_status AS orderStatus,
@@ -172,6 +174,18 @@
         codeworld_order
         set
         t_order_actual_pay = #{actualPay}
+        where
+        t_order_id = #{id}
+    </update>
+
+    <!-- 订单发货 -->
+    <update id="orderDelivery" parameterType="com.codeworld.fc.order.entity.Order">
+        update
+        codeworld_order
+        set
+        t_order_delivery_company = #{orderDeliveryCompany},
+        t_order_delivery_sn = #{orderDeliverySn},
+        t_order_delivery_number = #{orderDeliveryNumber}
         where
         t_order_id = #{id}
     </update>
