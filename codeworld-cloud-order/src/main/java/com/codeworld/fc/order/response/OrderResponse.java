@@ -51,4 +51,7 @@ public class OrderResponse {
     @ApiModelProperty("商品信息")
     private List<ProductModel> productModels;
 
+    @ApiModelProperty("订单退款退货状态")
+    private Integer orderReturnStatus;
+
 }

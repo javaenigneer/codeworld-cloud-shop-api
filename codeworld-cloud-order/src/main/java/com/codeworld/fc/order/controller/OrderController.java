@@ -82,4 +82,10 @@ public class OrderController {
     public FCResponse<Void> orderDelivery(@RequestBody @Valid OrderDeliveryMessage orderDeliveryMessage){
         return this.orderService.orderDelivery(orderDeliveryMessage);
     }
+
+    @PostMapping("refund-order")
+    @ApiOperation("订单退款")
+    public FCResponse<Void> refundOrder(@RequestParam("orderId") Long orderId){
+        return this.orderService.refundOrder(orderId);
+    }
 }

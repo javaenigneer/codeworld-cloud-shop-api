@@ -75,4 +75,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> orderDelivery(OrderDeliveryMessage orderDeliveryMessage);
+
+    /**
+     * 订单退款
+     * @param orderId
+     * @return
+     */
+    FCResponse<Void> refundOrder(Long orderId);
 }

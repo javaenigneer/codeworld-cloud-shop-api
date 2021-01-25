@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.order.mapper.OrderReturnMapper">
+
+    <resultMap id="BaseOrderReturnMap" type="com.codeworld.fc.order.entity.OrderReturn">
+
+        <id property="orderReturnId" column="t_return_order__id"/>
+        <result property="orderId" column="t_order_id"/>
+        <result property="orderReturnStatus" column="t_return_order_status"/>
+        <result property="orderReturnHandleTime" column="t_return_handle_time"/>
+        <result property="orderReturnReason" column="t_return_order_reason"/>
+        <result property="orderReturnApplyTime" column="t_return_order_apply_time"/>
+    </resultMap>
+
+    <!-- 添加退款退货 -->
+    <insert id="addOrderReturn" parameterType="com.codeworld.fc.order.entity.OrderReturn">
+        insert into codeworld_order_return
+        (
+        t_return_order__id,
+        t_order_id,
+        t_return_order_status,
+        t_return_order_apply_time
+        )
+        values
+        (
+        #{orderReturnId},
+        #{orderId},
+        #{orderReturnStatus},
+        #{orderReturnApplyTime}
+        )
+    </insert>
+</mapper>

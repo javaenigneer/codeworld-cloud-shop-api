@@ -18,10 +18,12 @@ import com.codeworld.fc.order.client.MerchantClient;
 import com.codeworld.fc.order.domain.*;
 import com.codeworld.fc.order.entity.Order;
 import com.codeworld.fc.order.entity.OrderDetail;
+import com.codeworld.fc.order.entity.OrderReturn;
 import com.codeworld.fc.order.entity.OrderStatus;
 import com.codeworld.fc.order.interceptor.AuthInterceptor;
 import com.codeworld.fc.order.mapper.OrderDetailMapper;
 import com.codeworld.fc.order.mapper.OrderMapper;
+import com.codeworld.fc.order.mapper.OrderReturnMapper;
 import com.codeworld.fc.order.mapper.OrderStatusMapper;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
@@ -71,6 +73,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusMapper orderStatusMapper;
     @Autowired(required = false)
     private OrderDetailMapper orderDetailMapper;
+    @Autowired(required = false)
+    private OrderReturnMapper orderReturnMapper;
 
     @Autowired(required = false)
     private StringRedisTemplate stringRedisTemplate;
@@ -176,6 +180,7 @@ public class OrderServiceImpl implements OrderService {
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         PageInfo<OrderResponse> pageInfo = new PageInfo<>(orderResponses);
+        AtomicReference<Integer> count = new AtomicReference<>(0);
         // 循环查询订单下的商品信息
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
@@ -196,8 +201,10 @@ public class OrderServiceImpl implements OrderService {
                 productSkuModel = JsonUtils.parse(orderDetail.getProductSkuDetail(), ProductSkuModel.class);
                 productModel.setProductSkuModel(productSkuModel);
                 productModels.add(productModel);
+                count.updateAndGet(v -> v + orderDetail.getProductCount());
             });
             orderResponse.setProductModels(productModels);
+            orderResponse.setCount(count.get());
         });
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), pageInfo.getList());
     }
@@ -514,11 +521,12 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
+    @Transactional
     public FCResponse<Void> orderDelivery(OrderDeliveryMessage orderDeliveryMessage) {
 
         String name = DeliveryEnum.getDeliveryNameByKey(orderDeliveryMessage.getLogisticsCompany());
-        if (StringUtils.isEmpty(name)){
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.delivery.DELIVERY_SN_ERROR.getMsg());
+        if (StringUtils.isEmpty(name)) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.delivery.DELIVERY_SN_ERROR.getMsg());
         }
 
         Order order = new Order();
@@ -535,7 +543,50 @@ public class OrderServiceImpl implements OrderService {
             orderStatus.setOrderStatus(3);
             orderStatus.setConsignTime(new Date());
             this.orderStatusMapper.updateOrderStatus(orderStatus);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.delivery.DELIVERY_ORDER_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.delivery.DELIVERY_ORDER_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 订单退款
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    @Transactional
+    public FCResponse<Void> refundOrder(Long orderId) {
+        if (ObjectUtils.isEmpty(orderId) || orderId <= 0) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
+        }
+        // 根据订单id查询是否存在
+        OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderId(orderId);
+        if (ObjectUtils.isEmpty(orderStatus)) {
+            log.info("退款订单不存在，订单id为{}", orderId);
+        }
+        // 判断当前订单的状态是否是未发货
+        if (orderStatus.getOrderStatus() != 2){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
+        }
+        // 发起退款
+        OrderReturn orderReturn = new OrderReturn();
+        orderReturn.setOrderReturnId(idWorker.nextId());
+        orderReturn.setOrderId(orderId);
+        // 设置为0订单退款退货待处理
+        orderReturn.setOrderReturnStatus(0);
+        orderReturn.setOrderReturnApplyTime(new Date());
+        try {
+            // 发起退款货
+            this.orderReturnMapper.addOrderReturn(orderReturn);
+            // 将订单状态修改为售后服务
+            orderStatus.setOrderId(orderId);
+            orderStatus.setOrderStatus(8);
+            orderStatus.setCloseTime(new Date());
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_RETURN_APPLY_SUCCESS.getMsg());
         }catch (Exception e){
             e.printStackTrace();
             throw new FCException("系统错误");
