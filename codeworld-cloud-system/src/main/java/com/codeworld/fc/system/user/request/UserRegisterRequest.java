@@ -43,4 +43,11 @@ public class UserRegisterRequest {
     @NotNull(message = "用户部门为空")
     private Long deptIds;
 
+    @ApiModelProperty("用户区域")
+    @NotNull(message = "请选择用户区域")
+    private String areaName;
+
+    @ApiModelProperty("区域id")
+    @NotNull(message = "请选择用户区域")
+    private Long areaId;
 }

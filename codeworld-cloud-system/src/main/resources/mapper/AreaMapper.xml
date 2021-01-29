@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.system.area.mapper.AreaMapper">
+
+    <resultMap id="BaseAreaMap" type="com.codeworld.fc.system.area.entity.Area">
+
+        <id property="id" column="t_area_id"/>
+        <result property="parentId" column="t_parent_id"/>
+        <result property="name" column="t_area_name"/>
+        <result property="sortNo" column="t_area_sort_no"/>
+    </resultMap>
+
+    <!-- 查询全部地区 -->
+    <select id="getAllArea" resultMap="BaseAreaMap">
+        select
+        *
+        from
+        codeworld_area
+    </select>
+</mapper>

@@ -31,6 +31,9 @@ public class UserSearchRequest extends PageQuery {
     @ApiModelProperty("用户状态")
     private Integer userStatus;
 
+    @ApiModelProperty("区域Id")
+    private Long areaId;
+
     @ApiModelProperty("创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8", locale = "zh")
     private Date createTime;

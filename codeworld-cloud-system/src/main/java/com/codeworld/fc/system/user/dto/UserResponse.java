@@ -32,6 +32,8 @@ public class UserResponse {
     private String userRole;
     @ApiModelProperty("用户部门")
     private String userDept;
+    @ApiModelProperty("用户区域")
+    private String userArea;
     @ApiModelProperty("创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;

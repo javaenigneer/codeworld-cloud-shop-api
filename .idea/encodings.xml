@@ -27,6 +27,7 @@
     <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/resources/mapper" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/resources/mapper/AreaMapper.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/resources/mapper/DeptMapper.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/resources/mapper/MenuMapper.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-system/src/main/resources/mapper/RoleMapper.xml" charset="UTF-8" />

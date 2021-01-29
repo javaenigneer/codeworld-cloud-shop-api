@@ -194,6 +194,8 @@ public class UserServiceImpl implements UserService {
             user.setUserPhone(userUpdateRequest.getUserPhone());
             user.setUpdateTime(new Date());
             user.setUserStatus(userUpdateRequest.getUserStatus());
+            user.setAreaId(userUpdateRequest.getAreaId());
+            user.setAreaName(userUpdateRequest.getAreaName());
             this.userMapper.updateUser(user);
             // 更新用户角色
             // 先删除角色id

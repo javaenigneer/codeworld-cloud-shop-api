@@ -423,8 +423,7 @@ public class HttpMsg {
         ORDER_MONEY_ERROR("订单金额错误"),
         ORDER_ID_ERROR("订单ID无效"),
         ORDER_STATUS_ERROR("订单状态错误，不能发起退款"),
-        ORDER_RETURN_APPLY_SUCCESS("订单退款申请成功")
-        ;
+        ORDER_RETURN_APPLY_SUCCESS("订单退款申请成功");
 
         order(String msg) {
             this.msg = msg;
@@ -498,6 +497,24 @@ public class HttpMsg {
         DELIVERY_ORDER_SUCCESS("订单发货成功");
 
         delivery(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 地区
+     */
+    public enum area {
+        AREA_GET_SUCCESS("地区查询成功");
+
+        area(String msg) {
             this.msg = msg;
         }
 

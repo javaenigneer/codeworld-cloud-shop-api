@@ -31,6 +31,7 @@
         cu.t_user_email AS userEmail,
         cu.t_user_phone AS userPhone,
         cu.t_user_status AS userStatus,
+        cu.t_area_name AS userArea,
         cu.t_create_time AS createTime,
         cu.t_update_time AS updateTime,
         cr.t_role_name AS userRole,
@@ -52,6 +53,9 @@
             </if>
             <if test="userStatus != null">
                 and  cu.t_user_status = #{userStatus}
+            </if>
+            <if test="areaId != null">
+                and  cu.t_area_id = #{areaId}
             </if>
             <if test="createTime != null ">
                 <![CDATA[
@@ -86,6 +90,7 @@ cu.t_user_name As userName,
 cu.t_user_email AS userEmail,
 cu.t_user_phone AS userPhone,
 cu.t_user_status AS userStatus,
+cu.t_area_name AS areaName,
 cu.t_create_time AS createTime,
 cu.t_update_time AS updateTime,
 cd.t_dept_name AS deptName
@@ -96,10 +101,6 @@ where cud.t_dept_id = #{deptId}
 order by cu.t_create_time DESC
     </select>
 
-<!--&lt;!&ndash;    &lt;!&ndash; 获取全部用户数量 &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <select id="getAllUserCount" resultType="java.lang.Long">&ndash;&gt;-->
-<!--&lt;!&ndash;        select count(t_user_id) from codeworld_user&ndash;&gt;-->
-<!--&lt;!&ndash;    </select>&ndash;&gt;-->
     <!-- 修改语句 -->
     <!-- 修改用户状态 -->
     <update id="updateUserStatus" parameterType="com.codeworld.fc.system.user.entity.User">
@@ -117,6 +118,8 @@ order by cu.t_create_time DESC
         t_user_email = #{userEmail},
         t_user_phone = #{userPhone},
         t_user_status = #{userStatus},
+        t_area_id = #{areaId},
+        t_area_name = #{areaName},
         t_update_time = #{updateTime}
         where t_user_id = #{userId}
     </update>
@@ -136,6 +139,8 @@ order by cu.t_create_time DESC
         t_user_email,
         t_user_phone,
         t_user_status,
+        t_area_name,
+        t_area_id,
         t_create_time,
         t_update_time)
         values (
@@ -144,6 +149,8 @@ order by cu.t_create_time DESC
         #{userEmail},
         #{userPhone},
         #{userStatus},
+        #{areaName},
+        #{areaId},
         #{createTime},
         #{updateTime}
         );

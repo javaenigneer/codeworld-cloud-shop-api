@@ -1,5 +1,6 @@
 package com.codeworld.fc.system.user.controller;
 
+import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.system.user.dto.UserDeptResponse;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.channels.FileChannel;
 import java.util.List;
 
 /**

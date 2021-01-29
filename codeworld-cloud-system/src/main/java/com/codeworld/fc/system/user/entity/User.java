@@ -33,6 +33,12 @@ public class User {
     @ApiModelProperty("用户状态")
     private Integer userStatus;
 
+    @ApiModelProperty("用户区域")
+    private String areaName;
+
+    @ApiModelProperty("区域Id")
+    private Long areaId;
+
     @ApiModelProperty("创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;

@@ -272,7 +272,7 @@ public class OrderServiceImpl implements OrderService {
         orderStatus.setOrderId(orderId);
         orderStatus.setOrderStatus(7);
         this.orderStatusMapper.updateOrderStatus(orderStatus);
-        log.error("订单已关闭，订单号：{}", orderId);
+        log.info("订单已关闭，订单号：{}", orderId);
     }
 
     /**
