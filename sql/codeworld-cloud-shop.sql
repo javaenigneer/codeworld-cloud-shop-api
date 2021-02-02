@@ -11,7 +11,7 @@
  Target Server Version : 50640
  File Encoding         : 65001
 
- Date: 29/01/2021 14:11:57
+ Date: 02/02/2021 15:16:30
 */
 
 SET NAMES utf8mb4;
@@ -3821,6 +3821,7 @@ INSERT INTO `codeworld_menu` VALUES (1001, 1000, '/system-role', 'role', '角色
 INSERT INTO `codeworld_menu` VALUES (1002, 1000, '/system-menu', 'menu', '菜单管理', 'menu', '菜单管理', 1, '2020-09-18 17:48:41', '2020-09-18 17:48:43');
 INSERT INTO `codeworld_menu` VALUES (1003, 1002, '/system-menu/add-menu', 'menu:add', '添加菜单', 'button', '添加菜单', 1, '2020-09-18 17:50:09', '2020-09-18 17:50:11');
 INSERT INTO `codeworld_menu` VALUES (85834, 431133, '/system-user/delete-user', 'user:delete', '删除用户', 'button', '删除一个用户', 5, '2020-09-20 10:33:56', '2020-09-20 10:33:56');
+INSERT INTO `codeworld_menu` VALUES (125441, 906682, '/codeworld-mercahnt/examine-merchant', 'merchant:examine', '审核商户', 'button', '审核商户', 4, '2021-02-01 11:49:28', '2021-02-01 11:49:28');
 INSERT INTO `codeworld_menu` VALUES (142731, 911538, '/codeworld-order/get-order-info-id', 'order:view', '查看订单', 'button', '查看订单', 2, '2021-01-08 17:05:08', '2021-01-08 17:05:08');
 INSERT INTO `codeworld_menu` VALUES (183517, 934228, '/codeworld-marketing/get-page-index-carouse', 'index-carouse', '首页轮播图', 'menu', '首页轮播图', 1, '2021-01-13 14:25:45', '2021-01-13 15:43:12');
 INSERT INTO `codeworld_menu` VALUES (192975, 0, '/system-goods', 'systemGoods', '商品管理', 'menu', '商品管理', 1, '2020-11-27 17:09:00', '2020-11-27 17:09:00');
@@ -3830,6 +3831,7 @@ INSERT INTO `codeworld_menu` VALUES (399716, 431133, '/system-user/enable-user',
 INSERT INTO `codeworld_menu` VALUES (414011, 1002, '/system-menu/delete-menu', 'menu:delete', '删除菜单', 'button', '删除菜单', 2, '2020-09-21 15:44:09', '2020-09-21 15:44:09');
 INSERT INTO `codeworld_menu` VALUES (422057, 192975, '/codeworld-goods/product', 'product', '商品信息', 'menu', '商品信息', 1, '2020-11-28 22:14:12', '2020-11-28 22:14:12');
 INSERT INTO `codeworld_menu` VALUES (431133, 1000, '/system-user', 'user', '用户管理', 'menu', '用户管理', 1, '2020-09-19 14:36:18', '2020-09-19 14:36:18');
+INSERT INTO `codeworld_menu` VALUES (436112, 906682, '/codeworld-merchant/merchant-settled', 'merchant:settled', '商户入驻', 'button', '商户入驻', 3, '2021-01-29 17:19:27', '2021-01-29 17:19:27');
 INSERT INTO `codeworld_menu` VALUES (453077, 422057, '/codeworld-system/product/update-product-status', 'product:onSale', '上架商品', 'button', '上架商品信息', 1, '2021-01-06 09:28:22', '2021-01-06 09:28:22');
 INSERT INTO `codeworld_menu` VALUES (482527, 422057, '/codeworld-goods/product/add-product', 'product:add', '添加商品', 'button', '添加商品', 1, '2020-11-28 22:15:20', '2020-11-28 22:15:20');
 INSERT INTO `codeworld_menu` VALUES (483295, 103177, '/system-job/add-delete', 'job:delete', '添加任务', 'button', '添加任务', 1, '2020-09-22 17:07:14', '2020-09-22 17:07:14');
@@ -3838,6 +3840,7 @@ INSERT INTO `codeworld_menu` VALUES (523925, 718023, '/codeworld-goods/category/
 INSERT INTO `codeworld_menu` VALUES (639590, 1001, '/system-user/delete-user', 'role:delete', '删除角色', 'button', '删除角色', 3, '2020-09-19 15:21:10', '2020-09-19 15:21:10');
 INSERT INTO `codeworld_menu` VALUES (652737, 192975, '/codeworld-goods/category-attribute', 'category-attribute', '分类属性', 'menu', '分类属性', 1, '2020-12-03 14:40:00', '2020-12-03 14:40:00');
 INSERT INTO `codeworld_menu` VALUES (652906, 422057, '/codeworld-system/product/update-product-status ', 'product:offSale', '下架商品', 'button', '下架商品信息', 2, '2021-01-06 09:29:07', '2021-01-06 09:29:07');
+INSERT INTO `codeworld_menu` VALUES (674600, 906682, '/codeworld-merchant/add-merchant', 'merchant:add', '添加商户', 'button', '添加商户，只能商户管理员来添加', 2, '2021-01-29 14:43:42', '2021-01-29 14:43:42');
 INSERT INTO `codeworld_menu` VALUES (712174, 911538, '/codeworld-order/order-delivery', 'order:delivery', '订单发货', 'button', '订单发货', 4, '2021-01-10 12:31:52', '2021-01-10 12:31:52');
 INSERT INTO `codeworld_menu` VALUES (718023, 192975, '/codeworld-goods/category', 'category', '分类管理', 'menu', '分类管理', 1, '2020-11-28 21:37:45', '2020-11-28 21:37:45');
 INSERT INTO `codeworld_menu` VALUES (731821, 177739, '/system-login-log/delete-login-log', 'login-log:delete', '删除登录日志', 'button', '删除登录日志', 1, '2020-10-10 15:34:23', '2020-10-10 15:34:23');
@@ -3867,14 +3870,17 @@ CREATE TABLE `codeworld_merchant`  (
   `t_merchant_phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商户手机',
   `t_merchant_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商户登录密码',
   `t_merchant_create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `t_merchant_follow_user` bigint(20) NULL DEFAULT NULL COMMENT '商户跟进人id',
   PRIMARY KEY (`t_merchant_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of codeworld_merchant
 -- ----------------------------
-INSERT INTO `codeworld_merchant` VALUES (1608851327, '21181611095746339', 'codeworld', '15281223317', '123456', '2021-01-07 17:04:35');
-INSERT INTO `codeworld_merchant` VALUES (1609046703, '21181608848696318', 'code', '15281223316', '123456', '2021-01-05 16:42:14');
+INSERT INTO `codeworld_merchant` VALUES (1608851327, '21181611095746339', 'codeworld', '15281223317', '123456', '2021-01-07 17:04:35', 500649);
+INSERT INTO `codeworld_merchant` VALUES (1609046703, '21181608848696318', 'code', '15281223316', '123456', '2021-01-05 16:42:14', 500649);
+INSERT INTO `codeworld_merchant` VALUES (1610747344, '21181612991763080', 'test', '15281223318', '123456', '2021-01-29 15:44:52', 500649);
+INSERT INTO `codeworld_merchant` VALUES (1610749076, '21181612993494969', 'code-fc', '15281223314', '123456', '2021-01-29 16:13:44', 500649);
 
 -- ----------------------------
 -- Table structure for codeworld_merchant_detail
@@ -3897,6 +3903,8 @@ CREATE TABLE `codeworld_merchant_detail`  (
 -- ----------------------------
 INSERT INTO `codeworld_merchant_detail` VALUES ('21181608848696318', '测试商户入驻', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/04/41881609743943658.jpg', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/04/41881609743943658.jpg', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/04/41881609743943658.jpg', 1, 1, '2021-01-05 16:58:15');
 INSERT INTO `codeworld_merchant_detail` VALUES ('21181611095746339', '测试商户入驻2', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/04/41881609743943658.jpg', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/04/41881609743943658.jpg', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/04/41881609743943658.jpg', 1, 1, '2021-01-07 17:05:19');
+INSERT INTO `codeworld_merchant_detail` VALUES ('21181612991763080', NULL, NULL, NULL, NULL, NULL, 3, NULL);
+INSERT INTO `codeworld_merchant_detail` VALUES ('21181612993494969', '测试商户入驻3', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/01/23011612150085833.jpg', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/01/89891612150146242.jpg', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/01/48871612150156143.jpg', 1, 0, '2021-02-01 11:30:29');
 
 -- ----------------------------
 -- Table structure for codeworld_order
@@ -3922,7 +3930,7 @@ CREATE TABLE `codeworld_order`  (
 -- ----------------------------
 -- Records of codeworld_order
 -- ----------------------------
-INSERT INTO `codeworld_order` VALUES (21048671759173696, 4, 4, NULL, NULL, 838395, 1000, NULL, 'CodeWorld', '2021-01-07 17:36:57', NULL, NULL, NULL);
+INSERT INTO `codeworld_order` VALUES (21048671759173696, 4, 4, NULL, NULL, 838395, 1000, NULL, 'CodeWorld', '2021-01-07 17:36:57', '中通快递', 2, 'ZT1612163022283');
 INSERT INTO `codeworld_order` VALUES (21048732140963904, 10000, 10000, NULL, NULL, 838395, 1000, NULL, 'CodeWorld', '2021-01-07 17:52:18', '圆通快递', 1, 'YT1611544449832');
 INSERT INTO `codeworld_order` VALUES (21069524015122496, 99, 99, NULL, NULL, 838395, 1000, NULL, 'CodeWorld', '2021-01-11 09:59:58', NULL, NULL, NULL);
 INSERT INTO `codeworld_order` VALUES (21069544944699456, 1, 1, NULL, NULL, 838395, 1000, NULL, 'CodeWorld', '2021-01-11 10:05:17', NULL, NULL, NULL);
@@ -3963,19 +3971,20 @@ INSERT INTO `codeworld_order_detail` VALUES (755418, 21048732140963904, 189609, 
 -- ----------------------------
 DROP TABLE IF EXISTS `codeworld_order_return`;
 CREATE TABLE `codeworld_order_return`  (
-  `t_return_order__id` bigint(20) NOT NULL COMMENT '退货订单主键id',
+  `t_return_order_id` bigint(20) NOT NULL COMMENT '退货订单主键id',
   `t_order_id` bigint(20) NULL DEFAULT NULL COMMENT '订单id',
   `t_return_order_status` int(1) NULL DEFAULT NULL COMMENT '订单退货 退款状态 0--待处理 1--退款中 2--退款成功 3--退货中 4--退货成功 5--拒绝退货',
   `t_return_handle_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   `t_return_order_reason` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '退货原因',
   `t_return_order_apply_time` datetime(0) NULL DEFAULT NULL COMMENT '订单退款退货申请时间',
-  PRIMARY KEY (`t_return_order__id`) USING BTREE
+  `t_return_order_type` int(1) NULL DEFAULT NULL COMMENT '订单服务类型 1--退款 3---退货',
+  PRIMARY KEY (`t_return_order_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of codeworld_order_return
 -- ----------------------------
-INSERT INTO `codeworld_order_return` VALUES (21150279511705664, 21069544944699456, 0, NULL, NULL, '2021-01-25 16:17:08');
+INSERT INTO `codeworld_order_return` VALUES (21150279511705664, 21069544944699456, 1, '2021-02-02 15:03:22', NULL, '2021-01-25 16:17:08', 1);
 
 -- ----------------------------
 -- Table structure for codeworld_order_status
@@ -3995,7 +4004,7 @@ CREATE TABLE `codeworld_order_status`  (
 -- ----------------------------
 -- Records of codeworld_order_status
 -- ----------------------------
-INSERT INTO `codeworld_order_status` VALUES (21048671759173696, 2, '2021-01-07 17:36:57', '2021-01-07 17:36:59', NULL, NULL, NULL);
+INSERT INTO `codeworld_order_status` VALUES (21048671759173696, 3, '2021-01-07 17:36:57', '2021-01-07 17:36:59', '2021-02-01 15:03:42', NULL, NULL);
 INSERT INTO `codeworld_order_status` VALUES (21048732140963904, 3, '2021-01-07 17:52:18', '2021-01-07 17:52:19', '2021-01-25 11:14:10', NULL, NULL);
 INSERT INTO `codeworld_order_status` VALUES (21069524015122496, 2, '2021-01-11 09:59:58', '2021-01-11 10:02:37', NULL, NULL, NULL);
 INSERT INTO `codeworld_order_status` VALUES (21069544944699456, 8, '2021-01-11 10:05:17', '2021-01-11 10:05:19', NULL, NULL, '2021-01-25 16:17:08');
@@ -4138,87 +4147,70 @@ CREATE TABLE `codeworld_role_menu`  (
 -- ----------------------------
 -- Records of codeworld_role_menu
 -- ----------------------------
-INSERT INTO `codeworld_role_menu` VALUES (25560, 1, 934228, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (26670, 853858, 911538, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (33293, 853858, 887057, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
+INSERT INTO `codeworld_role_menu` VALUES (34874, 1, 759155, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (46986, 1, 431133, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
 INSERT INTO `codeworld_role_menu` VALUES (61297, 127341, 1002, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (65239, 982301, 887057, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (87793, 853858, 506283, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (88058, 1, 482527, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (92725, 853858, 1001, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
+INSERT INTO `codeworld_role_menu` VALUES (92304, 1, 422057, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
 INSERT INTO `codeworld_role_menu` VALUES (104192, 127341, 1001, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (131377, 853858, 982791, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (137984, 1, 1002, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (149449, 1, 906682, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (183353, 853858, 806101, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (196364, 1, 431133, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (211434, 1, 940513, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (216704, 853858, 142731, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (230093, 853858, 431133, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (260067, 1, 652737, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (262096, 1, 85834, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (262834, 1, 948807, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (265431, 1, 422057, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (267067, 1, 982791, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (272336, 853858, 652906, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (283839, 982301, 1001, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (297487, 1, 652906, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (307599, 1, 248235, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (319000, 1, 887057, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (328428, 1, 399716, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (337363, 1, 183517, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
+INSERT INTO `codeworld_role_menu` VALUES (126521, 1, 751273, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (130097, 1, 934228, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (145885, 853858, 453077, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (182448, 853858, 911538, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (196989, 31845, 940513, '2021-02-01 11:49:38', '2021-02-01 11:49:38');
+INSERT INTO `codeworld_role_menu` VALUES (218093, 1, 482527, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (235245, 853858, 482527, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (239369, 853858, 1003, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (243470, 31845, 674600, '2021-02-01 11:49:38', '2021-02-01 11:49:38');
+INSERT INTO `codeworld_role_menu` VALUES (249483, 31845, 125441, '2021-02-01 11:49:38', '2021-02-01 11:49:38');
+INSERT INTO `codeworld_role_menu` VALUES (253913, 1, 1000, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (283273, 1, 85834, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (288111, 1, 948807, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (291856, 1, 940513, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (298916, 1, 453077, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (307250, 31845, 906682, '2021-02-01 11:49:38', '2021-02-01 11:49:38');
+INSERT INTO `codeworld_role_menu` VALUES (308663, 1, 1003, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (341815, 1, 652737, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (342954, 982301, 1003, '2021-02-01 09:28:04', '2021-02-01 09:28:04');
 INSERT INTO `codeworld_role_menu` VALUES (353700, 127341, 759155, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (361259, 1, 789006, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (393265, 982301, 854257, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (405391, 853858, 192975, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (420738, 853858, 399716, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (448385, 853858, 948807, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (472503, 1, 759155, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (482728, 1, 373292, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (483883, 1, 854257, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (493235, 1, 1001, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (499029, 853858, 759155, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (548258, 853858, 453077, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (585919, 1, 506283, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (590295, 982301, 483295, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
+INSERT INTO `codeworld_role_menu` VALUES (366230, 982301, 436112, '2021-02-01 09:28:04', '2021-02-01 09:28:04');
+INSERT INTO `codeworld_role_menu` VALUES (390027, 1, 789006, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (397710, 1, 1001, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (432381, 1, 523925, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (439522, 1, 183517, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (442525, 853858, 436112, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (448031, 853858, 414011, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (455687, 1, 192975, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (478625, 853858, 142731, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (489968, 853858, 806101, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (490228, 853858, 248235, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (492084, 1, 506283, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (541023, 1, 911538, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (552607, 1, 142731, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (556668, 853858, 422057, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
 INSERT INTO `codeworld_role_menu` VALUES (594825, 127341, 506283, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (608214, 1, 142731, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (612354, 853858, 482527, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (614538, 31845, 906682, '2021-01-28 17:10:52', '2021-01-28 17:10:52');
-INSERT INTO `codeworld_role_menu` VALUES (629691, 853858, 767865, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (630491, 1, 718023, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (635203, 1, 639590, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (644426, 982301, 431133, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (656538, 982301, 1000, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (660793, 1, 523925, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (701856, 982301, 506283, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (709127, 853858, 523925, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (742871, 853858, 85834, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (755549, 1, 1000, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (756381, 1, 192975, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (758335, 31845, 940513, '2021-01-28 17:10:52', '2021-01-28 17:10:52');
-INSERT INTO `codeworld_role_menu` VALUES (774729, 853858, 1003, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (783101, 853858, 639590, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (799065, 1, 806101, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (805040, 853858, 373292, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (810543, 1, 453077, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (813463, 853858, 712174, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (840329, 1, 767865, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (887992, 853858, 854257, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (892825, 982301, 1003, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (908468, 982301, 759155, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (910197, 1, 414011, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
+INSERT INTO `codeworld_role_menu` VALUES (614048, 1, 414011, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (642621, 1, 639590, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (658196, 1, 373292, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (671948, 853858, 712174, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (674287, 1, 887057, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (691383, 1, 652906, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (699792, 1, 806101, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (734920, 853858, 523925, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (739567, 853858, 192975, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (754583, 1, 1002, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (783713, 1, 399716, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (797478, 1, 982791, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (812699, 853858, 373292, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
+INSERT INTO `codeworld_role_menu` VALUES (815070, 1, 248235, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (857947, 1, 767865, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (866942, 1, 854257, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (869972, 1, 718023, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
 INSERT INTO `codeworld_role_menu` VALUES (920762, 127341, 431133, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (927562, 853858, 422057, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (933230, 1, 1003, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
+INSERT INTO `codeworld_role_menu` VALUES (944618, 853858, 652906, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
 INSERT INTO `codeworld_role_menu` VALUES (949335, 127341, 1000, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (949959, 853858, 789006, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (960705, 1, 751273, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (967601, 853858, 414011, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (983574, 1, 911538, '2021-01-13 15:42:21', '2021-01-13 15:42:21');
-INSERT INTO `codeworld_role_menu` VALUES (985573, 853858, 1002, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (995763, 853858, 248235, '2021-01-10 12:36:22', '2021-01-10 12:36:22');
-INSERT INTO `codeworld_role_menu` VALUES (999579, 982301, 1002, '2020-11-06 09:15:01', '2020-11-06 09:15:01');
+INSERT INTO `codeworld_role_menu` VALUES (950904, 982301, 854257, '2021-02-01 09:28:04', '2021-02-01 09:28:04');
+INSERT INTO `codeworld_role_menu` VALUES (980743, 1, 906682, '2021-01-29 14:44:52', '2021-01-29 14:44:52');
+INSERT INTO `codeworld_role_menu` VALUES (982439, 853858, 948807, '2021-02-01 14:54:11', '2021-02-01 14:54:11');
 
 -- ----------------------------
 -- Table structure for codeworld_stock
@@ -4255,9 +4247,9 @@ CREATE TABLE `codeworld_user`  (
 -- ----------------------------
 -- Records of codeworld_user
 -- ----------------------------
-INSERT INTO `codeworld_user` VALUES (434870, '1111', NULL, '1692454247@qq.com', '15281223316', 1, '四川省,眉山市,仁寿县', '2020-11-05 10:13:02', '2021-01-29 11:49:20', 511421);
-INSERT INTO `codeworld_user` VALUES (500649, 'merchant0001', NULL, '1692454247@qq.com', '15281223316', 1, '辽宁省,大连市,市辖区,中山区', '2021-01-28 17:10:29', '2021-01-29 11:47:56', 210202);
-INSERT INTO `codeworld_user` VALUES (594594, 'merchant0002', NULL, '1692454247@qq.com', '15281223316', 1, '河北省,唐山市,滦县', '2021-01-29 10:32:22', '2021-01-29 11:44:45', 130223);
+INSERT INTO `codeworld_user` VALUES (434870, 'codeworld', NULL, '1692454247@qq.com', '15281223316', 1, '四川省,眉山市,仁寿县', '2020-11-05 10:13:02', '2021-01-29 11:49:20', 511421);
+INSERT INTO `codeworld_user` VALUES (500649, 'FC000000', NULL, '1692454247@qq.com', '15281223316', 1, '辽宁省,大连市,市辖区,中山区', '2021-01-28 17:10:29', '2021-01-29 11:47:56', 210202);
+INSERT INTO `codeworld_user` VALUES (594594, 'FC000001', NULL, '1692454247@qq.com', '15281223316', 1, '河北省,唐山市,滦县', '2021-01-29 10:32:22', '2021-01-29 11:44:45', 130223);
 INSERT INTO `codeworld_user` VALUES (714564, 'FC', NULL, '1692454247@qq.com', '15281223316', 1, '辽宁省,大连市,市辖区,西岗区', '2020-11-06 09:21:02', '2021-01-29 11:48:12', 210203);
 INSERT INTO `codeworld_user` VALUES (722708, 'code', NULL, '1692454247@qq.com', '15281223316', 1, '四川省,成都市,市辖区,武侯区', '2020-11-05 17:01:13', '2021-01-29 11:48:57', 510107);
 
@@ -4301,9 +4293,11 @@ CREATE TABLE `codeworld_user_role`  (
 -- ----------------------------
 INSERT INTO `codeworld_user_role` VALUES (110485, 1, 434870, '2021-01-29 11:49:20', '2021-01-29 11:49:20');
 INSERT INTO `codeworld_user_role` VALUES (125360, 853858, 1608851327, '2021-01-07 17:04:35', '2021-01-07 17:04:35');
+INSERT INTO `codeworld_user_role` VALUES (142107, 982301, 1610747344, '2021-01-29 15:44:51', '2021-01-29 15:44:51');
 INSERT INTO `codeworld_user_role` VALUES (311835, 982301, 722708, '2021-01-29 11:48:57', '2021-01-29 11:48:57');
 INSERT INTO `codeworld_user_role` VALUES (654044, 853858, 714564, '2021-01-29 11:48:12', '2021-01-29 11:48:12');
 INSERT INTO `codeworld_user_role` VALUES (840122, 853858, 1609046703, '2021-01-05 16:42:14', '2021-01-05 16:42:14');
+INSERT INTO `codeworld_user_role` VALUES (873996, 853858, 1610749076, '2021-01-29 16:13:43', '2021-01-29 16:13:43');
 INSERT INTO `codeworld_user_role` VALUES (926419, 31845, 500649, '2021-01-29 11:47:56', '2021-01-29 11:47:56');
 INSERT INTO `codeworld_user_role` VALUES (938153, 31845, 594594, '2021-01-29 11:44:45', '2021-01-29 11:44:45');
 
