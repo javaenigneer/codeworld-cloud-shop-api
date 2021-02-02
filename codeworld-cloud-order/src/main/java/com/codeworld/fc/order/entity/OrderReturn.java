@@ -27,6 +27,9 @@ public class OrderReturn {
     @ApiModelProperty("订单退货退款状态")
     private Integer orderReturnStatus;
 
+    @ApiModelProperty("订单退款退货类型 1--退款 3--退货")
+    private Integer orderReturnType;
+
     @ApiModelProperty("订单退货退款处理时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderReturnHandleTime;

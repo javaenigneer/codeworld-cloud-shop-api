@@ -5,7 +5,7 @@
 
     <resultMap id="BaseOrderReturnMap" type="com.codeworld.fc.order.entity.OrderReturn">
 
-        <id property="orderReturnId" column="t_return_order__id"/>
+        <id property="orderReturnId" column="t_return_order_id"/>
         <result property="orderId" column="t_order_id"/>
         <result property="orderReturnStatus" column="t_return_order_status"/>
         <result property="orderReturnHandleTime" column="t_return_handle_time"/>
@@ -17,17 +17,68 @@
     <insert id="addOrderReturn" parameterType="com.codeworld.fc.order.entity.OrderReturn">
         insert into codeworld_order_return
         (
-        t_return_order__id,
+        t_return_order_id,
         t_order_id,
         t_return_order_status,
-        t_return_order_apply_time
+        t_return_order_apply_time,
+        t_return_order_type
         )
         values
         (
         #{orderReturnId},
         #{orderId},
         #{orderReturnStatus},
-        #{orderReturnApplyTime}
+        #{orderReturnApplyTime},
+        #{orderReturnType}
         )
     </insert>
+
+    <select id="getPageMerchantOrderReturn" parameterType="com.codeworld.fc.order.request.OrderSearchRequest"
+            resultType="com.codeworld.fc.order.response.OrderReturnResponse">
+
+        select
+        cor.t_return_order_id AS orderReturnId,
+        cor.t_order_id AS orderId,
+        cor.t_return_order_status AS orderReturnStatus,
+        cor.t_return_handle_time AS orderReturnHandleTime,
+        cor.t_return_order_reason AS orderReturnReason,
+        cor.t_return_order_apply_time AS orderReturnApplyTime,
+        cor.t_return_order_type AS orderReturnType,
+        co.t_order_total_pay AS totalPay,
+        co.t_order_actual_pay AS actualPay,
+        co.t_order_address_id AS addressId,
+        co.t_order_buyer_name AS buyerName,
+        co.t_order_create_time AS createTime
+        from
+        codeworld_order_return AS cor
+        left join codeworld_order AS co on cor.t_order_id = co.t_order_id
+        left join codeworld_order_detail AS cod on cor.t_order_id = cod.t_order_id
+        where cod.t_merchant_number = #{merchantNumber}
+        order by cor.t_return_order_apply_time
+    </select>
+
+    <select id="selectOrderReturnExistById" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select
+        count(t_return_order_id)
+        from
+        codeworld_order_return
+        where
+        t_return_order_id = #{orderReturnId}
+    </select>
+
+    <select id="getOrderReturnInfo" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.order.response.OrderReturnDetailResponse">
+
+        select
+        cor.t_return_order_id AS orderReturnId,
+        cor.t_return_order_status AS orderReturnStatus,
+        cor.t_order_id AS orderId,
+        cor.t_return_order_apply_time AS orderReturnApplyTime,
+        co.t_order_buyer_name AS buyerName,
+        co.t_order_address_id AS addressId
+        from
+        codeworld_order_return AS cor
+        left join codeworld_order AS co on cor.t_order_id = co.t_order_id
+        where cor.t_return_order_id and cor.t_return_order_id = #{orderReturnId}
+    </select>
 </mapper>

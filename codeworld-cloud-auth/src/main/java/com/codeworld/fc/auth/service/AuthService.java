@@ -61,4 +61,13 @@ public interface AuthService {
      * @return
      */
     FCResponse<MerchantInfo> getMerchantInfo(TokenRequest tokenRequest);
+
+    /**
+     * 商户登录商户系统
+     * @param systemLoginRequest
+     * @param request
+     * @param response
+     * @return
+     */
+    FCResponse<Map<String, Object>> merchantSystemLogin(SystemLoginRequest systemLoginRequest, HttpServletRequest request, HttpServletResponse response);
 }

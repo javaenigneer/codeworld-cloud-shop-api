@@ -1,5 +1,6 @@
 package com.codeworld.fc.upload.controller;
 
+import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.upload.service.UploadService;
 import io.swagger.annotations.ApiOperation;

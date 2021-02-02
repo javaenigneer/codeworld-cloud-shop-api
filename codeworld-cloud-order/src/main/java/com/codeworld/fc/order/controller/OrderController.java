@@ -1,18 +1,17 @@
 package com.codeworld.fc.order.controller;
 
+import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.order.domain.OrderDeliveryMessage;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
-import com.codeworld.fc.order.response.OrderDetailResponse;
-import com.codeworld.fc.order.response.OrderPageResponse;
-import com.codeworld.fc.order.response.OrderResponse;
-import com.codeworld.fc.order.response.OrderStatusCount;
+import com.codeworld.fc.order.response.*;
 import com.codeworld.fc.order.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.bouncycastle.asn1.ocsp.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,5 +88,16 @@ public class OrderController {
         return this.orderService.refundOrder(orderId);
     }
 
+    @PostMapping("get-page-merchant-order-return")
+    @ApiOperation("获取商户下订单退款退货列表")
+    public FCResponse<DataResponse<List<OrderReturnResponse>>> getPageMerchantOrderReturn(@RequestBody OrderSearchRequest orderSearchRequest){
+        return this.orderService.getPageMerchantOrderReturn(orderSearchRequest);
+    }
+
+    @PostMapping("get-order-return-info")
+    @ApiOperation("获取订单退款退货详情")
+    public FCResponse<OrderReturnDetailResponse> getOrderReturnInfo(@RequestParam("orderReturnId") Long orderReturnId){
+        return this.orderService.getOrderReturnInfo(orderReturnId);
+    }
 
 }

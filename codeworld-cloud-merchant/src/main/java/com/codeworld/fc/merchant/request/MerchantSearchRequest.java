@@ -29,4 +29,7 @@ public class MerchantSearchRequest extends PageQuery {
     @ApiModelProperty("更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8", locale = "zh")
     private Date updateTime;
+
+    @ApiModelProperty("商户跟进人")
+    private Long merchantFollowUser;
 }

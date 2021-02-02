@@ -31,11 +31,10 @@ public class MerchantController {
     @Autowired(required = false)
     private MerchantService merchantService;
 
-    @PostMapping("register-merchant")
-    @ApiOperation("商户注册")
-    @PassToken
-    public FCResponse<String> registerMerchant(@RequestBody @Valid MerchantRegisterRequest merchantRegisterRequest){
-        return this.merchantService.registerMerchant(merchantRegisterRequest);
+    @PostMapping("/web/register-merchant")
+    @ApiOperation("商户注册web端")
+    public FCResponse<String> registerMerchantWeb(@RequestBody @Valid MerchantRegisterRequest merchantRegisterRequest){
+        return this.merchantService.registerMerchantWeb(merchantRegisterRequest);
     }
 
     @PostMapping("check-merchant-phone")
@@ -91,5 +90,9 @@ public class MerchantController {
         return this.merchantService.getMerchantNumberAndNameById(merchantId);
     }
 
-
+    @GetMapping("judgment-merchant-set")
+    @ApiOperation("商户是否入驻")
+    public FCResponse<Integer> judgmentMerchantSet(){
+        return this.merchantService.judgmentMerchantSet();
+    }
 }

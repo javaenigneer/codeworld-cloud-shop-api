@@ -15,8 +15,8 @@ import javax.validation.constraints.Size;
  * Version 1.0
  **/
 @Data
-@ApiModel("web端商户注册Request")
-public class MerchantRegisterRequest {
+@ApiModel("app端商户注册Request")
+public class MerchantRegisterRequestApp {
 
     @ApiModelProperty("昵称")
     @Size(min = 4, max = 10, message = "昵称在4-10位")
@@ -33,4 +33,7 @@ public class MerchantRegisterRequest {
     @ApiModelProperty("验证码")
     @NotNull(message = "请输入验证码")
     private String code;
+
+    @ApiModelProperty("商户跟进人")
+    private Long merchantFollowUser;
 }

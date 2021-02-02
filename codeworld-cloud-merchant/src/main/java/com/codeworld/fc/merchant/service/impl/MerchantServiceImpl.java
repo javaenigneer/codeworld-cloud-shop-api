@@ -90,7 +90,7 @@ public class MerchantServiceImpl implements MerchantService {
      * @param merchantRegisterRequest
      * @return
      */
-    public FCResponse<String> registerMerchant(MerchantRegisterRequest merchantRegisterRequest) {
+    public FCResponse<String> registerMerchantWeb(MerchantRegisterRequest merchantRegisterRequest) {
         // 先从数据库中获取改手机号是否被注册
         Integer count = this.merchantMapper.checkMerchantByPhone(merchantRegisterRequest.getPhone());
         if (count != 0){
@@ -110,7 +110,11 @@ public class MerchantServiceImpl implements MerchantService {
             log.info("验证码错误");
             return FCResponse.dataResponse(HttpFcStatus.VALIDATEFAILCODE.getCode(), HttpMsg.sms.SMS_CODE_ERROR.getMsg());
         }
-
+        // 获取当前登录用户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_AUTH_ERROR.getMsg());
+        }
         // 验证通过实现注册
         Merchant merchant = new Merchant();
         merchant.setId(IDGeneratorUtil.getMerchantId());
@@ -119,17 +123,18 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setPhone(merchantRegisterRequest.getPhone());
         merchant.setPassword(merchantRegisterRequest.getPassword());
         merchant.setCreateTime(new Date());
+        merchant.setMerchantFollowUser(loginInfoData.getId());
         this.merchantMapper.registerMerchant(merchant);
         // 设置商户为未入住状态
         MerChantDetail merChantDetail = new MerChantDetail();
         merChantDetail.setMerchantNumber(merchant.getNumber());
         merChantDetail.setStatus(3);
         this.merChantDetailMapper.addMerchantDetail(merChantDetail);
-        // 添加到商户角色
-        // 默认写死 商户角色 ---853858
+        // 添加到注册角色
+        // 默认写死 注册角色 ---982301
         UserRole userRole = new UserRole();
         userRole.setUserRoleId(IDGeneratorUtil.getNextId());
-        userRole.setRoleId(853858L);
+        userRole.setRoleId(982301L);
         userRole.setUserId(merchant.getId());
         userRole.setCreateTime(new Date());
         userRole.setUpdateTime(userRole.getCreateTime());
@@ -174,6 +179,12 @@ public class MerchantServiceImpl implements MerchantService {
      */
     @Override
     public FCResponse<DataResponse<List<MerchantResponse>>> getPageMerchant(MerchantSearchRequest merchantSearchRequest) {
+        // 获取当前登录用户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_AUTH_ERROR.getMsg());
+        }
+        merchantSearchRequest.setMerchantFollowUser(loginInfoData.getId());
         PageHelper.startPage(merchantSearchRequest.getPage(),merchantSearchRequest.getLimit());
         List<MerchantResponse> merchantResponses = this.merchantMapper.getPageMerchant(merchantSearchRequest);
         if (CollectionUtils.isEmpty(merchantResponses)){
@@ -246,5 +257,22 @@ public class MerchantServiceImpl implements MerchantService {
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.merchant.MERCHANT_DATA_EMPTY.getMsg());
         }
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),merchantResponse);
+    }
+
+    /**
+     * 商户是否入驻
+     *
+     * @return
+     */
+    @Override
+    public FCResponse<Integer> judgmentMerchantSet() {
+        // 获取当前登录商户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
+        }
+        // 根据商户id查询商户状态
+        Integer status = this.merchantMapper.judgmentMerchantSet(loginInfoData.getId());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),status);
     }
 }

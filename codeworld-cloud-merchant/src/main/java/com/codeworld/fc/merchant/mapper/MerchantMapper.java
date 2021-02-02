@@ -79,4 +79,11 @@ public interface MerchantMapper {
      * @param merchantNumbers
      */
     void deleteNoMerchantSet(List<String> merchantNumbers);
+
+    /**
+     * 判断商户是否入驻
+     * @param id
+     * @return
+     */
+    Integer judgmentMerchantSet(Long id);
 }

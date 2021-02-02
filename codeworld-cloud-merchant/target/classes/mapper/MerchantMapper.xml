@@ -23,6 +23,7 @@
         t_merchant_nick_name,
         t_merchant_phone,
         t_merchant_password,
+        t_merchant_follow_user,
         t_merchant_create_time
         )
         values
@@ -32,6 +33,7 @@
         #{nickName},
         #{phone},
         #{password},
+        #{merchantFollowUser},
         #{createTime}
         )
     </insert>
@@ -108,6 +110,7 @@
                    and  cm.t_merchant_create_time <= #{updateTime}
                  ]]>
             </if>
+            and t_merchant_follow_user = #{merchantFollowUser}
         </where>
         order by cm.t_merchant_create_time DESC
     </select>
@@ -125,32 +128,32 @@
     <!-- 根据商户id获取商户信息 -->
     <select id="getMerchantNumberAndNameById" parameterType="java.lang.Long"
             resultType="com.codeworld.fc.merchant.response.MerchantResponse">
-           select
-           cm.t_merchant_number AS number,
-           cm.t_merchant_id AS id,
-           cm.t_merchant_phone AS phone,
-           cm.t_merchant_nick_name AS nickName,
-           cmd.t_merchant_name AS merchantName
-           from
-           codeworld_merchant AS cm
-           left join codeworld_merchant_detail AS cmd on cmd.t_merchant_number = cm.t_merchant_number
-           where
-           cm.t_merchant_id = #{merchantId}
-
-       <!-- select
-        t_merchant_number AS number,
-        t_merchant_name AS merchantName
-        from
-        codeworld_merchant_detail AS cmd
-        where
-        cmd.t_merchant_number =
-        (
         select
-         t_merchant_number AS number
+        cm.t_merchant_number AS number,
+        cm.t_merchant_id AS id,
+        cm.t_merchant_phone AS phone,
+        cm.t_merchant_nick_name AS nickName,
+        cmd.t_merchant_name AS merchantName
         from
         codeworld_merchant AS cm
-        where cm.t_merchant_id = #{merchantId}
-        ) -->
+        left join codeworld_merchant_detail AS cmd on cmd.t_merchant_number = cm.t_merchant_number
+        where
+        cm.t_merchant_id = #{merchantId}
+
+        <!-- select
+         t_merchant_number AS number,
+         t_merchant_name AS merchantName
+         from
+         codeworld_merchant_detail AS cmd
+         where
+         cmd.t_merchant_number =
+         (
+         select
+          t_merchant_number AS number
+         from
+         codeworld_merchant AS cm
+         where cm.t_merchant_id = #{merchantId}
+         ) -->
     </select>
 
     <!-- 查询商户注册7天后，未进行入驻 -->
@@ -165,6 +168,17 @@
         cmd.t_merchant_status = 3
         and
         datediff(now(),cm.t_merchant_create_time) > 7
+    </select>
+
+    <!-- 判断商户是否入驻 -->
+    <select id="judgmentMerchantSet" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select
+        cmd.t_merchant_status
+        from
+        codeworld_merchant AS cm
+        left join codeworld_merchant_detail AS cmd on cm.t_merchant_number = cmd.t_merchant_number
+        where
+        cm.t_merchant_id = #{id}
     </select>
 
     <!-- 删除商户注册未入驻信息 -->

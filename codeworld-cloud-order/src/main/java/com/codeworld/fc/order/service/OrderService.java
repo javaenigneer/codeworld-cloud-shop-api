@@ -6,10 +6,7 @@ import com.codeworld.fc.order.domain.OrderDeliveryMessage;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
-import com.codeworld.fc.order.response.OrderDetailResponse;
-import com.codeworld.fc.order.response.OrderPageResponse;
-import com.codeworld.fc.order.response.OrderResponse;
-import com.codeworld.fc.order.response.OrderStatusCount;
+import com.codeworld.fc.order.response.*;
 
 import java.util.List;
 
@@ -82,4 +79,18 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> refundOrder(Long orderId);
+
+    /**
+     * 获取商户下订单退款退货列表
+     * @param orderSearchRequest
+     * @return
+     */
+    FCResponse<DataResponse<List<OrderReturnResponse>>> getPageMerchantOrderReturn(OrderSearchRequest orderSearchRequest);
+
+    /**
+     * 获取订单退款退货详情
+     * @param orderReturnId
+     * @return
+     */
+    FCResponse<OrderReturnDetailResponse> getOrderReturnInfo(Long orderReturnId);
 }

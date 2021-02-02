@@ -28,4 +28,6 @@ public class OrderSearchRequest extends PageQuery {
     private Date createTime;
     @ApiModelProperty("商户号")
     private String merchantNumber;
+    @ApiModelProperty("订单退款退货状态")
+    private Integer orderReturnStatus;
 }

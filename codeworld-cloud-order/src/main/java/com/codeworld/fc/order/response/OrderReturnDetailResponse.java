@@ -1,22 +1,24 @@
 package com.codeworld.fc.order.response;
 
 import com.codeworld.fc.order.domain.ProductModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
- * ClassName OrderDetailResponse
- * Description 订单详细信息Model
+ * ClassName OrderReturnDetailResponse
+ * Description 订单退款退货详情
  * Author Lenovo
- * Date 2021/1/8
+ * Date 2021/2/1
  * Version 1.0
 **/
 @Data
-@ApiModel("订单详细信息Model")
-public class OrderDetailResponse {
+@ApiModel("订单退款退货详情")
+public class OrderReturnDetailResponse {
 
     @ApiModelProperty("订单编号")
     private Long orderId;
@@ -54,4 +56,13 @@ public class OrderDetailResponse {
     @ApiModelProperty("订单物流单号")
     private String orderDeliveryNumber;
 
+    @ApiModelProperty("订单售后编号")
+    private Long orderReturnId;
+
+    @ApiModelProperty("订单退货退款状态")
+    private Integer orderReturnStatus;
+
+    @ApiModelProperty("订单退款退货申请时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date orderReturnApplyTime;
 }

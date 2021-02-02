@@ -187,49 +187,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public FCResponse<Map<String, Object>> systemLogin(SystemLoginRequest systemLoginRequest, HttpServletRequest request, HttpServletResponse response) {
 
-        // 判断是否是商户登录 2118
-        if (systemLoginRequest.getUsername().startsWith("2118")) {
-            // 进行商户登录
-            FCResponse<Integer> fcResponse = this.merchantClient.checkMerchantByMerchantNumber(systemLoginRequest.getUsername());
-            if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
-                return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg(), null);
-            }
-            // 判断商户是否注册
-            if (fcResponse.getData() == 0) {
-                // 未注册
-                return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.merchant.MERCHANT_NO_REGISTER.getMsg(), null);
-            }
-            // 根据商户号获取商户信息
-            FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantByMerchantNumber(systemLoginRequest.getUsername());
-            if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
-                return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg(), null);
-            }
-            // 校验密码
-            // 比对密码
-            MerchantResponse merchantResponse = merchantFcResponse.getData();
-            if (!StringUtils.equals(merchantResponse.getPassword(), systemLoginRequest.getPassword())) {
-                return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_MESSAGE_ERROR.getMsg(), null);
-            }
-            // 执行登录
-            MerchantInfo merchantInfo = new MerchantInfo();
-            merchantInfo.setId(merchantResponse.getId());
-            merchantInfo.setPhone(merchantResponse.getPhone());
-            LoginInfoData loginInfoData = new LoginInfoData();
-            loginInfoData.setId(merchantInfo.getId());
-            loginInfoData.setPhone(merchantResponse.getPhone());
-            // 设置为商户标识
-            loginInfoData.setResources("merchant");
-            try {
-                String token = JwtUtils.generateToken(loginInfoData, this.jwtProperties.getPrivateKey(), this.jwtProperties.getExpire());
-                CookieUtils.setCookie(request, response, jwtProperties.getCookieName(), token, jwtProperties.getCookieMaxAge() * 60);
-                Map<String, Object> map = new HashMap<>();
-                map.put("token", token);
-                return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_SUCCESS.getMsg(), map);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new FCException("系统错误");
-            }
-        }
         // 否则是系统管理员登录
         // 根据用户名查询用户
         FCResponse<User> userFCResponse = this.userClient.getUserByName(systemLoginRequest.getUsername());
@@ -342,11 +299,11 @@ public class AuthServiceImpl implements AuthService {
     public FCResponse<MerchantInfo> getMerchantInfo(TokenRequest tokenRequest) {
         try {
             LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(tokenRequest.getToken(), jwtProperties.getPublicKey());
-            if (ObjectUtils.isEmpty(loginInfoData) || !StringUtils.equals("merchant",loginInfoData.getResources())) {
+            if (ObjectUtils.isEmpty(loginInfoData) || !StringUtils.equals("merchant", loginInfoData.getResources())) {
                 return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.member.MEMBER_DATA_EXPIRE.getMsg(), null);
             }
             FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantInfoById(loginInfoData.getId());
-            if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
+            if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
                 return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), merchantFcResponse.getMsg(), null);
             }
             MerchantResponse merchantResponse = merchantFcResponse.getData();
@@ -356,11 +313,63 @@ public class AuthServiceImpl implements AuthService {
             merchantInfo.setMerchantName(merchantResponse.getMerchantName());
             merchantInfo.setNumber(merchantResponse.getNumber());
             merchantInfo.setNickName(merchantResponse.getNickName());
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),merchantInfo);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), merchantInfo);
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
 
+    }
+
+    /**
+     * 商户登录商户系统
+     *
+     * @param systemLoginRequest
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    public FCResponse<Map<String, Object>> merchantSystemLogin(SystemLoginRequest systemLoginRequest, HttpServletRequest request, HttpServletResponse response) {
+        // 进行商户登录
+        FCResponse<Integer> fcResponse = this.merchantClient.checkMerchantByMerchantNumber(systemLoginRequest.getUsername());
+        if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg(), null);
+        }
+        // 判断商户是否注册
+        if (fcResponse.getData() == 0) {
+            // 未注册
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.merchant.MERCHANT_NO_REGISTER.getMsg(), null);
+        }
+        // 根据商户号获取商户信息
+        FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantByMerchantNumber(systemLoginRequest.getUsername());
+        if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg(), null);
+        }
+        // 校验密码
+        // 比对密码
+        MerchantResponse merchantResponse = merchantFcResponse.getData();
+        if (!StringUtils.equals(merchantResponse.getPassword(), systemLoginRequest.getPassword())) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_MESSAGE_ERROR.getMsg(), null);
+        }
+        // 执行登录
+        MerchantInfo merchantInfo = new MerchantInfo();
+        merchantInfo.setId(merchantResponse.getId());
+        merchantInfo.setPhone(merchantResponse.getPhone());
+        LoginInfoData loginInfoData = new LoginInfoData();
+        loginInfoData.setId(merchantInfo.getId());
+        loginInfoData.setPhone(merchantResponse.getPhone());
+        // 设置为商户标识
+        loginInfoData.setResources("merchant");
+        try {
+            String token = JwtUtils.generateToken(loginInfoData, this.jwtProperties.getPrivateKey(), this.jwtProperties.getExpire());
+            CookieUtils.setCookie(request, response, jwtProperties.getCookieName(), token, jwtProperties.getCookieMaxAge() * 60);
+            Map<String, Object> map = new HashMap<>();
+            map.put("token", token);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_SUCCESS.getMsg(), map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

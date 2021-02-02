@@ -28,10 +28,7 @@ import com.codeworld.fc.order.mapper.OrderStatusMapper;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
-import com.codeworld.fc.order.response.OrderDetailResponse;
-import com.codeworld.fc.order.response.OrderPageResponse;
-import com.codeworld.fc.order.response.OrderResponse;
-import com.codeworld.fc.order.response.OrderStatusCount;
+import com.codeworld.fc.order.response.*;
 import com.codeworld.fc.order.service.OrderService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -45,6 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -577,6 +575,8 @@ public class OrderServiceImpl implements OrderService {
         orderReturn.setOrderId(orderId);
         // 设置为0订单退款退货待处理
         orderReturn.setOrderReturnStatus(0);
+        // 设置为订单为退款类型
+        orderReturn.setOrderReturnType(1);
         orderReturn.setOrderReturnApplyTime(new Date());
         try {
             // 发起退款货
@@ -591,5 +591,88 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
+    }
+
+    /**
+     * 获取商户下订单退款退货列表
+     *
+     * @param orderSearchRequest
+     * @return
+     */
+    @Override
+    public FCResponse<DataResponse<List<OrderReturnResponse>>> getPageMerchantOrderReturn(OrderSearchRequest orderSearchRequest) {
+        // 从Token获取信息
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        if (ObjectUtils.isEmpty(loginInfoData) || !StringUtils.equals("merchant", loginInfoData.getResources())) {
+            throw new FCException("登录失效，请重新登录");
+        }
+        // 根据id获取商户号
+        FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
+        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            throw new FCException(merchantFcResponse.getMsg());
+        }
+        MerchantResponse merchantResponse = merchantFcResponse.getData();
+        PageHelper.startPage(orderSearchRequest.getPage(), orderSearchRequest.getLimit());
+        orderSearchRequest.setMerchantNumber(merchantResponse.getNumber());
+        List<OrderReturnResponse> orderReturnResponses = this.orderReturnMapper.getPageMerchantOrderReturn(orderSearchRequest);
+        if (CollectionUtils.isEmpty(orderReturnResponses)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg(), DataResponse.dataResponse(orderReturnResponses,0L));
+        }
+        PageInfo<OrderReturnResponse> pageInfo = new PageInfo<>(orderReturnResponses);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),DataResponse.dataResponse(pageInfo.getList(),pageInfo.getTotal()));
+    }
+
+    /**
+     * 获取订单退款退货详情
+     *
+     * @param orderReturnId
+     * @return
+     */
+    @Override
+    public FCResponse<OrderReturnDetailResponse> getOrderReturnInfo(Long orderReturnId) {
+        // 根据订单退款退货id查询是否存在
+        Integer count = this.orderReturnMapper.selectOrderReturnExistById(orderReturnId);
+        if (count == 0){
+            log.info("订单退款退货详情不存在，id为{}",orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        }
+        OrderReturnDetailResponse orderReturnDetailResponse = this.orderReturnMapper.getOrderReturnInfo(orderReturnId);
+        if (ObjectUtils.isEmpty(orderReturnDetailResponse)){
+            log.info("订单退款退货详情不存在，id为{}",orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        }
+        // 根据地址Id获取地收货人信息
+        FCResponse<ReceiverAddress> receiverAddressFCResponse = this.memberClient.getReceiverAddressByAddressId(orderReturnDetailResponse.getAddressId());
+        if (!receiverAddressFCResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), receiverAddressFCResponse.getMsg());
+        }
+        ReceiverAddress receiverAddress = receiverAddressFCResponse.getData();
+        // 设置收货信息
+        orderReturnDetailResponse.setReceiverName(receiverAddress.getName());
+        orderReturnDetailResponse.setReceiverPhone(receiverAddress.getPhone());
+        orderReturnDetailResponse.setReceiverAddress(receiverAddress.getArea() + receiverAddress.getDetailed() + receiverAddress.getHouseNumber());
+
+        // 根据订单号查询查询商品信息
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderReturnDetailResponse.getOrderId());
+        if (CollectionUtils.isEmpty(orderDetails)) {
+            log.error("订单下无商品信息：{}", orderReturnDetailResponse.getOrderId());
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        }
+        List<ProductModel> productModels = new ArrayList<>();
+        // 循环设置商品信息
+        orderDetails.forEach(orderDetail -> {
+            ProductModel productModel = new ProductModel();
+            ProductSkuModel productSkuModel = new ProductSkuModel();
+            // 设置商品信息
+            productModel.setProductCount(orderDetail.getProductCount());
+            productModel.setProductImage(orderDetail.getProductImage());
+            productModel.setProductTitle(orderDetail.getProductTitle());
+            // 设置sku信息
+            productSkuModel = JsonUtils.parse(orderDetail.getProductSkuDetail(), ProductSkuModel.class);
+            productModel.setProductSkuModel(productSkuModel);
+            productModels.add(productModel);
+        });
+        orderReturnDetailResponse.setProductModels(productModels);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), orderReturnDetailResponse);
     }
 }

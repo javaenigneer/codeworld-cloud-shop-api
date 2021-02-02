@@ -23,7 +23,7 @@ public interface MerchantService {
      * @param merchantRegisterRequest
      * @return
      */
-    FCResponse<String> registerMerchant(MerchantRegisterRequest merchantRegisterRequest);
+    FCResponse<String> registerMerchantWeb(MerchantRegisterRequest merchantRegisterRequest);
 
     /**
      * 根据手机号判断是否被注册
@@ -73,4 +73,10 @@ public interface MerchantService {
      * @return
      */
     FCResponse<MerchantResponse> getMerchantNumberAndNameById(Long merchantId);
+
+    /**
+     * 商户是否入驻
+     * @return
+     */
+    FCResponse<Integer> judgmentMerchantSet();
 }

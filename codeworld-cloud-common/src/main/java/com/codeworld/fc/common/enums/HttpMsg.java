@@ -453,7 +453,9 @@ public class HttpMsg {
         MERCHANT_NUMBER_ERROR("商户号错误"),
         MERCHANT_EXAMINE_SUCCESS("审核成功"),
         MERCHANT_NO_REGISTER("该商户未注册"),
-        MERCHANT_PHONE_REGISTER("该手机号已注册");
+        MERCHANT_PHONE_REGISTER("该手机号已注册"),
+        MERCHANT_LOGIN_EXPIRE("商户登录失效")
+        ;
 
         merchant(String msg) {
             this.msg = msg;
