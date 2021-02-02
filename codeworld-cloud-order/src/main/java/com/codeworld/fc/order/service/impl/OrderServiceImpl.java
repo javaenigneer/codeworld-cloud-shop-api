@@ -8,10 +8,7 @@ import com.codeworld.fc.common.enums.HttpMsg;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
-import com.codeworld.fc.common.utils.DeliveryNumberUtil;
-import com.codeworld.fc.common.utils.IDGeneratorUtil;
-import com.codeworld.fc.common.utils.IdWorker;
-import com.codeworld.fc.common.utils.JsonUtils;
+import com.codeworld.fc.common.utils.*;
 import com.codeworld.fc.order.client.CartClient;
 import com.codeworld.fc.order.client.MemberClient;
 import com.codeworld.fc.order.client.MerchantClient;
@@ -25,6 +22,7 @@ import com.codeworld.fc.order.mapper.OrderDetailMapper;
 import com.codeworld.fc.order.mapper.OrderMapper;
 import com.codeworld.fc.order.mapper.OrderReturnMapper;
 import com.codeworld.fc.order.mapper.OrderStatusMapper;
+import com.codeworld.fc.order.properties.OrderExcelProperties;
 import com.codeworld.fc.order.request.OrderAddRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
@@ -81,6 +79,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired(required = false)
     private IdWorker idWorker;
+    @Autowired(required = false)
+    private OrderExcelProperties orderExcelProperties;
+
+    @Autowired(required = false)
+    private ExcelUtil excelUtil;
 
     /**
      * 创建订单
@@ -706,6 +709,33 @@ public class OrderServiceImpl implements OrderService {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
         } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 导出订单数据
+     *
+     * @param response
+     */
+    @Override
+    public void exportExcel(HttpServletResponse response) {
+        log.info("开始执行导出Excel");
+        String[] colName = this.orderExcelProperties.getTitle().split(",");
+        // 获取导出数据信息
+        List<OrderExcel> orderExcels = this.orderMapper.getOrderExcel();
+        /*定义相关变量*/
+        List<Object[]> printDataList = new ArrayList<Object[]>();
+        //组合得到生成数据的数组
+        for(int i = 0; i < orderExcels.size(); i++)
+        {
+            printDataList.add(orderExcels.get(i).getFieldArray());
+        }
+        try {
+            this.excelUtil.exportOrderExcel(response,"订单数据.xls","订单数据",colName,printDataList);
+            log.info("订单数据导出完成");
+        }catch (Exception e){
             e.printStackTrace();
             throw new FCException("系统错误");
         }

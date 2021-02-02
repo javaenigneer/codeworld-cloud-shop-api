@@ -170,6 +170,18 @@
         group by cos.t_order_status
     </select>
 
+    <select id="getOrderExcel" resultType="com.codeworld.fc.order.domain.OrderExcel">
+        select
+        co.t_order_id AS orderId,
+        co.t_order_total_pay AS totalPay,
+        co.t_order_buyer_name AS buyerName,
+        co.t_order_create_time AS createTime,
+        cos.t_order_status AS orderStatus
+        from
+        codeworld_order AS co
+        left join codeworld_order_status AS cos on co.t_order_id = cos.t_order_id
+    </select>
+
     <!-- 修改订单信息 -->
     <update id="updatePayOrder" parameterType="com.codeworld.fc.order.entity.Order">
         update

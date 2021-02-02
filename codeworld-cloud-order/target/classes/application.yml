@@ -40,6 +40,9 @@ codeworld:
   worker:
     workerId: 1
     datacenterId: 1
+  order:
+    excel:
+      title: 序号,订单编号,订单提交时间,会员名称,订单金额,订单状态
 logging:
   config: classpath:log/logback-spring.xml
   level:

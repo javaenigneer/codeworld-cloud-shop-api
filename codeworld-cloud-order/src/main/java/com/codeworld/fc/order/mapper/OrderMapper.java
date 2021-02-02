@@ -1,6 +1,7 @@
 package com.codeworld.fc.order.mapper;
 
 import com.codeworld.fc.order.domain.OrderCount;
+import com.codeworld.fc.order.domain.OrderExcel;
 import com.codeworld.fc.order.entity.Order;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.response.OrderDetailResponse;
@@ -76,4 +77,10 @@ public interface OrderMapper {
      * @param order
      */
     void orderDelivery(Order order);
+
+    /**
+     * 获取导出数据信息
+     * @return
+     */
+    List<OrderExcel> getOrderExcel();
 }

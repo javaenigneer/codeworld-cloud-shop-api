@@ -8,6 +8,7 @@ import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface OrderService {
@@ -100,4 +101,10 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> receiveProcessingServiceOrder(Long orderReturnId);
+
+    /**
+     * 导出订单数据
+     * @param response
+     */
+    void exportExcel(HttpServletResponse response);
 }
