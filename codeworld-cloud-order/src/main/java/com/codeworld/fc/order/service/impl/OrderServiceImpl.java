@@ -566,8 +566,8 @@ public class OrderServiceImpl implements OrderService {
             log.info("退款订单不存在，订单id为{}", orderId);
         }
         // 判断当前订单的状态是否是未发货
-        if (orderStatus.getOrderStatus() != 2){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
+        if (orderStatus.getOrderStatus() != 2) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
         }
         // 发起退款
         OrderReturn orderReturn = new OrderReturn();
@@ -586,8 +586,8 @@ public class OrderServiceImpl implements OrderService {
             orderStatus.setOrderStatus(8);
             orderStatus.setCloseTime(new Date());
             this.orderStatusMapper.updateOrderStatus(orderStatus);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_RETURN_APPLY_SUCCESS.getMsg());
-        }catch (Exception e){
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_RETURN_APPLY_SUCCESS.getMsg());
+        } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
@@ -615,11 +615,11 @@ public class OrderServiceImpl implements OrderService {
         PageHelper.startPage(orderSearchRequest.getPage(), orderSearchRequest.getLimit());
         orderSearchRequest.setMerchantNumber(merchantResponse.getNumber());
         List<OrderReturnResponse> orderReturnResponses = this.orderReturnMapper.getPageMerchantOrderReturn(orderSearchRequest);
-        if (CollectionUtils.isEmpty(orderReturnResponses)){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg(), DataResponse.dataResponse(orderReturnResponses,0L));
+        if (CollectionUtils.isEmpty(orderReturnResponses)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg(), DataResponse.dataResponse(orderReturnResponses, 0L));
         }
         PageInfo<OrderReturnResponse> pageInfo = new PageInfo<>(orderReturnResponses);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),DataResponse.dataResponse(pageInfo.getList(),pageInfo.getTotal()));
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
     }
 
     /**
@@ -632,14 +632,14 @@ public class OrderServiceImpl implements OrderService {
     public FCResponse<OrderReturnDetailResponse> getOrderReturnInfo(Long orderReturnId) {
         // 根据订单退款退货id查询是否存在
         Integer count = this.orderReturnMapper.selectOrderReturnExistById(orderReturnId);
-        if (count == 0){
-            log.info("订单退款退货详情不存在，id为{}",orderReturnId);
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        if (count == 0) {
+            log.info("订单退款退货详情不存在，id为{}", orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         OrderReturnDetailResponse orderReturnDetailResponse = this.orderReturnMapper.getOrderReturnInfo(orderReturnId);
-        if (ObjectUtils.isEmpty(orderReturnDetailResponse)){
-            log.info("订单退款退货详情不存在，id为{}",orderReturnId);
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        if (ObjectUtils.isEmpty(orderReturnDetailResponse)) {
+            log.info("订单退款退货详情不存在，id为{}", orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         // 根据地址Id获取地收货人信息
         FCResponse<ReceiverAddress> receiverAddressFCResponse = this.memberClient.getReceiverAddressByAddressId(orderReturnDetailResponse.getAddressId());
@@ -674,5 +674,40 @@ public class OrderServiceImpl implements OrderService {
         });
         orderReturnDetailResponse.setProductModels(productModels);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), orderReturnDetailResponse);
+    }
+
+    /**
+     * 接受处理订单服务
+     *
+     * @param orderReturnId
+     * @return
+     */
+    @Override
+    public FCResponse<Void> receiveProcessingServiceOrder(Long orderReturnId) {
+        if (ObjectUtils.isEmpty(orderReturnId) || orderReturnId <= 0) {
+            log.error("服务订单号错误,服务订单号为：{}", orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ID_ERROR.getMsg());
+        }
+        // 根据服务订单id查询信息
+        OrderReturn orderReturn = this.orderReturnMapper.getOrderReturnById(orderReturnId);
+        if (ObjectUtils.isEmpty(orderReturn)) {
+            log.error("没有服务订单信息，服务订单号为：{}", orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_DATA_EMPTY.getMsg());
+        }
+        // 判断订单状态是否为未处理
+        if (orderReturn.getOrderReturnStatus() != 0) {
+            log.error("服务订单号状态错误，该服务订单已被处理");
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_PROCESSED.getMsg());
+        }
+        // 修改服务订单信息
+        orderReturn.setOrderReturnStatus(1);
+        orderReturn.setOrderReturnHandleTime(new Date());
+        try {
+            this.orderReturnMapper.updateOrderReturn(orderReturn);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

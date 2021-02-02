@@ -100,4 +100,10 @@ public class OrderController {
         return this.orderService.getOrderReturnInfo(orderReturnId);
     }
 
+    @PostMapping("receive-processing-service-order")
+    @ApiOperation("接受处理订单服务")
+    public FCResponse<Void> receiveProcessingServiceOrder(@RequestParam("orderReturnId") Long orderReturnId){
+        return this.orderService.receiveProcessingServiceOrder(orderReturnId);
+    }
+
 }

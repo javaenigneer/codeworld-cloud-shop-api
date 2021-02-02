@@ -527,4 +527,27 @@ public class HttpMsg {
             return msg;
         }
     }
+
+    /**
+     * 地区
+     */
+    public enum orderReturn {
+
+        ORDER_RETURN_ID_ERROR("服务订单号错误"),
+        ORDER_RETURN_DATA_EMPTY("服务订单数据为空"),
+        ORDER_RETURN_PROCESSED("服务订单已被处理"),
+        ORDER_RETURN_ACCPECTED_SUCCESS("服务订单受理成功")
+        ;
+
+        orderReturn(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
 }

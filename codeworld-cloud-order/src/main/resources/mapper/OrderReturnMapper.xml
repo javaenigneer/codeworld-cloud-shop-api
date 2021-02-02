@@ -81,4 +81,24 @@
         left join codeworld_order AS co on cor.t_order_id = co.t_order_id
         where cor.t_return_order_id and cor.t_return_order_id = #{orderReturnId}
     </select>
+
+    <select id="getOrderReturnById" parameterType="java.lang.Long"
+            resultMap="BaseOrderReturnMap">
+        select
+        *
+        from
+        codeworld_order_return
+        where
+        t_return_order_id = #{orderReturnId}
+    </select>
+
+    <update id="updateOrderReturn" parameterType="com.codeworld.fc.order.entity.OrderReturn">
+        update
+        codeworld_order_return
+        set
+        t_return_order_status = #{orderReturnStatus},
+        t_return_handle_time = #{orderReturnHandleTime}
+        where
+        t_return_order_id = #{orderReturnId}
+    </update>
 </mapper>

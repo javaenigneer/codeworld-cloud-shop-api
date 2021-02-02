@@ -93,4 +93,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<OrderReturnDetailResponse> getOrderReturnInfo(Long orderReturnId);
+
+    /**
+     * 接受处理订单服务
+     * @param orderReturnId
+     * @return
+     */
+    FCResponse<Void> receiveProcessingServiceOrder(Long orderReturnId);
 }

@@ -38,4 +38,17 @@ public interface OrderReturnMapper {
      * @return
      */
     OrderReturnDetailResponse getOrderReturnInfo(Long orderReturnId);
+
+    /**
+     * 根据服务订单号查询服务订单信息
+     * @param orderReturnId
+     * @return
+     */
+    OrderReturn getOrderReturnById(Long orderReturnId);
+
+    /**
+     * 修改服务订单
+     * @param orderReturn
+     */
+    void updateOrderReturn(OrderReturn orderReturn);
 }
