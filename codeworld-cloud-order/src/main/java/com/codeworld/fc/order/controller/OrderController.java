@@ -107,6 +107,12 @@ public class OrderController {
         return this.orderService.receiveProcessingServiceOrder(orderReturnId);
     }
 
+    @PostMapping("refuse-process-service-order")
+    @ApiOperation("拒绝处理订单服务")
+    public FCResponse<Void> refuseProcessServiceOrder(@RequestParam("orderReturnId") Long orderReturnId){
+        return this.orderService.refuseProcessServiceOrder(orderReturnId);
+    }
+
     @PostMapping("export-order")
     @ApiOperation("导出订单数据")
     public void exportOrder(HttpServletResponse response){

@@ -107,4 +107,11 @@ public interface OrderService {
      * @param response
      */
     void exportExcel(HttpServletResponse response);
+
+    /**
+     * 拒绝处理订单服务
+     * @param orderReturnId
+     * @return
+     */
+    FCResponse<Void> refuseProcessServiceOrder(Long orderReturnId);
 }

@@ -740,4 +740,40 @@ public class OrderServiceImpl implements OrderService {
             throw new FCException("系统错误");
         }
     }
+
+    /**
+     * 拒绝处理订单服务
+     *
+     * @param orderReturnId
+     * @return
+     */
+    @Override
+    public FCResponse<Void> refuseProcessServiceOrder(Long orderReturnId) {
+
+        if (ObjectUtils.isEmpty(orderReturnId) || orderReturnId <= 0) {
+            log.error("服务订单号错误,服务订单号为：{}", orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ID_ERROR.getMsg());
+        }
+        // 根据服务订单id查询信息
+        OrderReturn orderReturn = this.orderReturnMapper.getOrderReturnById(orderReturnId);
+        if (ObjectUtils.isEmpty(orderReturn)) {
+            log.error("没有服务订单信息，服务订单号为：{}", orderReturnId);
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_DATA_EMPTY.getMsg());
+        }
+        // 判断订单状态是否为未处理
+        if (orderReturn.getOrderReturnStatus() != 0) {
+            log.error("服务订单号状态错误，该服务订单已被处理");
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_PROCESSED.getMsg());
+        }
+        // 修改服务订单信息，拒绝退款
+        orderReturn.setOrderReturnStatus(5);
+        orderReturn.setOrderReturnHandleTime(new Date());
+        try {
+            this.orderReturnMapper.updateOrderReturn(orderReturn);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
 }
