@@ -28,6 +28,22 @@ public class OrderExcel {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
+    @ApiModelProperty("支付时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date payTime;
+
+    @ApiModelProperty("发货时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date consignTime;
+
+    @ApiModelProperty("结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date endTime;
+
+    @ApiModelProperty("关闭时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date closeTime;
+
     @ApiModelProperty("买家名称")
     private String buyerName;
 
@@ -61,6 +77,10 @@ public class OrderExcel {
         /*向列表中添加数据*/
         FieldList.add(orderId.toString());
         FieldList.add(DateUtil.date(createTime).toString());
+        FieldList.add(payTime != null ? DateUtil.date(payTime).toString() : "无信息");
+        FieldList.add(consignTime != null ? DateUtil.date(consignTime).toString() : "无信息");
+        FieldList.add(endTime != null ? DateUtil.date(endTime).toString() : "无信息");
+        FieldList.add(closeTime != null ? DateUtil.date(closeTime).toString() : "无信息");
         FieldList.add(buyerName);
         FieldList.add(totalPay.toString());
         FieldList.add(actualPay != null ? actualPay.toString() : "未支付");
