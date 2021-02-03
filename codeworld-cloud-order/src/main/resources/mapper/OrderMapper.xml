@@ -82,10 +82,10 @@
         inner join codeworld_order_status AS cos on cos.t_order_id = co.t_order_id
         <where>
             <if test="orderStatus != null">
-                cos.t_order_status = #{orderStatus}
+               and cos.t_order_status = #{orderStatus}
             </if>
+            and cod.t_merchant_number = #{merchantNumber}
         </where>
-        and cod.t_merchant_number = #{merchantNumber}
         order by co.t_order_create_time DESC
 
     </select>
