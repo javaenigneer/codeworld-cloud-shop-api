@@ -82,5 +82,5 @@ public interface OrderMapper {
      * 获取导出数据信息
      * @return
      */
-    List<OrderExcel> getOrderExcel();
+    List<OrderExcel> getOrderExcel(Map<String, Object> map);
 }

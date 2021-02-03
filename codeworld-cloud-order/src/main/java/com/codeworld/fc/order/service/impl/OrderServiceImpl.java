@@ -721,10 +721,20 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void exportExcel(HttpServletResponse response) {
+        // 获取当前登录商户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        // 根据id获取商户号
+        FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
+        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            throw new FCException(merchantFcResponse.getMsg());
+        }
+        MerchantResponse merchantResponse = merchantFcResponse.getData();
+        Map<String, Object> map = new HashMap<>();
+        map.put("merchantNumber", merchantResponse.getNumber());
         log.info("开始执行导出Excel");
         String[] colName = this.orderExcelProperties.getTitle().split(",");
         // 获取导出数据信息
-        List<OrderExcel> orderExcels = this.orderMapper.getOrderExcel();
+        List<OrderExcel> orderExcels = this.orderMapper.getOrderExcel(map);
         /*定义相关变量*/
         List<Object[]> printDataList = new ArrayList<Object[]>();
         //组合得到生成数据的数组

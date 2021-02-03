@@ -170,16 +170,23 @@
         group by cos.t_order_status
     </select>
 
-    <select id="getOrderExcel" resultType="com.codeworld.fc.order.domain.OrderExcel">
+    <select id="getOrderExcel" resultType="com.codeworld.fc.order.domain.OrderExcel" parameterType="hashmap">
         select
         co.t_order_id AS orderId,
         co.t_order_total_pay AS totalPay,
+        co.t_order_actual_pay AS actualPay,
         co.t_order_buyer_name AS buyerName,
         co.t_order_create_time AS createTime,
+        co.t_order_delivery_company AS orderDeliveryCompany,
+        co.t_order_delivery_sn AS orderDeliverySn,
+        co.t_order_delivery_number AS orderDeliveryNumber,
         cos.t_order_status AS orderStatus
         from
         codeworld_order AS co
         left join codeworld_order_status AS cos on co.t_order_id = cos.t_order_id
+        left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber}
     </select>
 
     <!-- 修改订单信息 -->

@@ -42,7 +42,7 @@ codeworld:
     datacenterId: 1
   order:
     excel:
-      title: 序号,订单编号,订单提交时间,会员名称,订单金额,订单状态
+      title: 序号,订单编号,订单提交时间,会员名称,订单金额,订单实付金额,订单状态,物流公司,物流单号
 logging:
   config: classpath:log/logback-spring.xml
   level:
