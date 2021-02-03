@@ -37,6 +37,9 @@ public class OrderExcel {
     @ApiModelProperty("订单状态")
     private Integer orderStatus;
 
+    @ApiModelProperty("订单状态信息")
+    private String orderStatusMsg;
+
     @ApiModelProperty("订单实付金额")
     private Long actualPay;
 
@@ -61,7 +64,7 @@ public class OrderExcel {
         FieldList.add(buyerName);
         FieldList.add(totalPay.toString());
         FieldList.add(actualPay != null ? actualPay.toString() : "未支付");
-        FieldList.add(orderStatus.toString());
+        FieldList.add(orderStatusMsg);
         FieldList.add(orderDeliveryCompany != null ? orderDeliveryCompany : "无信息");
         FieldList.add(orderDeliveryNumber != null ? orderDeliveryNumber : "无信息");
 

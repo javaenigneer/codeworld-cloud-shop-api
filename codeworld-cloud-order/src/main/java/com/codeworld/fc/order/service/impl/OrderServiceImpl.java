@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * ClassName OrderServiceImpl
@@ -707,7 +708,7 @@ public class OrderServiceImpl implements OrderService {
         orderReturn.setOrderReturnHandleTime(new Date());
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
@@ -735,17 +736,18 @@ public class OrderServiceImpl implements OrderService {
         String[] colName = this.orderExcelProperties.getTitle().split(",");
         // 获取导出数据信息
         List<OrderExcel> orderExcels = this.orderMapper.getOrderExcel(map);
+        // 设置导出数据信息
+        orderExcels = this.changeOrderExcel(orderExcels);
         /*定义相关变量*/
         List<Object[]> printDataList = new ArrayList<Object[]>();
         //组合得到生成数据的数组
-        for(int i = 0; i < orderExcels.size(); i++)
-        {
+        for (int i = 0; i < orderExcels.size(); i++) {
             printDataList.add(orderExcels.get(i).getFieldArray());
         }
         try {
-            this.excelUtil.exportOrderExcel(response,"订单数据.xls","订单数据",colName,printDataList);
+            this.excelUtil.exportOrderExcel(response, "订单数据.xls", "订单数据", colName, printDataList);
             log.info("订单数据导出完成");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
@@ -780,10 +782,48 @@ public class OrderServiceImpl implements OrderService {
         orderReturn.setOrderReturnHandleTime(new Date());
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 改变导出订单信息
+     *
+     * @param orderExcels
+     * @return
+     */
+    private List<OrderExcel> changeOrderExcel(List<OrderExcel> orderExcels) {
+
+        return orderExcels.stream().map(orderExcel -> {
+            orderExcel.setOrderStatusMsg(getOrderStatusMsg(orderExcel.getOrderStatus()));
+            return orderExcel;
+        }).collect(Collectors.toList());
+    }
+
+
+    public String getOrderStatusMsg(Integer orderStatus) {
+        switch (orderStatus) {
+            case 1:
+                return "未付款";
+            case 2:
+                return "未发货";
+            case 3:
+                return "已发货";
+            case 4:
+                return "交易成功";
+            case 5:
+                return "交易关闭";
+            case 6:
+                return "已评价";
+            case 7:
+                return "失效订单";
+            case 8:
+                return "售后服务";
+            default:
+                return "无状态";
         }
     }
 }
