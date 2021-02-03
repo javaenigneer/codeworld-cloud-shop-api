@@ -95,6 +95,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public FCResponse<String> createOrder(OrderAddRequest orderAddRequest) {
+        AtomicReference<Integer> productCount = new AtomicReference<>(0);
         Order order = new Order();
         order.setId(idWorker.nextId());
         order.setMemberId(orderAddRequest.getMemberId());
@@ -104,13 +105,20 @@ public class OrderServiceImpl implements OrderService {
         if (!memberResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.member.MEMBER_DATA_EXPIRE.getMsg());
         }
+
         MemberInfo memberInfo = memberResponse.getData();
         order.setBuyerName(memberInfo.getMemberName());
         order.setAddressId(orderAddRequest.getAddressId());
         order.setCreateTime(new Date());
+        // 将Json装换位List对象
+        List<ProductInfoSkuModel> productInfoSkuModels = JsonUtils.parseList(orderAddRequest.getProductInfoSkuModels(), ProductInfoSkuModel.class);
+        assert productInfoSkuModels != null;
+        productInfoSkuModels.forEach(productInfoSkuModel -> {
+            productCount.set(productCount.get() + productInfoSkuModel.getProductCount());
+        });
+        order.setOrderProductCount(productCount.get());
         // 创建订单
         this.orderMapper.createOrder(order);
-
         // 保存订单状态
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setOrderId(order.getId());
@@ -118,11 +126,8 @@ public class OrderServiceImpl implements OrderService {
         // 默认为未支付状态
         orderStatus.setOrderStatus(1);
         this.orderStatusMapper.saveOrderStatus(orderStatus);
-        // 将Json装换位List对象
-        List<ProductInfoSkuModel> productInfoSkuModels = JsonUtils.parseList(orderAddRequest.getProductInfoSkuModels(), ProductInfoSkuModel.class);
 
         // 循环添加订单详细
-        assert productInfoSkuModels != null;
         productInfoSkuModels.forEach(productInfoSkuModel -> {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrderId(order.getId());

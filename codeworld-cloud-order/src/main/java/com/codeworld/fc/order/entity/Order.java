@@ -62,4 +62,7 @@ public class Order {
     @ApiModelProperty("订单物流单号")
     private String orderDeliveryNumber;
 
+    @ApiModelProperty("订单下总共的商品数量")
+    private Integer orderProductCount;
+
 }

@@ -27,7 +27,8 @@
         t_order_member_id,
         t_order_address_id,
         t_order_buyer_name,
-        t_order_create_time
+        t_order_create_time,
+        t_order_product_count
         )
         values
         (
@@ -36,7 +37,8 @@
         #{memberId},
         #{addressId},
         #{buyerName},
-        #{createTime}
+        #{createTime},
+        #{orderProductCount}
         )
     </insert>
 
