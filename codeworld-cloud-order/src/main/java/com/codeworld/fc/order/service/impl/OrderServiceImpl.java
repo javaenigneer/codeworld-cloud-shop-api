@@ -1,5 +1,6 @@
 package com.codeworld.fc.order.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.codeworld.fc.common.domain.LoginInfoData;
 import com.codeworld.fc.common.enums.DeliveryEnum;
@@ -188,6 +189,9 @@ public class OrderServiceImpl implements OrderService {
         }
         PageInfo<OrderResponse> pageInfo = new PageInfo<>(orderResponses);
         AtomicReference<Integer> count = new AtomicReference<>(0);
+        // 创建一个新的订单集合保存所有的订单信息
+        // 一个商品类别就保存一个订单信息
+        List<OrderResponse> newOrderResponses = new ArrayList<>();
         // 循环查询订单下的商品信息
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
@@ -198,6 +202,12 @@ public class OrderServiceImpl implements OrderService {
             }
             List<ProductModel> productModels = new ArrayList<>();
             orderDetails.forEach(orderDetail -> {
+                OrderResponse newOrderResponse = new OrderResponse();
+                // 设置订单信息
+                newOrderResponse.setOrderId(orderResponse.getOrderId());
+                newOrderResponse.setCreateTime(orderResponse.getCreateTime());
+                newOrderResponse.setOrderStatus(orderResponse.getOrderStatus());
+//                newOrderResponse.setTotalPay();
                 ProductModel productModel = new ProductModel();
                 ProductSkuModel productSkuModel = new ProductSkuModel();
                 // 设置商品信息

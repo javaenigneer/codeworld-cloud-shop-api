@@ -12,6 +12,6 @@ spring:
         weight: 1
   redis:
     host: 192.168.2.4
-    database: 4
+    database: 6
 
 

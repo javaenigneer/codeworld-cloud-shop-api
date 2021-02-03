@@ -21,8 +21,8 @@ spring:
 #ribbon:
 #  ReadTimeOut: 5000
 #  ConnectTimeOut: 5000
-#
-#
+
+
 #hystrix:
 #  command:
 #    default:
