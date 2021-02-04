@@ -60,7 +60,7 @@
         left join codeworld_order_return AS cor on cod.t_order_detail_id = cor.t_order_id
         <where>
             <if test="orderStatus != null">
-              and  cos.t_order_status = #{orderStatus}
+                and cos.t_order_status = #{orderStatus}
             </if>
             and co.t_order_member_id = #{memberId}
         </where>
@@ -83,7 +83,7 @@
         inner join codeworld_order_status AS cos on cos.t_order_id = co.t_order_id
         <where>
             <if test="orderStatus != null">
-               and cos.t_order_status = #{orderStatus}
+                and cos.t_order_status = #{orderStatus}
             </if>
             and cod.t_merchant_number = #{merchantNumber}
         </where>
@@ -144,7 +144,8 @@
     </select>
 
     <!-- 根据订单号获取详细信息 -->
-    <select id="getOrderInfoById" parameterType="java.lang.Long" resultType="com.codeworld.fc.order.response.OrderDetailResponse">
+    <select id="getOrderInfoById" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.order.response.OrderDetailResponse">
 
         select
         co.t_order_id AS orderId,
@@ -162,7 +163,8 @@
     </select>
 
     <!-- 根据会员id查询订单状态下的数量 -->
-    <select id="getOrderStatusCount" parameterType="java.lang.Long" resultType="com.codeworld.fc.order.domain.OrderCount">
+    <select id="getOrderStatusCount" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.order.domain.OrderCount">
 
         select
         cos.t_order_status AS orderStatus,
@@ -197,6 +199,39 @@
         left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
         where
         cod.t_merchant_number = #{merchantNumber}
+    </select>
+
+    <select id="getWebPageMerchantOrder" parameterType="com.codeworld.fc.order.request.OrderSearchRequest"
+            resultType="com.codeworld.fc.order.response.OrderPageResponse">
+        select
+        co.t_order_id AS orderId,
+        co.t_order_address_id AS addressId,
+        co.t_order_create_time AS createTime,
+        co.t_order_member_id AS memberId,
+        co.t_order_buyer_name AS buyerName,
+        co.t_order_total_pay AS totalPay,
+        cos.t_order_status AS orderStatus
+        from
+        codeworld_order AS co
+        inner join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
+        inner join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        <where>
+            <if test="orderStatus != null">
+                cos.t_order_status = #{orderStatus}
+            </if>
+            <if test="orderId != null">
+                and co.t_order_id = #{orderId}
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[
+                    and co.t_order_create_time == #{createTime}
+                 ]]>
+            </if>
+            and cod.t_merchant_number = #{merchantNumber}
+        </where>
+        group by
+        co.t_order_id
+        order by co.t_order_create_time DESC
     </select>
 
     <!-- 修改订单信息 -->

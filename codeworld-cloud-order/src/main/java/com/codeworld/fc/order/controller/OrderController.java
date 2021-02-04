@@ -59,6 +59,13 @@ public class OrderController {
         return this.orderService.getPageMerchantOrder(orderSearchRequest);
     }
 
+    // 查询web端商户下的订单列表
+    @PostMapping("/web/get-page-merchant-order")
+    @ApiOperation("查询商户下的订单列表")
+    public FCResponse<DataResponse<List<OrderPageResponse>>> getWebPageMerchantOrder(@RequestBody OrderSearchRequest orderSearchRequest){
+        return this.orderService.getWebPageMerchantOrder(orderSearchRequest);
+    }
+
     @PostMapping("get-system-page-order")
     @ApiOperation("系统订单查询显示")
     public FCResponse<DataResponse<List<OrderPageResponse>>> getSystemPageOrder(@RequestBody OrderSearchRequest orderSearchRequest){

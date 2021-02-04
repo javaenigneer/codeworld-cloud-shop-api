@@ -122,4 +122,11 @@ public interface OrderService {
      * @return
      */
     Long createOrderAsync(Map<String, Object> map);
+
+    /**
+     * 查询web端商户下的订单列表
+     * @param orderSearchRequest
+     * @return
+     */
+    FCResponse<DataResponse<List<OrderPageResponse>>> getWebPageMerchantOrder(OrderSearchRequest orderSearchRequest);
 }

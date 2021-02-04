@@ -84,4 +84,11 @@ public interface OrderMapper {
      * @return
      */
     List<OrderExcel> getOrderExcel(Map<String, Object> map);
+
+    /**
+     * 查询web端商户下的订单列表
+     * @param orderSearchRequest
+     * @return
+     */
+    List<OrderPageResponse> getWebPageMerchantOrder(OrderSearchRequest orderSearchRequest);
 }
