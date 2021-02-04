@@ -49,4 +49,13 @@ public class OrderDetail {
     @ApiModelProperty("商户号")
     private String merchantNumber;
 
+    @ApiModelProperty("订单物流公司")
+    private String orderDeliveryCompany;
+
+    @ApiModelProperty("订单物流编号")
+    private Integer orderDeliverySn;
+
+    @ApiModelProperty("订单物流单号")
+    private String orderDeliveryNumber;
+
 }

@@ -29,4 +29,10 @@ public interface OrderDetailMapper {
      * @return
      */
     List<OrderDetail> getOrderDetailByOrderIdAndMerchantNumber(Map<String, Object> orderDetailMap);
+
+    /**
+     * 订单发货
+     * @param orderDetail
+     */
+    void orderDelivery(OrderDetail orderDetail);
 }

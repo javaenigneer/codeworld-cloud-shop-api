@@ -53,15 +53,6 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
-    @ApiModelProperty("订单物流公司")
-    private String orderDeliveryCompany;
-
-    @ApiModelProperty("订单物流编号")
-    private Integer orderDeliverySn;
-
-    @ApiModelProperty("订单物流单号")
-    private String orderDeliveryNumber;
-
     @ApiModelProperty("订单下总共的商品数量")
     private Integer orderProductCount;
 

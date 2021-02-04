@@ -515,18 +515,17 @@ public class OrderServiceImpl implements OrderService {
         if (StringUtils.isEmpty(name)) {
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.delivery.DELIVERY_SN_ERROR.getMsg());
         }
-
-        Order order = new Order();
-        order.setId(orderDeliveryMessage.getOrderId());
-        order.setOrderDeliveryCompany(name);
-        order.setOrderDeliverySn(orderDeliveryMessage.getLogisticsCompany());
-        order.setOrderDeliveryNumber(DeliveryNumberUtil.getDeliveryNumber(orderDeliveryMessage.getLogisticsCompany()));
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setDetailId(orderDeliveryMessage.getOrderDetailId());
+        orderDetail.setOrderDeliveryCompany(name);
+        orderDetail.setOrderDeliverySn(orderDeliveryMessage.getLogisticsCompany());
+        orderDetail.setOrderDeliveryNumber(DeliveryNumberUtil.getDeliveryNumber(orderDeliveryMessage.getLogisticsCompany()));
         // 修改订单
         try {
-            this.orderMapper.orderDelivery(order);
+            this.orderDetailMapper.orderDelivery(orderDetail);
             // 修改订单状态
             OrderStatus orderStatus = new OrderStatus();
-            orderStatus.setOrderId(order.getId());
+            orderStatus.setOrderId(orderDetail.getDetailId());
             orderStatus.setOrderStatus(3);
             orderStatus.setConsignTime(new Date());
             this.orderStatusMapper.updateOrderStatus(orderStatus);

@@ -71,4 +71,16 @@
             and  t_merchant_number = #{merchantNumber}
         </if>
     </select>
+
+    <!-- 订单发货 -->
+    <update id="orderDelivery" parameterType="com.codeworld.fc.order.entity.OrderDetail">
+        update
+        codeworld_order_detail
+        set
+        t_order_delivery_company = #{orderDeliveryCompany},
+        t_order_delivery_sn = #{orderDeliverySn},
+        t_order_delivery_number = #{orderDeliveryNumber}
+        where
+        t_order_Detail_id = #{detailId}
+    </update>
 </mapper>

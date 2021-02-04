@@ -14,8 +14,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class OrderDeliveryMessage {
 
-    @NotNull(message = "订单Id为空")
-    private Long orderId;
+    @NotNull(message = "子订单Id为空")
+    private Long orderDetailId;
 
     @NotNull(message = "物流公司为空")
     private Integer logisticsCompany;
