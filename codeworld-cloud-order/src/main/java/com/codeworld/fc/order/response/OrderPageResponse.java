@@ -22,7 +22,8 @@ public class OrderPageResponse {
 
     // 订单编号
     @ApiModelProperty("订单编号")
-    private Long orderId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long orderDetailId;
 
     @ApiModelProperty("订单创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

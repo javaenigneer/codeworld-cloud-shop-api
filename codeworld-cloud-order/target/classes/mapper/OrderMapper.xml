@@ -204,7 +204,7 @@
     <select id="getWebPageMerchantOrder" parameterType="com.codeworld.fc.order.request.OrderSearchRequest"
             resultType="com.codeworld.fc.order.response.OrderPageResponse">
         select
-        co.t_order_id AS orderId,
+        cod.t_order_detail_id AS orderDetailId,
         co.t_order_address_id AS addressId,
         co.t_order_create_time AS createTime,
         co.t_order_member_id AS memberId,

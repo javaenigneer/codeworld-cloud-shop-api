@@ -365,7 +365,7 @@ public class OrderServiceImpl implements OrderService {
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
             Map<String, Object> orderDetailMap = new HashMap<>();
-            orderDetailMap.put("orderId", orderResponse.getOrderId());
+            orderDetailMap.put("orderId", orderResponse.getOrderDetailId());
             // 若merchantResponse为Null，则为系统查询
             if (ObjectUtils.isEmpty(finalMerchantResponse)) {
                 orderDetailMap.put("merchantNumber", null);
@@ -881,42 +881,42 @@ public class OrderServiceImpl implements OrderService {
         }
         PageInfo<OrderPageResponse> pageInfo = new PageInfo<>(orderPageResponses);
         // 循环查询订单下的商品信息
-        MerchantResponse finalMerchantResponse = merchantResponse;
-        pageInfo.getList().forEach(orderResponse -> {
-            // 根据订单编号查询订单下的商品详细信息
-            Map<String, Object> orderDetailMap = new HashMap<>();
-            orderDetailMap.put("orderId", orderResponse.getOrderId());
-            // 若merchantResponse为Null，则为系统查询
-            if (ObjectUtils.isEmpty(finalMerchantResponse)) {
-                orderDetailMap.put("merchantNumber", null);
-            } else {
-                // 否则为商户查询
-                orderDetailMap.put("merchantNumber", finalMerchantResponse.getNumber());
-            }
-            List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderIdAndMerchantNumber(orderDetailMap);
-            if (CollectionUtils.isEmpty(orderDetails)) {
-                log.error("该订单号下无商品信息");
-                throw new FCException("系统异常");
-            }
-            AtomicReference<Integer> count = new AtomicReference<>(0);
-            List<ProductModel> productModels = new ArrayList<>();
-            orderDetails.forEach(orderDetail -> {
-                ProductModel productModel = new ProductModel();
-                ProductSkuModel productSkuModel = new ProductSkuModel();
-                // 设置商品信息
-                productModel.setProductCount(orderDetail.getProductCount());
-                productModel.setProductImage(orderDetail.getProductImage());
-                productModel.setProductTitle(orderDetail.getProductTitle());
-                // 设置sku信息
-                productSkuModel = JsonUtils.parse(orderDetail.getProductSkuDetail(), ProductSkuModel.class);
-                productModel.setProductSkuModel(productSkuModel);
-                productModels.add(productModel);
-                assert productSkuModel != null;
-                count.updateAndGet(v -> v + orderDetail.getProductCount());
-            });
-            orderResponse.setCount(count.get());
-            orderResponse.setProductModels(productModels);
-        });
+//        MerchantResponse finalMerchantResponse = merchantResponse;
+//        pageInfo.getList().forEach(orderResponse -> {
+//            // 根据订单编号查询订单下的商品详细信息
+//            Map<String, Object> orderDetailMap = new HashMap<>();
+//            orderDetailMap.put("orderId", orderResponse.getOrderId());
+//            // 若merchantResponse为Null，则为系统查询
+//            if (ObjectUtils.isEmpty(finalMerchantResponse)) {
+//                orderDetailMap.put("merchantNumber", null);
+//            } else {
+//                // 否则为商户查询
+//                orderDetailMap.put("merchantNumber", finalMerchantResponse.getNumber());
+//            }
+//            List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderIdAndMerchantNumber(orderDetailMap);
+//            if (CollectionUtils.isEmpty(orderDetails)) {
+//                log.error("该订单号下无商品信息");
+//                throw new FCException("系统异常");
+//            }
+//            AtomicReference<Integer> count = new AtomicReference<>(0);
+//            List<ProductModel> productModels = new ArrayList<>();
+//            orderDetails.forEach(orderDetail -> {
+//                ProductModel productModel = new ProductModel();
+//                ProductSkuModel productSkuModel = new ProductSkuModel();
+//                // 设置商品信息
+//                productModel.setProductCount(orderDetail.getProductCount());
+//                productModel.setProductImage(orderDetail.getProductImage());
+//                productModel.setProductTitle(orderDetail.getProductTitle());
+//                // 设置sku信息
+//                productSkuModel = JsonUtils.parse(orderDetail.getProductSkuDetail(), ProductSkuModel.class);
+//                productModel.setProductSkuModel(productSkuModel);
+//                productModels.add(productModel);
+//                assert productSkuModel != null;
+//                count.updateAndGet(v -> v + orderDetail.getProductCount());
+//            });
+//            orderResponse.setCount(count.get());
+//            orderResponse.setProductModels(productModels);
+//        });
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
     }
 
