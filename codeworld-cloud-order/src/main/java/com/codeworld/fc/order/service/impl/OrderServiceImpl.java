@@ -638,7 +638,7 @@ public class OrderServiceImpl implements OrderService {
         orderReturnDetailResponse.setReceiverAddress(receiverAddress.getArea() + receiverAddress.getDetailed() + receiverAddress.getHouseNumber());
 
         // 根据订单号查询查询商品信息
-        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderReturnDetailResponse.getOrderId());
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderDetailId(orderReturnDetailResponse.getOrderId());
         if (CollectionUtils.isEmpty(orderDetails)) {
             log.error("订单下无商品信息：{}", orderReturnDetailResponse.getOrderId());
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());

@@ -21,9 +21,11 @@ import java.util.List;
 public class OrderReturnResponse {
 
     @ApiModelProperty("退货订单主键id")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long orderReturnId;
 
     @ApiModelProperty("原订单id")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long orderId;
 
     @ApiModelProperty("订单退货退款状态")

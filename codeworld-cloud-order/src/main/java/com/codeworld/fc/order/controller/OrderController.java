@@ -96,13 +96,13 @@ public class OrderController {
         return this.orderService.refundOrder(orderDetailId);
     }
 
-    @PostMapping("get-page-merchant-order-return")
+    @PostMapping("/web/get-page-merchant-order-return")
     @ApiOperation("获取商户下订单退款退货列表")
     public FCResponse<DataResponse<List<OrderReturnResponse>>> getPageMerchantOrderReturn(@RequestBody OrderSearchRequest orderSearchRequest){
         return this.orderService.getPageMerchantOrderReturn(orderSearchRequest);
     }
 
-    @PostMapping("get-order-return-info")
+    @PostMapping("/web/get-order-return-info")
     @ApiOperation("获取订单退款退货详情")
     public FCResponse<OrderReturnDetailResponse> getOrderReturnInfo(@RequestParam("orderReturnId") Long orderReturnId){
         return this.orderService.getOrderReturnInfo(orderReturnId);

@@ -51,8 +51,8 @@
         co.t_order_create_time AS createTime
         from
         codeworld_order_return AS cor
-        left join codeworld_order AS co on cor.t_order_id = co.t_order_id
-        left join codeworld_order_detail AS cod on cor.t_order_id = cod.t_order_id
+        left join codeworld_order_detail AS cod on cor.t_order_id = cod.t_order_detail_id
+        left join codeworld_order AS co on cod.t_order_id = co.t_order_id
         where cod.t_merchant_number = #{merchantNumber}
         order by cor.t_return_order_apply_time
     </select>
@@ -78,7 +78,8 @@
         co.t_order_address_id AS addressId
         from
         codeworld_order_return AS cor
-        left join codeworld_order AS co on cor.t_order_id = co.t_order_id
+        left join codeworld_order_detail AS cod on cor.t_order_id = cod.t_order_detail_id
+        left join codeworld_order AS co on cod.t_order_id = co.t_order_id
         where cor.t_return_order_id and cor.t_return_order_id = #{orderReturnId}
     </select>
 
