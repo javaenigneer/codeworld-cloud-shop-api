@@ -169,7 +169,8 @@
         count(co.t_order_id) AS orderCount
         from
         codeworld_order AS co
-        left join codeworld_order_status AS cos on co.t_order_id = cos.t_order_id
+        left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
         where
         cos.t_order_status != 7 and co.t_order_member_id = #{memberId}
         group by cos.t_order_status
