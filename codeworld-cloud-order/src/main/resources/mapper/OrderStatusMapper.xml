@@ -64,4 +64,14 @@
         cos.t_order_id = #{orderId}
     </select>
 
+    <select id="getOrderStatusByOrderDetailId" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.order.entity.OrderStatus">
+         select
+        cos.t_order_status AS orderStatus,
+        cos.t_order_id AS orderId
+        from
+        codeworld_order_status AS cos
+        where
+        cos.t_order_id = #{orderDetailId}
+    </select>
 </mapper>

@@ -17,11 +17,11 @@ public interface OrderDetailMapper {
     void saveOrderDetail(OrderDetail orderDetail);
 
     /**
-     * 根据订单编号查询订单下的商品详细信息
-     * @param orderDetailId
+     * 根据母订单编号查询订单下的商品详细信息
+     * @param orderId
      * @return
      */
-    List<OrderDetail> getOrderDetailByOrderId(Long orderDetailId);
+    List<OrderDetail> getOrderDetailByOrderId(Long orderId);
 
     /**
      * 根据订单号和商户号查询订单详情
@@ -35,4 +35,11 @@ public interface OrderDetailMapper {
      * @param orderDetail
      */
     void orderDelivery(OrderDetail orderDetail);
+
+    /**
+     * 根据订单明细id查询订单明细
+     * @param orderDetailId
+     * @return
+     */
+    List<OrderDetail> getOrderDetailByOrderDetailId(Long orderDetailId);
 }

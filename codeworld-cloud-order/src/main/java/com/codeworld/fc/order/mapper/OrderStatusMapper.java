@@ -25,4 +25,11 @@ public interface OrderStatusMapper {
      * @return
      */
     OrderStatus getOrderStatusByOrderId(Long orderId);
+
+    /**
+     * 根据订单明细id查询订单状态信息
+     * @param orderDetailId
+     * @return
+     */
+    OrderStatus getOrderStatusByOrderDetailId(Long orderDetailId);
 }

@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
         // 循环查询订单下的商品信息
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
-            List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderResponse.getOrderDetailId());
+            List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderDetailId(orderResponse.getOrderDetailId());
             if (CollectionUtils.isEmpty(orderDetails)) {
                 log.error("该订单号下无商品信息");
                 throw new FCException("系统异常");
@@ -427,7 +427,7 @@ public class OrderServiceImpl implements OrderService {
         orderDetailResponse.setReceiverPhone(receiverAddress.getPhone());
         orderDetailResponse.setReceiverAddress(receiverAddress.getArea() + receiverAddress.getDetailed() + receiverAddress.getHouseNumber());
         // 根据订单号查询查询商品信息
-        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderDetailId);
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderDetailId(orderDetailId);
         if (CollectionUtils.isEmpty(orderDetails)) {
             log.error("订单下无商品信息：{}", orderDetailId);
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
@@ -536,19 +536,19 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 订单退款
      *
-     * @param orderId
+     * @param orderDetailId
      * @return
      */
     @Override
     @Transactional
-    public FCResponse<Void> refundOrder(Long orderId) {
-        if (ObjectUtils.isEmpty(orderId) || orderId <= 0) {
+    public FCResponse<Void> refundOrder(Long orderDetailId) {
+        if (ObjectUtils.isEmpty(orderDetailId) || orderDetailId <= 0) {
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
         }
-        // 根据订单id查询是否存在
-        OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderId(orderId);
+        // 根据订单明细id查询是否存在
+        OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderDetailId(orderDetailId);
         if (ObjectUtils.isEmpty(orderStatus)) {
-            log.info("退款订单不存在，订单id为{}", orderId);
+            log.info("退款订单不存在，订单id为{}", orderDetailId);
         }
         // 判断当前订单的状态是否是未发货
         if (orderStatus.getOrderStatus() != 2) {
@@ -557,7 +557,7 @@ public class OrderServiceImpl implements OrderService {
         // 发起退款
         OrderReturn orderReturn = new OrderReturn();
         orderReturn.setOrderReturnId(idWorker.nextId());
-        orderReturn.setOrderId(orderId);
+        orderReturn.setOrderId(orderDetailId);
         // 设置为0订单退款退货待处理
         orderReturn.setOrderReturnStatus(0);
         // 设置为订单为退款类型
@@ -567,7 +567,7 @@ public class OrderServiceImpl implements OrderService {
             // 发起退款货
             this.orderReturnMapper.addOrderReturn(orderReturn);
             // 将订单状态修改为售后服务
-            orderStatus.setOrderId(orderId);
+            orderStatus.setOrderId(orderDetailId);
             orderStatus.setOrderStatus(8);
             orderStatus.setCloseTime(new Date());
             this.orderStatusMapper.updateOrderStatus(orderStatus);

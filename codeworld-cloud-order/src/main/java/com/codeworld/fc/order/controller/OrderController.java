@@ -40,7 +40,7 @@ public class OrderController {
         return this.orderService.createOrder(orderAddRequest);
     }
 
-    @PostMapping("get-page-member-order")
+    @PostMapping("/app/get-page-member-order")
     @ApiOperation("分页查询当前会员订单信息")
     public FCResponse<List<OrderResponse>> getPageMemberOrder(@RequestBody OrderSearchRequest orderSearchRequest){
         return this.orderService.getPageMemberOrder(orderSearchRequest);
@@ -90,10 +90,10 @@ public class OrderController {
         return this.orderService.orderDelivery(orderDeliveryMessage);
     }
 
-    @PostMapping("refund-order")
+    @PostMapping("/app/refund-order")
     @ApiOperation("订单退款")
-    public FCResponse<Void> refundOrder(@RequestParam("orderId") Long orderId){
-        return this.orderService.refundOrder(orderId);
+    public FCResponse<Void> refundOrder(@RequestParam("orderDetailId") Long orderDetailId){
+        return this.orderService.refundOrder(orderDetailId);
     }
 
     @PostMapping("get-page-merchant-order-return")

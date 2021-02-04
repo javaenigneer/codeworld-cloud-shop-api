@@ -55,7 +55,15 @@
         *
         from
         codeworld_order_detail
-        where t_order_detail_id = #{orderDetailId}
+        where t_order_id = #{orderId}
+    </select>
+
+    <select id="getOrderDetailByOrderDetailId" parameterType="java.lang.Long" resultMap="BaseOrderDetailMap">
+        select
+        *
+        from
+        codeworld_order_detail
+        where t_order_Detail_id = #{orderDetailId}
     </select>
 
     <!-- 根据订单号和商户号查询订单详情 -->

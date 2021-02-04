@@ -24,9 +24,11 @@ public class OrderResponse {
 
     // 订单编号
     @ApiModelProperty("订单编号")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long orderId;
 
     @ApiModelProperty("订单明细编号")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long orderDetailId;
 
     @ApiModelProperty("订单创建时间")
