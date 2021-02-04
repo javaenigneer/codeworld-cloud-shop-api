@@ -213,13 +213,20 @@ public class OrderServiceImpl implements OrderService {
         this.orderMapper.updatePayOrder(order);
 
         // 修改订单状态
-        OrderStatus orderStatus = new OrderStatus();
-        orderStatus.setOrderId(payOrderRequest.getOrderId());
-        orderStatus.setPayTime(new Date());
-        // 设置订单为已支付，未发货
-        orderStatus.setOrderStatus(2);
-        // 执行修改
-        this.orderStatusMapper.updateOrderStatus(orderStatus);
+        // 根据母订单id查询子订单信息即订单详细
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(order.getId());
+        // 获取子订单明细id
+        List<Long> orderDetailIds = orderDetails.stream().map(OrderDetail::getDetailId).collect(Collectors.toList());
+        // 修改子订单订单状态
+        orderDetailIds.forEach(orderDetailId -> {
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrderId(orderDetailId);
+            orderStatus.setPayTime(new Date());
+            // 设置订单为已支付，未发货
+            orderStatus.setOrderStatus(2);
+            // 执行修改
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+        });
         // 删除redis中的订单id
         this.stringRedisTemplate.delete(String.valueOf(order.getId()));
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_PAY_SUCCESS.getMsg());

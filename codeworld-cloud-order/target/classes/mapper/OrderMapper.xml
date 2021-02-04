@@ -55,14 +55,15 @@
         cor.t_return_order_status AS orderReturnStatus
         from
         codeworld_order AS co
-        left join codeworld_order_status AS cos on cos.t_order_id = co.t_order_id
-        left join codeworld_order_return AS cor on cor.t_order_id = co.t_order_id
+        left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        left join codeworld_order_return AS cor on cod.t_order_detail_id = cor.t_order_id
         <where>
             <if test="orderStatus != null">
-                cos.t_order_status = #{orderStatus}
+              and  cos.t_order_status = #{orderStatus}
             </if>
+            and co.t_order_member_id = #{memberId}
         </where>
-        and co.t_order_member_id = #{memberId}
         order by co.t_order_create_time DESC
     </select>
 
