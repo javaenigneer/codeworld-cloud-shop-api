@@ -56,6 +56,7 @@ public class MemberController {
 
     @PostMapping("get-member-id")
     @ApiOperation("根据会员id获取会员信息")
+    @PassToken
     public FCResponse<MemberInfo> getMemberById(@RequestParam("memberId") Long memberId){
         return this.memberService.getMemberById(memberId);
     }

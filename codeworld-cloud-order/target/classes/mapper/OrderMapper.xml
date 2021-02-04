@@ -98,9 +98,11 @@
         co.t_order_total_pay AS totalPay
         from
         codeworld_order AS co
-        left join codeworld_order_status AS cos on cos.t_order_id = co.t_order_id
+        left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
         where
-        co.t_order_id = #{orderId} and cos.t_order_status = 1
+        co.t_order_id = #{orderId}
+        and cos.t_order_status = 1
     </select>
 
     <!-- 获取Web端订单列表 -->

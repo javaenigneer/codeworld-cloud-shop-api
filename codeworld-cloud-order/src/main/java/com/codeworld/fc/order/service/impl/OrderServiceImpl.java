@@ -96,76 +96,36 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public FCResponse<String> createOrder(OrderAddRequest orderAddRequest) {
-        AtomicReference<Integer> productCount = new AtomicReference<>(0);
-        Order order = new Order();
-        order.setId(idWorker.nextId());
-        order.setMemberId(orderAddRequest.getMemberId());
-        order.setTotalPay(orderAddRequest.getPayTotal());
-        // 根据会员id查询会员信息
-        FCResponse<MemberInfo> memberResponse = this.memberClient.getMemberById(orderAddRequest.getMemberId());
-        if (!memberResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
-            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.member.MEMBER_DATA_EXPIRE.getMsg());
-        }
-
-        MemberInfo memberInfo = memberResponse.getData();
-        order.setBuyerName(memberInfo.getMemberName());
-        order.setAddressId(orderAddRequest.getAddressId());
-        order.setCreateTime(new Date());
         // 将Json装换位List对象
         List<ProductInfoSkuModel> productInfoSkuModels = JsonUtils.parseList(orderAddRequest.getProductInfoSkuModels(), ProductInfoSkuModel.class);
         assert productInfoSkuModels != null;
-        productInfoSkuModels.forEach(productInfoSkuModel -> {
-            productCount.set(productCount.get() + productInfoSkuModel.getProductCount());
-        });
-        order.setOrderProductCount(productCount.get());
-        // 创建订单
-        this.orderMapper.createOrder(order);
-        // 保存订单状态
-        OrderStatus orderStatus = new OrderStatus();
-        orderStatus.setOrderId(order.getId());
-        orderStatus.setCreateTime(order.getCreateTime());
-        // 默认为未支付状态
-        orderStatus.setOrderStatus(1);
-        this.orderStatusMapper.saveOrderStatus(orderStatus);
-
-        // 循环添加订单详细
-        productInfoSkuModels.forEach(productInfoSkuModel -> {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrderId(order.getId());
-            orderDetail.setDetailId(IDGeneratorUtil.getNextId());
-            orderDetail.setCreateTime(order.getCreateTime());
-            orderDetail.setProductCount(productInfoSkuModel.getProductCount());
-            orderDetail.setProductImage(productInfoSkuModel.getProductImage());
-            orderDetail.setProductPrice(productInfoSkuModel.getPrice());
-            orderDetail.setProductSkuId(productInfoSkuModel.getId());
-            orderDetail.setProductTitle(productInfoSkuModel.getProductTitle());
-            // 创建SkuModel
-            ProductSkuModel productSkuModel = new ProductSkuModel();
-            productSkuModel.setId(productInfoSkuModel.getId());
-            productSkuModel.setImages(productInfoSkuModel.getImages());
-            productSkuModel.setPrice(productInfoSkuModel.getPrice());
-            productSkuModel.setTitle(productInfoSkuModel.getTitle());
-            // 将其序列化
-            String skuDetail = JsonUtils.serialize(productSkuModel);
-            orderDetail.setProductSkuDetail(skuDetail);
-            orderDetail.setMerchantNumber(productInfoSkuModel.getMerchantNumber());
-            // 添加订单明细
-            this.orderDetailMapper.saveOrderDetail(orderDetail);
-        });
-        log.info("生成订单，订单编号：{}，用户id：{}", order.getId(), memberInfo.getMemberId());
-        // 将订单信息保存到redis缓存中,时间为10分钟，10分钟过后将其置为失效订单
-        // 将订单id作为Key，订单信息作为value
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("orderId", order.getId());
-        map.put("totalPay", order.getTotalPay());
-        // 将map进行序列化
-        String json = JsonUtils.serialize(map);
-        assert json != null;
-        this.stringRedisTemplate.opsForValue().set(String.valueOf(order.getId()), json, 60 * 10, TimeUnit.SECONDS);
-        log.info("订单加入Redis缓存，订单编号：{}，用户id：{}，将在10分钟后过期", order.getId(), memberInfo.getMemberId());
+        FCResponse<MemberInfo> memberResponse = this.memberClient.getMemberById(orderAddRequest.getMemberId());
+        if (!memberResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            log.info("订单创建失败，失败原因：未找到该会员信息，会员Id为{}", orderAddRequest.getMemberId());
+            throw new FCException("系统错误-订单创建失败");
+        }
+        MemberInfo memberInfo = memberResponse.getData();
+        // 异步添加订单
+        Map<String, Object> map = new HashMap<>();
+        OrderAddAsyn orderAddAsyn = new OrderAddAsyn();
+        BeanUtil.copyProperties(orderAddRequest, orderAddAsyn);
+        // 将其序列化字符串
+        String jsonOrder = JsonUtils.serialize(orderAddAsyn);
+        String jsonProduct = JsonUtils.serialize(productInfoSkuModels);
+        String jsonMemberInfo = JsonUtils.serialize(memberInfo);
+        assert jsonOrder != null;
+        map.put("orderAddAsync", jsonOrder);
+        assert jsonProduct != null;
+        map.put("productInfoSkuModels", jsonProduct);
+        map.put("memberInfo", jsonMemberInfo);
+        // 异步创建订单
+        Long orderId = (Long) this.amqpTemplate.convertSendAndReceive("order.create", map);
+        if (ObjectUtils.isEmpty(orderId)) {
+            throw new FCException("系统错误");
+        }
         // 异步删除购物车中对应的数据（使用RabbitMQ消息队列）
         this.amqpTemplate.convertAndSend("cart.delete", orderAddRequest.getCartIds());
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_CREATE_SUCCESS.getMsg(), String.valueOf(order.getId()));
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_CREATE_SUCCESS.getMsg(), orderId.toString());
     }
 
     /**
@@ -237,8 +197,11 @@ public class OrderServiceImpl implements OrderService {
     public FCResponse<Void> payOrder(PayOrderRequest payOrderRequest) {
         // 根据订单id查询订单信息
         Order oldOrder = this.orderMapper.getOrderByOrderId(payOrderRequest.getOrderId());
-        // 判断订单是否存在
-
+        if (ObjectUtils.isEmpty(oldOrder)) {
+            // 判断订单是否存在
+            log.error("订单不存在");
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
+        }
         // 判断订单金额是否一致
         if (!oldOrder.getTotalPay().equals(payOrderRequest.getTotalPay())) {
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_MONEY_ERROR.getMsg());
@@ -798,6 +761,86 @@ public class OrderServiceImpl implements OrderService {
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 异步创建订单
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public Long createOrderAsync(Map<String, Object> map) {
+        String orderJson = (String) map.get("orderAddAsync");
+        OrderAddAsyn orderAddAsync = JsonUtils.parse(orderJson, OrderAddAsyn.class);
+        String jsonProduct = (String) map.get("productInfoSkuModels");
+        List<ProductInfoSkuModel> productInfoSkuModels = JsonUtils.parseList(jsonProduct, ProductInfoSkuModel.class);
+        String jsonMemberInfo = (String) map.get("memberInfo");
+        MemberInfo memberInfo = JsonUtils.parse(jsonMemberInfo, MemberInfo.class);
+        // 根据会员id查询会员信息
+        assert orderAddAsync != null;
+        // 创建订单信息
+        Order order = new Order();
+        order.setId(idWorker.nextId());
+        order.setMemberId(orderAddAsync.getMemberId());
+        assert productInfoSkuModels != null;
+        order.setTotalPay(orderAddAsync.getPayTotal());
+        assert memberInfo != null;
+        order.setBuyerName(memberInfo.getMemberName());
+        order.setAddressId(orderAddAsync.getAddressId());
+        order.setCreateTime(new Date());
+        // 创建订单
+        try {
+            this.orderMapper.createOrder(order);
+            // 循环商品信息，保存订单明细
+            productInfoSkuModels.forEach(productInfoSkuModel -> {
+
+                // 进行商品拆分订单
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setDetailId(idWorker.nextId());
+                orderDetail.setOrderId(order.getId());
+                orderDetail.setCreateTime(new Date());
+                orderDetail.setMerchantNumber(productInfoSkuModel.getMerchantNumber());
+                orderDetail.setProductCount(productInfoSkuModel.getProductCount());
+                orderDetail.setProductImage(productInfoSkuModel.getProductImage());
+                orderDetail.setProductPrice(productInfoSkuModel.getPrice());
+                orderDetail.setProductSkuId(productInfoSkuModel.getId());
+                orderDetail.setProductTitle(productInfoSkuModel.getProductTitle());
+                // 创建SkuModel
+                ProductSkuModel productSkuModel = new ProductSkuModel();
+                productSkuModel.setId(productInfoSkuModel.getId());
+                productSkuModel.setImages(productInfoSkuModel.getImages());
+                productSkuModel.setPrice(productInfoSkuModel.getPrice());
+                productSkuModel.setTitle(productInfoSkuModel.getTitle());
+                // 将其序列化
+                String skuDetail = JsonUtils.serialize(productSkuModel);
+                orderDetail.setProductSkuDetail(skuDetail);
+                // 添加订单明细
+                this.orderDetailMapper.saveOrderDetail(orderDetail);
+                // 保存子订单状态
+                OrderStatus orderStatus = new OrderStatus();
+                orderStatus.setOrderId(orderDetail.getDetailId());
+                orderStatus.setCreateTime(orderDetail.getCreateTime());
+                // 默认这是为未支付状态
+                orderStatus.setOrderStatus(1);
+                this.orderStatusMapper.saveOrderStatus(orderStatus);
+            });
+            log.info("生成订单，订单编号：{}，用户id：{}", order.getId(), memberInfo.getMemberId());
+            // 将订单信息保存到redis缓存中,时间为10分钟，10分钟过后将其置为失效订单
+            // 将订单id作为Key，订单信息作为value
+            Map<String, Object> newMap = new HashMap<>(2);
+            newMap.put("orderId", order.getId());
+            newMap.put("totalPay", order.getTotalPay());
+            // 将map进行序列化
+            String json = JsonUtils.serialize(map);
+            assert json != null;
+            this.stringRedisTemplate.opsForValue().set(String.valueOf(order.getId()), json, 60 * 10, TimeUnit.SECONDS);
+            log.info("订单加入Redis缓存，订单编号：{}，用户id：{}，将在10分钟后过期", order.getId(), memberInfo.getMemberId());
+            return order.getId();
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");

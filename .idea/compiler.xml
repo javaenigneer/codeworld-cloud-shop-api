@@ -23,15 +23,7 @@
         <module name="codeworld-cloud-search" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
-      <module name="xxl-job" target="1.8" />
-      <module name="xxl-job-admin" target="1.8" />
-      <module name="xxl-job-core" target="1.8" />
-      <module name="xxl-job-executor-sample-frameless" target="1.8" />
-      <module name="xxl-job-executor-sample-spring" target="1.8" />
-      <module name="xxl-job-executor-sample-springboot" target="1.8" />
-      <module name="xxl-job-executor-samples" target="1.8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

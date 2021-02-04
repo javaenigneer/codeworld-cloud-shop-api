@@ -10,6 +10,7 @@ import com.codeworld.fc.order.response.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
 
@@ -114,4 +115,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> refuseProcessServiceOrder(Long orderReturnId);
+
+    /**
+     * 异步创建订单
+     * @param map
+     * @return
+     */
+    Long createOrderAsync(Map<String, Object> map);
 }
