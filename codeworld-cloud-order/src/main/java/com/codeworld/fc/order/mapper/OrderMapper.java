@@ -61,10 +61,10 @@ public interface OrderMapper {
 
     /**
      * 根据订单号获取订单详细信息
-     * @param orderId
+     * @param orderDetailId
      * @return
      */
-    OrderDetailResponse getOrderInfoById(Long orderId);
+    OrderDetailResponse getOrderInfoById(Long orderDetailId);
 
     /**
      * 根据会员id查询订单状态下的数量

@@ -148,18 +148,19 @@
             resultType="com.codeworld.fc.order.response.OrderDetailResponse">
 
         select
-        co.t_order_id AS orderId,
+        cod.t_order_detail_id AS orderDetailId,
         co.t_order_member_id AS memberId,
         co.t_order_address_id AS addressId,
         co.t_order_buyer_name AS buyerName,
-        co.t_order_delivery_company AS orderDeliveryCompany,
-        co.t_order_delivery_number AS orderDeliveryNumber,
+        cod.t_order_delivery_company AS orderDeliveryCompany,
+        cod.t_order_delivery_number AS orderDeliveryNumber,
         cos.t_order_status AS orderStatus
         from
-        codeworld_order AS co
-        left join codeworld_order_status AS cos on cos.t_order_id = co.t_order_id
+        codeworld_order_detail AS cod
+        left join codeworld_order AS co on cod.t_order_id = co.t_order_id
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
         where
-        co.t_order_id = #{orderId}
+        cod.t_order_detail_id = #{orderDetailId}
     </select>
 
     <!-- 根据会员id查询订单状态下的数量 -->

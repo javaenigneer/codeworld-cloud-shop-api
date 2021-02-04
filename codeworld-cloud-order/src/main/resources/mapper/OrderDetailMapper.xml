@@ -55,7 +55,7 @@
         *
         from
         codeworld_order_detail
-        where t_order_id = #{orderId}
+        where t_order_detail_id = #{orderDetailId}
     </select>
 
     <!-- 根据订单号和商户号查询订单详情 -->

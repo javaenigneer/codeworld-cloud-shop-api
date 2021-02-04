@@ -74,8 +74,8 @@ public class OrderController {
 
     @PostMapping("get-order-info-id")
     @ApiOperation("根据订单号获取订单信息")
-    public FCResponse<OrderDetailResponse> getOrderInfoById(@RequestParam("orderId") Long orderId){
-        return this.orderService.getOrderInfoById(orderId);
+    public FCResponse<OrderDetailResponse> getOrderInfoById(@RequestParam("orderDetailId") Long orderDetailId){
+        return this.orderService.getOrderInfoById(orderDetailId);
     }
 
     @PostMapping("get-order-status-count")

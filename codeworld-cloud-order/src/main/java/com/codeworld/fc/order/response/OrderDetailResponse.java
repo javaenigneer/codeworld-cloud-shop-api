@@ -1,6 +1,7 @@
 package com.codeworld.fc.order.response;
 
 import com.codeworld.fc.order.domain.ProductModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,7 +20,8 @@ import java.util.List;
 public class OrderDetailResponse {
 
     @ApiModelProperty("订单编号")
-    private Long orderId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long orderDetailId;
 
     @ApiModelProperty("总金额")
     private Long totalPay;

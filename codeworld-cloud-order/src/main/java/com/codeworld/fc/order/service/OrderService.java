@@ -57,10 +57,10 @@ public interface OrderService {
 
     /**
      * 根据订单号获取订单信息
-     * @param orderId
+     * @param orderDetailId
      * @return
      */
-    FCResponse<OrderDetailResponse> getOrderInfoById(Long orderId);
+    FCResponse<OrderDetailResponse> getOrderInfoById(Long orderDetailId);
 
     /**
      * 获取订单状态下的数量

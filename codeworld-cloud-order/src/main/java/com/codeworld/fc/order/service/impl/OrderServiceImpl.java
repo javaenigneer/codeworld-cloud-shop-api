@@ -403,19 +403,19 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 根据订单号获取订单信息
      *
-     * @param orderId
+     * @param orderDetailId
      * @return
      */
     @Override
-    public FCResponse<OrderDetailResponse> getOrderInfoById(Long orderId) {
-        if (ObjectUtils.isEmpty(orderId) || orderId <= 0) {
-            log.error("订单ID错误：{}", orderId);
+    public FCResponse<OrderDetailResponse> getOrderInfoById(Long orderDetailId) {
+        if (ObjectUtils.isEmpty(orderDetailId) || orderDetailId <= 0) {
+            log.error("订单ID错误：{}", orderDetailId);
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
         }
         // 根据订单号查询订单基本信息
-        OrderDetailResponse orderDetailResponse = this.orderMapper.getOrderInfoById(orderId);
+        OrderDetailResponse orderDetailResponse = this.orderMapper.getOrderInfoById(orderDetailId);
         if (ObjectUtils.isEmpty(orderDetailResponse)) {
-            log.error("订单数据为空，订单号：{}", orderId);
+            log.error("订单数据为空，订单号：{}", orderDetailId);
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         // 根据地址Id获取地收货人信息
@@ -430,9 +430,9 @@ public class OrderServiceImpl implements OrderService {
         orderDetailResponse.setReceiverPhone(receiverAddress.getPhone());
         orderDetailResponse.setReceiverAddress(receiverAddress.getArea() + receiverAddress.getDetailed() + receiverAddress.getHouseNumber());
         // 根据订单号查询查询商品信息
-        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderId);
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderDetailId);
         if (CollectionUtils.isEmpty(orderDetails)) {
-            log.error("订单下无商品信息：{}", orderId);
+            log.error("订单下无商品信息：{}", orderDetailId);
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         List<ProductModel> productModels = new ArrayList<>();
