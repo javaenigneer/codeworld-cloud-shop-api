@@ -241,22 +241,41 @@ public class OrderServiceImpl implements OrderService {
         if (ObjectUtil.isEmpty(orderId) || orderId <= 0) {
             log.error("订单号无效：{}", orderId);
         }
-        // 根据订单号查询订单是否存在,且属于未付款订单
-        OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderId(orderId);
-        // 订单不存在
-        if (ObjectUtil.isEmpty(orderStatus)) {
-            log.error("订单不存在：{}", orderId);
+        // 根据订单号查询是否存在订单
+        Order order = this.orderMapper.getOrderByOrderId(orderId);
+        if (ObjectUtils.isEmpty(order)) {
+            log.error("订单不存在，订单号为{}", orderId);
+            return;
         }
-        // 订单状态不正确,只有状态为1才能自动取消订单
-        if (orderStatus.getOrderStatus() != 1) {
-            log.error("订单状态错误，{}", orderId);
+        // 根据母订单查询子订单
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderId);
+        if (ObjectUtils.isEmpty(orderDetails)) {
+            log.error("订单详细不存在：订单号为{}", orderId);
+            return;
         }
-        // 执行修改订单状态
-        orderStatus.setCloseTime(new Date());
-        orderStatus.setOrderId(orderId);
-        orderStatus.setOrderStatus(7);
-        this.orderStatusMapper.updateOrderStatus(orderStatus);
-        log.info("订单已关闭，订单号：{}", orderId);
+        // 查询订单明细订单状态
+        List<Long> orderDetailIds = orderDetails.stream().map(orderDetail -> {
+            return orderDetail.getDetailId();
+        }).collect(Collectors.toList());
+
+        orderDetailIds.forEach(orderDetailId -> {
+            OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderDetailId(orderDetailId);
+            // 订单不存在
+            if (ObjectUtil.isEmpty(orderStatus)) {
+                log.error("订单不存在：{}", orderId);
+            }
+            // 订单状态不正确,只有状态为1才能自动取消订单
+            if (orderStatus.getOrderStatus() != 1) {
+                log.error("订单状态错误，{}", orderId);
+            }
+            // 执行修改订单状态
+            orderStatus.setCloseTime(new Date());
+            orderStatus.setOrderId(orderDetailId);
+            orderStatus.setOrderStatus(7);
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+            log.info("订单已关闭，订单号：{}", orderId);
+        });
+
     }
 
     /**
@@ -931,6 +950,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 转换订单状态
+     *
      * @param orderStatus
      * @return
      */
