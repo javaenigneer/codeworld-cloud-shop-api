@@ -108,19 +108,19 @@ public class OrderController {
         return this.orderService.getOrderReturnInfo(orderReturnId);
     }
 
-    @PostMapping("receive-processing-service-order")
+    @PostMapping("/web/receive-processing-service-order")
     @ApiOperation("接受处理订单服务")
     public FCResponse<Void> receiveProcessingServiceOrder(@RequestParam("orderReturnId") Long orderReturnId){
         return this.orderService.receiveProcessingServiceOrder(orderReturnId);
     }
 
-    @PostMapping("refuse-process-service-order")
+    @PostMapping("/web/refuse-process-service-order")
     @ApiOperation("拒绝处理订单服务")
     public FCResponse<Void> refuseProcessServiceOrder(@RequestParam("orderReturnId") Long orderReturnId){
         return this.orderService.refuseProcessServiceOrder(orderReturnId);
     }
 
-    @PostMapping("export-order")
+    @PostMapping("/web/export-order")
     @ApiOperation("导出订单数据")
     public void exportOrder(HttpServletResponse response){
         this.orderService.exportExcel(response);

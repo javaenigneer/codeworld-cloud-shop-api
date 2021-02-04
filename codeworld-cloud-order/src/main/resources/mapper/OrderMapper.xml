@@ -187,9 +187,9 @@
         co.t_order_actual_pay AS actualPay,
         co.t_order_buyer_name AS buyerName,
         co.t_order_create_time AS createTime,
-        co.t_order_delivery_company AS orderDeliveryCompany,
-        co.t_order_delivery_sn AS orderDeliverySn,
-        co.t_order_delivery_number AS orderDeliveryNumber,
+        cod.t_order_delivery_company AS orderDeliveryCompany,
+        cod.t_order_delivery_sn AS orderDeliverySn,
+        cod.t_order_delivery_number AS orderDeliveryNumber,
         cos.t_order_status AS orderStatus,
         cos.t_order_pay_time AS payTime,
         cos.t_order_consign_time AS consignTime,
@@ -197,8 +197,8 @@
         cos.t_order_close_time AS closeTime
         from
         codeworld_order AS co
-        left join codeworld_order_status AS cos on co.t_order_id = cos.t_order_id
         left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
         where
         cod.t_merchant_number = #{merchantNumber}
     </select>
