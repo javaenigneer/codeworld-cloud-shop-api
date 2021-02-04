@@ -52,7 +52,8 @@
         co.t_order_address_id AS addressId,
         co.t_order_create_time AS createTime,
         cos.t_order_status AS orderStatus,
-        cor.t_return_order_status AS orderReturnStatus
+        cor.t_return_order_status AS orderReturnStatus,
+        cod.t_order_detail_id AS orderDetailId
         from
         codeworld_order AS co
         left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id

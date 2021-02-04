@@ -149,13 +149,10 @@ public class OrderServiceImpl implements OrderService {
         }
         PageInfo<OrderResponse> pageInfo = new PageInfo<>(orderResponses);
         AtomicReference<Integer> count = new AtomicReference<>(0);
-        // 创建一个新的订单集合保存所有的订单信息
-        // 一个商品类别就保存一个订单信息
-        List<OrderResponse> newOrderResponses = new ArrayList<>();
         // 循环查询订单下的商品信息
         pageInfo.getList().forEach(orderResponse -> {
             // 根据订单编号查询订单下的商品详细信息
-            List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderResponse.getOrderId());
+            List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderResponse.getOrderDetailId());
             if (CollectionUtils.isEmpty(orderDetails)) {
                 log.error("该订单号下无商品信息");
                 throw new FCException("系统异常");

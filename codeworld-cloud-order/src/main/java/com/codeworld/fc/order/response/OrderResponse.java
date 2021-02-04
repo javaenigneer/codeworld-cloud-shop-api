@@ -26,6 +26,9 @@ public class OrderResponse {
     @ApiModelProperty("订单编号")
     private Long orderId;
 
+    @ApiModelProperty("订单明细编号")
+    private Long orderDetailId;
+
     @ApiModelProperty("订单创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
