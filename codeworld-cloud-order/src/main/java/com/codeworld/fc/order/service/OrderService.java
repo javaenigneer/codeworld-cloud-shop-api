@@ -136,4 +136,10 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> cancelOrder(Long orderId);
+
+    /**
+     * web端获取商户dashboard基本数据
+     * @return
+     */
+    FCResponse<MerchantDashBoardData> getMerchantDashBoardData();
 }

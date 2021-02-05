@@ -16,7 +16,7 @@
         <result property="createTime" column="t_order_create_time"/>
     </resultMap>
 
-   <!-- 添加订单明细 -->
+    <!-- 添加订单明细 -->
     <insert id="saveOrderDetail" parameterType="com.codeworld.fc.order.entity.OrderDetail">
 
         insert into
@@ -76,10 +76,80 @@
         where
         t_order_id = #{orderId}
         <if test="merchantNumber != null">
-            and  t_merchant_number = #{merchantNumber}
+            and t_merchant_number = #{merchantNumber}
         </if>
     </select>
 
+    <select id="getMerchantDashBoardOrderTotalCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count(cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        where
+        cod.t_merchant_number = #{merchantNumber}
+    </select>
+    <select id="getMerchantDashBoardPendingPayCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count(cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber} and cos.t_order_status = 1
+    </select>
+    <select id="getMerchantDashBoardToBeDeliveredCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count(cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber} and cos.t_order_status = 2
+    </select>
+
+    <select id="getMerchantDashBoardShippedCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count (cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber} and cos.t_order_status = 3
+    </select>
+    <select id="getMerchantDashBoardReceivedCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count (cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber} and cos.t_order_status = 4
+    </select>
+    <select id="getMerchantDashBoardRefundingCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count (cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        left join codeworld_order_return AS cor on cod.t_order_detail_id = cor.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber} and cor.t_return_order_status = 1
+    </select>
+    <select id="getMerchantDashBoardAfterSaleCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count (cod.t_order_detail_id)
+        from
+        codeworld_order_detail AS cod
+        left join codeworld_order_return AS cor on cod.t_order_detail_id = cor.t_order_id
+        where
+        cod.t_merchant_number = #{merchantNumber} and cor.t_return_order_status = 0
+    </select>
     <!-- 订单发货 -->
     <update id="orderDelivery" parameterType="com.codeworld.fc.order.entity.OrderDetail">
         update

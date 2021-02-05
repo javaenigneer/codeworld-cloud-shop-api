@@ -1,6 +1,7 @@
 package com.codeworld.fc.order.mapper;
 
 import com.codeworld.fc.order.entity.OrderDetail;
+import com.codeworld.fc.order.response.MerchantDashBoardData;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -42,4 +43,53 @@ public interface OrderDetailMapper {
      * @return
      */
     List<OrderDetail> getOrderDetailByOrderDetailId(Long orderDetailId);
+
+    /**
+     * 查询商户下所有的订单数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardOrderTotalCount(String number);
+
+    /**
+     * 查询商户下待付款总数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardPendingPayCount(String number);
+
+    /**
+     * 查询商户下待发货总数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardToBeDeliveredCount(String number);
+
+    /**
+     * 查询商户下已发货总数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardShippedCount(String number);
+
+    /**
+     * 查询商户下已收货总数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardReceivedCount(String number);
+
+    /**
+     * 查询商户下退款中总数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardRefundingCount(String number);
+
+    /**
+     * 查询商户下待处理-待售后总数
+     * @param number
+     * @return
+     */
+    Integer getMerchantDashBoardAfterSaleCount(String number);
 }

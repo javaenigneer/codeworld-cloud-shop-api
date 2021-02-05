@@ -971,6 +971,50 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * web端获取商户dashboard基本数据
+     *
+     * @return
+     */
+    @Override
+    public FCResponse<MerchantDashBoardData> getMerchantDashBoardData() {
+        // 获取当前登录商户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            throw new FCException("登录过期，请重新登录");
+        }
+        // 根据商户id获取商户信息
+        FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
+        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), merchantFcResponse.getMsg());
+        }
+        MerchantResponse merchantResponse = merchantFcResponse.getData();
+        MerchantDashBoardData merchantDashBoardData = new MerchantDashBoardData();
+        // 分开查询各个数量
+        // 查询所有的订单数量
+        Integer orderTotalCount = this.orderDetailMapper.getMerchantDashBoardOrderTotalCount(merchantResponse.getNumber());
+        merchantDashBoardData.setOrderTotalCount(orderTotalCount);
+        // 查询待付款
+        Integer pendingPaymentCount = this.orderDetailMapper.getMerchantDashBoardPendingPayCount(merchantResponse.getNumber());
+        merchantDashBoardData.setPendingPaymentCount(pendingPaymentCount);
+        // 查询待发货
+        Integer toBeDeliveredCount = this.orderDetailMapper.getMerchantDashBoardToBeDeliveredCount(merchantResponse.getNumber());
+        merchantDashBoardData.setToBeDeliveredCount(toBeDeliveredCount);
+        // 查询已发货
+        Integer shippedCount = this.orderDetailMapper.getMerchantDashBoardShippedCount(merchantResponse.getNumber());
+        merchantDashBoardData.setShippedCount(shippedCount);
+        // 查询已收货
+        Integer receivedCount = this.orderDetailMapper.getMerchantDashBoardReceivedCount(merchantResponse.getNumber());
+        merchantDashBoardData.setReceivedCount(receivedCount);
+        // 查询退款中总数
+        Integer refundingCount = this.orderDetailMapper.getMerchantDashBoardRefundingCount(merchantResponse.getNumber());
+        merchantDashBoardData.setRefundingCount(refundingCount);
+        // 查询待售后总数
+        Integer afterSaleCount = this.orderDetailMapper.getMerchantDashBoardAfterSaleCount(merchantResponse.getNumber());
+        merchantDashBoardData.setAfterSaleCount(afterSaleCount);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),merchantDashBoardData);
+    }
+
+    /**
      * 改变导出订单信息
      *
      * @param orderExcels

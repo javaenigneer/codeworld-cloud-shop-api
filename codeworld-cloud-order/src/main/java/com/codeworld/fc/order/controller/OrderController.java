@@ -11,7 +11,6 @@ import com.codeworld.fc.order.response.*;
 import com.codeworld.fc.order.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.bouncycastle.asn1.ocsp.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -130,5 +129,11 @@ public class OrderController {
     @ApiOperation("app端取消订单")
     public FCResponse<Void> cancelOrder(@RequestParam("orderId") Long orderId){
         return this.orderService.cancelOrder(orderId);
+    }
+
+    @PostMapping("/web/get-merchant-dashboard-data")
+    @ApiOperation("web端获取商户dashboard基本数据")
+    public FCResponse<MerchantDashBoardData> getMerchantDashBoardData(){
+        return this.orderService.getMerchantDashBoardData();
     }
 }
