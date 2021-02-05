@@ -49,6 +49,8 @@ public class OrderListener {
 
     @Autowired(required = false)
     private OrderService orderService;
+    @Autowired(required = false)
+    private OrderStatusMapper orderStatusMapper;
 
     /**
      * 创建订单
@@ -76,6 +78,32 @@ public class OrderListener {
                 return null;
             }
             return orderId;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param orderDetailIds
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "CODEWORLD.CLOUD.ORDER.CANCEL.QUEUE", declare = "true"),
+            exchange = @Exchange(value = "CODEWORLD-SHOP.EXCHANGE", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),
+            key = {"order.cancel"}
+    ))
+    public void cancelOrder(List<Long> orderDetailIds) {
+        try {
+            orderDetailIds.forEach(orderDetailId -> {
+                OrderStatus orderStatus = new OrderStatus();
+                orderStatus.setOrderId(orderDetailId);
+                orderStatus.setOrderStatus(5);
+                orderStatus.setCloseTime(new Date());
+                this.orderStatusMapper.updateOrderStatus(orderStatus);
+            });
+            log.info("订单取消成功，订单号有{}",orderDetailIds);
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");

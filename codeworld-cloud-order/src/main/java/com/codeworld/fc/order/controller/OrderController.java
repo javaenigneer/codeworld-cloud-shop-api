@@ -126,5 +126,9 @@ public class OrderController {
         this.orderService.exportExcel(response);
     }
 
-
+    @PostMapping("/app/cancel-order")
+    @ApiOperation("app端取消订单")
+    public FCResponse<Void> cancelOrder(@RequestParam("orderId") Long orderId){
+        return this.orderService.cancelOrder(orderId);
+    }
 }

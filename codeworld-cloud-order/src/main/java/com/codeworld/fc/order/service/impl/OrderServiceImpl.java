@@ -936,6 +936,41 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * app端取消订单
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    @Transactional
+    public FCResponse<Void> cancelOrder(Long orderId) {
+        if (ObjectUtils.isEmpty(orderId) || orderId <= 0){
+            log.error("取消订单失败，失败原因：订单号为空或者订单号小于0");
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.order.ORDER_ID_ERROR.getMsg());
+        }
+        // 根据订单号查询订单信息
+        Order order = this.orderMapper.getOrderByOrderId(orderId);
+        if (ObjectUtils.isEmpty(order)){
+            log.error("取消订单失败，失败原因：没有该订单信息，订单号为：{}",orderId);
+            FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        }
+        // 根据母订单号查询子集订单号
+        List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderId);
+        if (CollectionUtils.isEmpty(orderDetails)){
+            log.error("取消订单失败，失败原因：没有该订单详细信息，订单号为：{}",orderId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        }
+        // 将其所有子集订单状态改为5，交易关闭
+        List<Long> orderDetailIds = orderDetails.stream().map(OrderDetail::getDetailId).collect(Collectors.toList());
+        // 放入到队列中异步取消
+        this.amqpTemplate.convertAndSend("order.cancel",orderDetailIds);
+        // 删除redis中的缓存
+        // 删除redis中的订单id
+        this.stringRedisTemplate.delete(String.valueOf(order.getId()));
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_CANCEL_SUCCESS.getMsg());
+    }
+
+    /**
      * 改变导出订单信息
      *
      * @param orderExcels

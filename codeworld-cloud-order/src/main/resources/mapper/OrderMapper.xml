@@ -96,6 +96,7 @@
     <select id="getOrderByOrderId" parameterType="java.lang.Long" resultType="com.codeworld.fc.order.entity.Order">
 
         select
+        distinct
         co.t_order_id AS id,
         co.t_order_total_pay AS totalPay
         from

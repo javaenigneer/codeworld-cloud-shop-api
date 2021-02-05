@@ -129,4 +129,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<DataResponse<List<OrderPageResponse>>> getWebPageMerchantOrder(OrderSearchRequest orderSearchRequest);
+
+    /**
+     * app端取消订单
+     * @param orderId
+     * @return
+     */
+    FCResponse<Void> cancelOrder(Long orderId);
 }

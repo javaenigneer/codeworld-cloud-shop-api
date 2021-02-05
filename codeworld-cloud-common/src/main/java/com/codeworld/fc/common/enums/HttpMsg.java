@@ -424,7 +424,8 @@ public class HttpMsg {
         ORDER_ID_ERROR("订单ID无效"),
         ORDER_STATUS_ERROR("订单状态错误，不能发起退款"),
         ORDER_RETURN_APPLY_SUCCESS("订单退款申请成功"),
-        ORDER_EXPORT_SUCCESS("订单数据导出成功")
+        ORDER_EXPORT_SUCCESS("订单数据导出成功"),
+        ORDER_CANCEL_SUCCESS("订单取消成功")
         ;
 
         order(String msg) {
