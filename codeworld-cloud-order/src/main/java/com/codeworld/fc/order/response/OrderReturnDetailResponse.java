@@ -21,6 +21,7 @@ import java.util.List;
 public class OrderReturnDetailResponse {
 
     @ApiModelProperty("订单编号")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long orderId;
 
     @ApiModelProperty("总金额")
@@ -57,6 +58,7 @@ public class OrderReturnDetailResponse {
     private String orderDeliveryNumber;
 
     @ApiModelProperty("订单售后编号")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long orderReturnId;
 
     @ApiModelProperty("订单退货退款状态")
