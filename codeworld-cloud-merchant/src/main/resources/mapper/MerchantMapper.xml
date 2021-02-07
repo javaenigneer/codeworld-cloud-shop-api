@@ -181,6 +181,28 @@
         cm.t_merchant_id = #{id}
     </select>
 
+    <!--获取商户信息 -->
+    <select id="getMerchantInfoById" parameterType="java.lang.Long" resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+        select
+        cm.t_merchant_number AS number,
+        cm.t_merchant_nick_name AS nickName,
+        cm.t_merchant_phone AS phone,
+        cm.t_merchant_create_time AS createTime,
+        cmd.t_merchant_name AS merchantName,
+        cmd.t_merchant_id_card_front AS idCardFront,
+        cmd.t_merchant_id_card_back AS idCardBack,
+        cmd.t_merchant_license AS license,
+        cmd.t_merchant_type AS type,
+        cmd.t_merchant_set_create_time AS setCreateTime,
+        cou.t_user_name AS merchantFollower
+        from
+        codeworld_merchant AS cm
+        left join codeworld_user As cou on cm.t_merchant_follow_user = cou.t_user_id
+        left join codeworld_merchant_detail AS cmd on cm.t_merchant_number = cmd.t_merchant_number
+        where
+        cm.t_merchant_id = #{id}
+    </select>
+
     <!-- 删除商户注册未入驻信息 -->
     <delete id="deleteNoMerchantSet">
         delete

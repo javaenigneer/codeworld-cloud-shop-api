@@ -95,4 +95,10 @@ public class MerchantController {
     public FCResponse<Integer> judgmentMerchantSet(){
         return this.merchantService.judgmentMerchantSet();
     }
+
+    @PostMapping("/web/get-merchant-info")
+    @ApiOperation("获取商户基本信息")
+    public FCResponse<MerchantResponse> getMerchantInfo(){
+        return this.merchantService.getMerchantInfo();
+    }
 }

@@ -79,4 +79,10 @@ public interface MerchantService {
      * @return
      */
     FCResponse<Integer> judgmentMerchantSet();
+
+    /**
+     * 获取商户基本信息
+     * @return
+     */
+    FCResponse<MerchantResponse> getMerchantInfo();
 }

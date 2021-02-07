@@ -86,4 +86,11 @@ public interface MerchantMapper {
      * @return
      */
     Integer judgmentMerchantSet(Long id);
+
+    /**
+     * 获取商户基本信息
+     * @param id
+     * @return
+     */
+    MerchantResponse getMerchantInfoById(Long id);
 }

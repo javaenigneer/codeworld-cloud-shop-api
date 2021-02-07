@@ -275,4 +275,20 @@ public class MerchantServiceImpl implements MerchantService {
         Integer status = this.merchantMapper.judgmentMerchantSet(loginInfoData.getId());
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),status);
     }
+
+    /**
+     * 获取商户基本信息
+     *
+     * @return
+     */
+    @Override
+    public FCResponse<MerchantResponse> getMerchantInfo() {
+        // 获取当前登录商户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
+        }
+        MerchantResponse merchantResponse = this.merchantMapper.getMerchantInfoById(loginInfoData.getId());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),merchantResponse);
+    }
 }
