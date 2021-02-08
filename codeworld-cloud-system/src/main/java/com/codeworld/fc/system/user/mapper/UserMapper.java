@@ -58,4 +58,10 @@ public interface UserMapper {
      * @return
      */
     List<UserDeptResponse> getUserByDeptId(Long deptId);
+
+    /**
+     * 查询角色为商户管理员的用户信息
+     * @return
+     */
+    List<User> getUserRoleToMerchant(String userName);
 }

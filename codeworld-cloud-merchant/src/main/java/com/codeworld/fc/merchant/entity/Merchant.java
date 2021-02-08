@@ -26,6 +26,9 @@ public class Merchant {
     @ApiModelProperty("商户昵称")
     private String nickName;
 
+    @ApiModelProperty("头像")
+    private String avatar;
+
     @ApiModelProperty("商户手机号")
     private String phone;
 

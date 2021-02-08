@@ -182,19 +182,22 @@
     </select>
 
     <!--获取商户信息 -->
-    <select id="getMerchantInfoById" parameterType="java.lang.Long" resultType="com.codeworld.fc.merchant.response.MerchantResponse">
+    <select id="getMerchantInfoById" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.merchant.response.MerchantResponse">
         select
         cm.t_merchant_number AS number,
         cm.t_merchant_nick_name AS nickName,
         cm.t_merchant_phone AS phone,
         cm.t_merchant_create_time AS createTime,
+        cm.t_merchant_avatar AS avatar,
         cmd.t_merchant_name AS merchantName,
         cmd.t_merchant_id_card_front AS idCardFront,
         cmd.t_merchant_id_card_back AS idCardBack,
         cmd.t_merchant_license AS license,
         cmd.t_merchant_type AS type,
         cmd.t_merchant_set_create_time AS setCreateTime,
-        cou.t_user_name AS merchantFollower
+        cou.t_user_name AS merchantFollower,
+        cou.t_user_id AS followerId
         from
         codeworld_merchant AS cm
         left join codeworld_user As cou on cm.t_merchant_follow_user = cou.t_user_id
@@ -202,6 +205,18 @@
         where
         cm.t_merchant_id = #{id}
     </select>
+
+    <!-- 更新商户基本信息 -->
+    <update id="updateMerchantInfo" parameterType="com.codeworld.fc.merchant.entity.Merchant">
+        update
+        codeworld_merchant
+        set
+        t_merchant_nick_name = #{nickName},
+        t_merchant_avatar = #{avatar},
+        t_merchant_follow_user = #{merchantFollowUser}
+        where
+        t_merchant_number = #{number}
+    </update>
 
     <!-- 删除商户注册未入驻信息 -->
     <delete id="deleteNoMerchantSet">

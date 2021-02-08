@@ -84,4 +84,10 @@ public class UserController {
     public FCResponse<List<UserDeptResponse>> getUserByDeptId(@RequestParam("deptId") Long deptId){
         return this.userService.getUserByDeptId(deptId);
     }
+
+    @GetMapping("get-user-role-to-merchant")
+    @ApiOperation("获取全部的商户管理员")
+    public FCResponse<List<User>> getUserRoleToMerchant(@RequestParam("userName") String userName){
+        return this.userService.getUserRoleToMerchant(userName);
+    }
 }

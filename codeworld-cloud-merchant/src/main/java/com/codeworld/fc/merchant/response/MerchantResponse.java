@@ -62,4 +62,10 @@ public class MerchantResponse {
     @ApiModelProperty("商户跟进人")
     private String merchantFollower;
 
+    @ApiModelProperty("跟进人Id")
+    private Long followerId;
+
+    @ApiModelProperty("头像")
+    private String avatar;
+
 }

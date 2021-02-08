@@ -243,4 +243,19 @@ public class UserServiceImpl implements UserService {
         }
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.user.USER_GET_SUCCESS.getMsg(), userDepts);
     }
+
+    /**
+     * 获取全部的商户管理员
+     *
+     * @return
+     * @param userName
+     */
+    @Override
+    public FCResponse<List<User>> getUserRoleToMerchant(String userName) {
+        List<User> users = this.userMapper.getUserRoleToMerchant(userName);
+        if (CollectionUtils.isEmpty(users)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.user.USE_DATA_EMPTY.getMsg(),users);
+        }
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.user.USER_GET_SUCCESS.getMsg(),users);
+    }
 }

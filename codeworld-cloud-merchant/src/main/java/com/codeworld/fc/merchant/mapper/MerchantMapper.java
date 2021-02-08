@@ -93,4 +93,10 @@ public interface MerchantMapper {
      * @return
      */
     MerchantResponse getMerchantInfoById(Long id);
+
+    /**
+     * 更新商户基本信息
+     * @param merchant
+     */
+    void updateMerchantInfo(Merchant merchant);
 }

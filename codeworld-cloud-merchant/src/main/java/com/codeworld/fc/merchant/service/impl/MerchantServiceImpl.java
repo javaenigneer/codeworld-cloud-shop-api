@@ -16,10 +16,7 @@ import com.codeworld.fc.merchant.entity.Merchant;
 import com.codeworld.fc.merchant.interceptor.AuthInterceptor;
 import com.codeworld.fc.merchant.mapper.MerChantDetailMapper;
 import com.codeworld.fc.merchant.mapper.MerchantMapper;
-import com.codeworld.fc.merchant.request.ExamineMerchantRequest;
-import com.codeworld.fc.merchant.request.MerchantAddRequest;
-import com.codeworld.fc.merchant.request.MerchantRegisterRequest;
-import com.codeworld.fc.merchant.request.MerchantSearchRequest;
+import com.codeworld.fc.merchant.request.*;
 import com.codeworld.fc.merchant.response.MerchantResponse;
 import com.codeworld.fc.merchant.service.MerchantService;
 import com.github.pagehelper.PageHelper;
@@ -290,5 +287,23 @@ public class MerchantServiceImpl implements MerchantService {
         }
         MerchantResponse merchantResponse = this.merchantMapper.getMerchantInfoById(loginInfoData.getId());
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),merchantResponse);
+    }
+
+    /**
+     * 更新商户基本信息
+     *
+     * @param editMerchantInfo
+     * @return
+     */
+    @Override
+    public FCResponse<Void> updateMerchantInfo(EditMerchantInfo editMerchantInfo) {
+
+        Merchant merchant = new Merchant();
+        merchant.setNumber(editMerchantInfo.getNumber());
+        merchant.setAvatar(editMerchantInfo.getAvatar());
+        merchant.setMerchantFollowUser(editMerchantInfo.getMerchantFollower());
+        merchant.setNickName(editMerchantInfo.getNickName());
+        this.merchantMapper.updateMerchantInfo(merchant);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_UPDATE_SUCCESS.getMsg());
     }
 }

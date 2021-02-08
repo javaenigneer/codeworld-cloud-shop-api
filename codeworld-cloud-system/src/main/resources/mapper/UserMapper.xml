@@ -23,7 +23,8 @@
 
     <!-- 查询语句 -->
     <!-- 查询全部用户 -->
-    <select id="getAllUser" resultType="com.codeworld.fc.system.user.dto.UserResponse" parameterType="com.codeworld.fc.system.user.request.UserSearchRequest">
+    <select id="getAllUser" resultType="com.codeworld.fc.system.user.dto.UserResponse"
+            parameterType="com.codeworld.fc.system.user.request.UserSearchRequest">
 
         select
         cu.t_user_id AS userId,
@@ -43,19 +44,19 @@
         left join codeworld_dept AS cd on cd.t_dept_id = cud.t_dept_id
         <where>
             <if test="userName != null and userName != ''">
-             and   cu.t_user_name like "%"#{userName}"%"
+                and cu.t_user_name like "%"#{userName}"%"
             </if>
             <if test="userEmail != null and userEmail != ''">
                 and cu.t_user_email like "%"#{userEmail}"%"
             </if>
             <if test="userPhone != null and userPhone != ''">
-                and  cu.t_user_phone like "%"#{userPhone}"%"
+                and cu.t_user_phone like "%"#{userPhone}"%"
             </if>
             <if test="userStatus != null">
-                and  cu.t_user_status = #{userStatus}
+                and cu.t_user_status = #{userStatus}
             </if>
             <if test="areaId != null">
-                and  cu.t_area_id = #{areaId}
+                and cu.t_area_id = #{areaId}
             </if>
             <if test="createTime != null ">
                 <![CDATA[
@@ -83,7 +84,8 @@
     </select>
 
     <!-- 根据部门id获取用户数据 -->
-    <select id="getUserByDeptId" parameterType="java.lang.Long" resultType="com.codeworld.fc.system.user.dto.UserDeptResponse">
+    <select id="getUserByDeptId" parameterType="java.lang.Long"
+            resultType="com.codeworld.fc.system.user.dto.UserDeptResponse">
 select
 cu.t_user_id AS userId,
 cu.t_user_name As userName,
@@ -99,6 +101,18 @@ left join codeworld_user cu on cud.t_user_id = cu.t_user_id
 left join codeworld_dept cd on cud.t_dept_id = cd.t_dept_id
 where cud.t_dept_id = #{deptId}
 order by cu.t_create_time DESC
+    </select>
+
+    <select id="getUserRoleToMerchant" resultType="com.codeworld.fc.system.user.entity.User" parameterType="java.lang.String">
+        select
+        cu.t_user_id AS userId,
+        cu.t_user_name AS userName
+        fro
+        codeworld_user_role AS cur
+        left join codeworld_user AS cu on cur.t_user_id = cu.t_user_id
+        left join codeworld_role AS cr on cur.t_role_id = cr.t_role_id
+        where
+        cur.t_role_id = 31845 and cu.t_user_name like "%"#{userName}"%"
     </select>
 
     <!-- 修改语句 -->

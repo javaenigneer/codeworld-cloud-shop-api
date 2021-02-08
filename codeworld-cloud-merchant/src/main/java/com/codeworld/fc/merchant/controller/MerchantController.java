@@ -3,10 +3,7 @@ package com.codeworld.fc.merchant.controller;
 import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
-import com.codeworld.fc.merchant.request.ExamineMerchantRequest;
-import com.codeworld.fc.merchant.request.MerchantAddRequest;
-import com.codeworld.fc.merchant.request.MerchantRegisterRequest;
-import com.codeworld.fc.merchant.request.MerchantSearchRequest;
+import com.codeworld.fc.merchant.request.*;
 import com.codeworld.fc.merchant.response.MerchantResponse;
 import com.codeworld.fc.merchant.service.MerchantService;
 import io.swagger.annotations.Api;
@@ -100,5 +97,11 @@ public class MerchantController {
     @ApiOperation("获取商户基本信息")
     public FCResponse<MerchantResponse> getMerchantInfo(){
         return this.merchantService.getMerchantInfo();
+    }
+
+    @PostMapping("update-merchant-info")
+    @ApiOperation("更新商户基本信息")
+    public FCResponse<Void> updateMerchantInfo(@RequestBody EditMerchantInfo editMerchantInfo){
+        return this.merchantService.updateMerchantInfo(editMerchantInfo);
     }
 }

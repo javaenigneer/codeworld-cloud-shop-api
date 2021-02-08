@@ -2,10 +2,7 @@ package com.codeworld.fc.merchant.service;
 
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
-import com.codeworld.fc.merchant.request.ExamineMerchantRequest;
-import com.codeworld.fc.merchant.request.MerchantAddRequest;
-import com.codeworld.fc.merchant.request.MerchantRegisterRequest;
-import com.codeworld.fc.merchant.request.MerchantSearchRequest;
+import com.codeworld.fc.merchant.request.*;
 import com.codeworld.fc.merchant.response.MerchantResponse;
 
 import java.util.List;
@@ -85,4 +82,11 @@ public interface MerchantService {
      * @return
      */
     FCResponse<MerchantResponse> getMerchantInfo();
+
+    /**
+     * 更新商户基本信息
+     * @param editMerchantInfo
+     * @return
+     */
+    FCResponse<Void> updateMerchantInfo(EditMerchantInfo editMerchantInfo);
 }
