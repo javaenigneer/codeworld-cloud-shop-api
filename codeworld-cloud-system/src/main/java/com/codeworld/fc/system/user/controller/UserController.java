@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.nio.channels.FileChannel;
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -89,5 +90,11 @@ public class UserController {
     @ApiOperation("获取全部的商户管理员")
     public FCResponse<List<User>> getUserRoleToMerchant(@RequestParam("userName") String userName){
         return this.userService.getUserRoleToMerchant(userName);
+    }
+
+    @PostMapping("get-user-id")
+    @ApiOperation("根据用户id获取用户信息")
+    public FCResponse<User> getUserById(@RequestParam("userId") Long userId) {
+        return this.userService.getUserById(userId);
     }
 }

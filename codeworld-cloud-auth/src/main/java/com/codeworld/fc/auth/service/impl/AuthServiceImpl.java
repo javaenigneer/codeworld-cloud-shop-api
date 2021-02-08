@@ -234,11 +234,32 @@ public class AuthServiceImpl implements AuthService {
     public FCResponse<SystemLoginInfoResponse> getSystemLoginInfo(TokenRequest tokenRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
             LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(tokenRequest.getToken(), this.jwtProperties.getPublicKey());
-
             if (ObjectUtils.isEmpty(loginInfoData)) {
                 throw new FCException("登录过期");
             }
             SystemLoginInfoResponse systemLoginInfoResponse = new SystemLoginInfoResponse();
+            // 判断是哪一种登录
+            String resources = loginInfoData.getResources();
+            // 系统管理员登录
+            if ("system".equals(resources)) {
+                // 查询角色管理员信息
+                FCResponse<User> fcResponse = this.userClient.getUserById(loginInfoData.getId());
+                if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+                    return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg());
+                }
+                User user = fcResponse.getData();
+                systemLoginInfoResponse.setAvatar(user.getAvatar());
+            }
+            // 商户登录
+            else if ("merchant".equals(resources)) {
+                // 查询商户信息
+                FCResponse<MerchantResponse> fcResponse = this.merchantClient.getMerchantInfoById(loginInfoData.getId());
+                if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
+                    return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg());
+                }
+                MerchantResponse merchantResponse = fcResponse.getData();
+                systemLoginInfoResponse.setAvatar(merchantResponse.getAvatar());
+            }
             Set<String> roles = new HashSet<>();
             Set<MenuVO> menuVOS = new HashSet<>();
             Set<ButtonVO> buttonVOS = new HashSet<>();

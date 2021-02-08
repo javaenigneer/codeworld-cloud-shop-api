@@ -133,27 +133,13 @@
         cm.t_merchant_id AS id,
         cm.t_merchant_phone AS phone,
         cm.t_merchant_nick_name AS nickName,
+        cm.t_merchant_avatar AS avatar,
         cmd.t_merchant_name AS merchantName
         from
         codeworld_merchant AS cm
         left join codeworld_merchant_detail AS cmd on cmd.t_merchant_number = cm.t_merchant_number
         where
         cm.t_merchant_id = #{merchantId}
-
-        <!-- select
-         t_merchant_number AS number,
-         t_merchant_name AS merchantName
-         from
-         codeworld_merchant_detail AS cmd
-         where
-         cmd.t_merchant_number =
-         (
-         select
-          t_merchant_number AS number
-         from
-         codeworld_merchant AS cm
-         where cm.t_merchant_id = #{merchantId}
-         ) -->
     </select>
 
     <!-- 查询商户注册7天后，未进行入驻 -->

@@ -64,4 +64,11 @@ public interface UserMapper {
      * @return
      */
     List<User> getUserRoleToMerchant(String userName);
+
+    /**
+     * 根据用户id查询用户
+     * @param userId
+     * @return
+     */
+    User getUserById(Long userId);
 }

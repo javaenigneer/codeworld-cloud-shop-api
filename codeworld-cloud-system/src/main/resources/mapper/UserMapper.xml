@@ -115,6 +115,17 @@ order by cu.t_create_time DESC
         cur.t_role_id = 31845 and cu.t_user_name like "%"#{userName}"%"
     </select>
 
+    <!-- 根据用户id查询用户信息 -->
+    <select id="getUserById" parameterType="java.lang.Long" resultType="com.codeworld.fc.system.user.entity.User">
+        select
+        t_user_id,
+        t_user_avatar
+        from
+        codeworld_user
+        where
+        t_user_id = #{userId}
+    </select>
+
     <!-- 修改语句 -->
     <!-- 修改用户状态 -->
     <update id="updateUserStatus" parameterType="com.codeworld.fc.system.user.entity.User">

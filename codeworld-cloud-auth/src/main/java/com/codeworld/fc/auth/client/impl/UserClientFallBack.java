@@ -19,4 +19,9 @@ public class UserClientFallBack implements UserClient {
     public FCResponse<User> getUserByName(String username) {
         return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(),"请求超时",null);
     }
+
+    @Override
+    public FCResponse<User> getUserById(Long userId) {
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(),"请求超时",null);
+    }
 }

@@ -35,4 +35,5 @@ public interface MerchantClient {
     @ApiOperation("根据商户id获取商户信息")
     @PassToken
     FCResponse<MerchantResponse> getMerchantInfoById(@RequestParam("merchantId") Long merchantId);
+
 }

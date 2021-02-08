@@ -58,4 +58,7 @@ public class MerchantResponse {
     @ApiModelProperty("入驻时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date setCreateTime;
+
+    @ApiModelProperty("商户头像")
+    private String avatar;
 }

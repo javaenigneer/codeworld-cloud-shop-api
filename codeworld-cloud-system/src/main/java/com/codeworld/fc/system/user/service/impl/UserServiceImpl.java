@@ -3,6 +3,7 @@ package com.codeworld.fc.system.user.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.enums.HttpMsg;
+import com.codeworld.fc.common.enums.StatusEnum;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
@@ -257,5 +258,26 @@ public class UserServiceImpl implements UserService {
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.user.USE_DATA_EMPTY.getMsg(),users);
         }
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.user.USER_GET_SUCCESS.getMsg(),users);
+    }
+
+    /**
+     * 根据用户id获取用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public FCResponse<User> getUserById(Long userId) {
+        if (ObjectUtils.isEmpty(userId) || userId <= 0){
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.user.USER_ID_ERROR.getMsg());
+        }
+        User user = this.userMapper.getUserById(userId);
+        if (ObjectUtils.isEmpty(user)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.user.USER_NO_EXIST.getMsg());
+        }
+        if (user.getUserStatus().equals(StatusEnum.USER_DISABLE)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_DISABLE.getMsg());
+        }
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.user.USER_GET_SUCCESS.getMsg(),user);
     }
 }

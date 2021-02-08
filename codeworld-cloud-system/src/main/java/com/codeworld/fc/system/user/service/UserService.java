@@ -69,4 +69,11 @@ public interface UserService {
      * @param userName
      */
     FCResponse<List<User>> getUserRoleToMerchant(String userName);
+
+    /**
+     * 根据用户id获取用户信息
+     * @param userId
+     * @return
+     */
+    FCResponse<User> getUserById(Long userId);
 }

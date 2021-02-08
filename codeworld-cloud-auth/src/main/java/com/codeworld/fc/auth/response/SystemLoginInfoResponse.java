@@ -35,6 +35,9 @@ public class SystemLoginInfoResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
+    @ApiModelProperty("头像")
+    private String avatar;
+
     @ApiModelProperty("角色集")
     private Set<String> roles = Sets.newHashSet();
 
