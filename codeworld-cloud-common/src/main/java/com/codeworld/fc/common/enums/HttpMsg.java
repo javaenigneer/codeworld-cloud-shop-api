@@ -422,10 +422,11 @@ public class HttpMsg {
         ORDER_PAY_SUCCESS("订单支付成功"),
         ORDER_MONEY_ERROR("订单金额错误"),
         ORDER_ID_ERROR("订单ID无效"),
-        ORDER_STATUS_ERROR("订单状态错误，不能发起退款"),
+        ORDER_STATUS_ERROR("订单状态错误"),
         ORDER_RETURN_APPLY_SUCCESS("订单退款申请成功"),
         ORDER_EXPORT_SUCCESS("订单数据导出成功"),
-        ORDER_CANCEL_SUCCESS("订单取消成功")
+        ORDER_CANCEL_SUCCESS("订单取消成功"),
+        ORDER_CONFIRM_RECEIPT_SUCCESS("订单收货成功")
         ;
 
         order(String msg) {

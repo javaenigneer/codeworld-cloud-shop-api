@@ -136,4 +136,10 @@ public class OrderController {
     public FCResponse<MerchantDashBoardData> getMerchantDashBoardData(){
         return this.orderService.getMerchantDashBoardData();
     }
+
+    @PostMapping("/app/confirm-receipt")
+    @ApiOperation("订单收货")
+    public FCResponse<Void> confirmReceipt(@RequestParam("orderDetailId") Long orderDetailId){
+        return this.orderService.confirmReceipt(orderDetailId);
+    }
 }

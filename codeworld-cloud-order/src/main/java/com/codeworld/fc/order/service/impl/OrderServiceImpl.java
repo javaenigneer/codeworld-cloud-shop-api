@@ -1015,6 +1015,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 订单收货
+     *
+     * @param orderDetailId
+     * @return
+     */
+    @Override
+    public FCResponse<Void> confirmReceipt(Long orderDetailId) {
+        if (ObjectUtils.isEmpty(orderDetailId) || orderDetailId <= 0) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
+        }
+        // 根据订单明细id查询是否存在
+        OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderDetailId(orderDetailId);
+        if (ObjectUtils.isEmpty(orderStatus)) {
+            log.info("退款订单不存在，订单id为{}", orderDetailId);
+        }
+        // 判断当前订单的状态是否是已发货
+        if (orderStatus.getOrderStatus() != 3) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
+        }
+        // 修改订单信息为已收货
+        orderStatus.setOrderStatus(4);
+        orderStatus.setCloseTime(new Date());
+        try {
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_CONFIRM_RECEIPT_SUCCESS.getMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
      * 改变导出订单信息
      *
      * @param orderExcels

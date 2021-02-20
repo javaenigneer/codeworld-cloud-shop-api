@@ -142,4 +142,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<MerchantDashBoardData> getMerchantDashBoardData();
+
+    /**
+     * 订单收货
+     * @param orderDetailId
+     * @return
+     */
+    FCResponse<Void> confirmReceipt(Long orderDetailId);
 }
