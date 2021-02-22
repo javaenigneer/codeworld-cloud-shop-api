@@ -183,7 +183,7 @@
 
     <select id="getOrderExcel" resultType="com.codeworld.fc.order.domain.OrderExcel" parameterType="hashmap">
         select
-        co.t_order_id AS orderId,
+        cod.t_order_detail_id AS orderId,
         co.t_order_total_pay AS totalPay,
         co.t_order_actual_pay AS actualPay,
         co.t_order_buyer_name AS buyerName,
