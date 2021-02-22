@@ -11,7 +11,7 @@
  Target Server Version : 50640
  File Encoding         : 65001
 
- Date: 08/02/2021 17:03:55
+ Date: 22/02/2021 18:27:01
 */
 
 SET NAMES utf8mb4;
@@ -4008,6 +4008,26 @@ INSERT INTO `codeworld_order_detail` VALUES (21218124920916032, 2121812492071942
 INSERT INTO `codeworld_order_detail` VALUES (21218152742062144, 21218152741800000, 751491, 1, NULL, '{\"id\":751491,\"price\":111,\"title\":\"小米MIX5 红色 1000G\",\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/43181612598161912.jpg\"}', 111, 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/77881612598154251.jpg', '2021-02-06 15:58:12', '21181611095746339', '申通快递', 4, 'ST1612598310157');
 
 -- ----------------------------
+-- Table structure for codeworld_order_evaluation
+-- ----------------------------
+DROP TABLE IF EXISTS `codeworld_order_evaluation`;
+CREATE TABLE `codeworld_order_evaluation`  (
+  `t_order_detail_id` bigint(20) NOT NULL COMMENT '订单详情id',
+  `t_order_evaluation_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '订单评价内容',
+  `t_order_evaluation_image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单评价图片',
+  `t_order_evaluation_rate` int(1) NULL DEFAULT NULL COMMENT '订单商品评分',
+  `t_order_evaluation_time` datetime(0) NULL DEFAULT NULL COMMENT '评价时间'
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of codeworld_order_evaluation
+-- ----------------------------
+INSERT INTO `codeworld_order_evaluation` VALUES (21218152741800000, '12345', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/22/85261613988411776.jpg', 4, '2021-02-22 18:06:56');
+INSERT INTO `codeworld_order_evaluation` VALUES (21218152741800000, '123445', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/22/3911613988842691.jpg', 3, '2021-02-22 18:14:12');
+INSERT INTO `codeworld_order_evaluation` VALUES (21218152742062144, '12345', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/22/23951613989008314.jpg', 3, '2021-02-22 18:16:54');
+INSERT INTO `codeworld_order_evaluation` VALUES (21218107738622016, '好', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/22/58531613989067952.jpg', 3, '2021-02-22 18:17:53');
+
+-- ----------------------------
 -- Table structure for codeworld_order_return
 -- ----------------------------
 DROP TABLE IF EXISTS `codeworld_order_return`;
@@ -4061,12 +4081,12 @@ INSERT INTO `codeworld_order_status` VALUES (21207409547348032, 8, '2021-02-04 1
 INSERT INTO `codeworld_order_status` VALUES (21211111819642944, 5, '2021-02-05 10:07:36', NULL, NULL, NULL, '2021-02-05 10:07:45');
 INSERT INTO `codeworld_order_status` VALUES (21211115239966784, 5, '2021-02-05 10:08:28', NULL, NULL, NULL, '2021-02-05 10:14:50');
 INSERT INTO `codeworld_order_status` VALUES (21211115240360000, 5, '2021-02-05 10:08:28', NULL, NULL, NULL, '2021-02-05 10:14:50');
-INSERT INTO `codeworld_order_status` VALUES (21218107738622016, 3, '2021-02-06 15:46:45', '2021-02-06 15:47:11', '2021-02-06 15:48:08', NULL, NULL);
+INSERT INTO `codeworld_order_status` VALUES (21218107738622016, 6, '2021-02-06 15:46:45', '2021-02-06 15:47:11', '2021-02-06 15:48:08', NULL, '2021-02-20 17:14:55');
 INSERT INTO `codeworld_order_status` VALUES (21218115307112512, 8, '2021-02-06 15:48:40', '2021-02-06 15:48:42', NULL, NULL, '2021-02-06 15:48:49');
 INSERT INTO `codeworld_order_status` VALUES (21218120571684928, 8, '2021-02-06 15:50:01', '2021-02-06 15:50:02', NULL, NULL, '2021-02-06 15:50:04');
 INSERT INTO `codeworld_order_status` VALUES (21218122411149376, 8, '2021-02-06 15:50:29', '2021-02-06 15:50:30', NULL, NULL, '2021-02-06 15:50:32');
 INSERT INTO `codeworld_order_status` VALUES (21218124920916032, 8, '2021-02-06 15:51:07', '2021-02-06 15:51:08', NULL, NULL, '2021-02-06 15:51:17');
-INSERT INTO `codeworld_order_status` VALUES (21218152742062144, 3, '2021-02-06 15:58:12', '2021-02-06 15:58:12', '2021-02-06 15:58:30', NULL, NULL);
+INSERT INTO `codeworld_order_status` VALUES (21218152742062144, 6, '2021-02-06 15:58:12', '2021-02-06 15:58:12', '2021-02-06 15:58:30', NULL, '2021-02-20 17:13:43');
 
 -- ----------------------------
 -- Table structure for codeworld_param
