@@ -5,6 +5,7 @@ import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.order.domain.OrderDeliveryMessage;
 import com.codeworld.fc.order.request.OrderAddRequest;
+import com.codeworld.fc.order.request.OrderEvaluationRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.*;
@@ -141,5 +142,11 @@ public class OrderController {
     @ApiOperation("订单收货")
     public FCResponse<Void> confirmReceipt(@RequestParam("orderDetailId") Long orderDetailId){
         return this.orderService.confirmReceipt(orderDetailId);
+    }
+
+    @PostMapping("/app/order-product-evaluation")
+    @ApiOperation("订单商品评价")
+    public FCResponse<Void> orderProductEvaluation(@RequestBody @Valid OrderEvaluationRequest orderEvaluationRequest){
+        return this.orderService.orderProductEvaluation(orderEvaluationRequest);
     }
 }

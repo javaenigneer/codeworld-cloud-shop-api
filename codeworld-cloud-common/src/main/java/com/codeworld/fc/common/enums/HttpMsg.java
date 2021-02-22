@@ -534,7 +534,7 @@ public class HttpMsg {
     }
 
     /**
-     * 地区
+     * 服务订单
      */
     public enum orderReturn {
 
@@ -545,6 +545,26 @@ public class HttpMsg {
         ;
 
         orderReturn(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 订单商品评价
+     */
+    public enum orderEvaluation {
+
+        ORDER_EVALUATION_SUCCESS("评价成功")
+        ;
+
+        orderEvaluation(String msg) {
             this.msg = msg;
         }
 

@@ -14,17 +14,12 @@ import com.codeworld.fc.order.client.CartClient;
 import com.codeworld.fc.order.client.MemberClient;
 import com.codeworld.fc.order.client.MerchantClient;
 import com.codeworld.fc.order.domain.*;
-import com.codeworld.fc.order.entity.Order;
-import com.codeworld.fc.order.entity.OrderDetail;
-import com.codeworld.fc.order.entity.OrderReturn;
-import com.codeworld.fc.order.entity.OrderStatus;
+import com.codeworld.fc.order.entity.*;
 import com.codeworld.fc.order.interceptor.AuthInterceptor;
-import com.codeworld.fc.order.mapper.OrderDetailMapper;
-import com.codeworld.fc.order.mapper.OrderMapper;
-import com.codeworld.fc.order.mapper.OrderReturnMapper;
-import com.codeworld.fc.order.mapper.OrderStatusMapper;
+import com.codeworld.fc.order.mapper.*;
 import com.codeworld.fc.order.properties.OrderExcelProperties;
 import com.codeworld.fc.order.request.OrderAddRequest;
+import com.codeworld.fc.order.request.OrderEvaluationRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.*;
@@ -36,6 +31,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +69,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailMapper orderDetailMapper;
     @Autowired(required = false)
     private OrderReturnMapper orderReturnMapper;
+    @Autowired(required = false)
+    private OrderEvaluationMapper orderEvaluationMapper;
 
     @Autowired(required = false)
     private StringRedisTemplate stringRedisTemplate;
@@ -944,30 +942,30 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public FCResponse<Void> cancelOrder(Long orderId) {
-        if (ObjectUtils.isEmpty(orderId) || orderId <= 0){
+        if (ObjectUtils.isEmpty(orderId) || orderId <= 0) {
             log.error("取消订单失败，失败原因：订单号为空或者订单号小于0");
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.order.ORDER_ID_ERROR.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.order.ORDER_ID_ERROR.getMsg());
         }
         // 根据订单号查询订单信息
         Order order = this.orderMapper.getOrderByOrderId(orderId);
-        if (ObjectUtils.isEmpty(order)){
-            log.error("取消订单失败，失败原因：没有该订单信息，订单号为：{}",orderId);
-            FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        if (ObjectUtils.isEmpty(order)) {
+            log.error("取消订单失败，失败原因：没有该订单信息，订单号为：{}", orderId);
+            FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         // 根据母订单号查询子集订单号
         List<OrderDetail> orderDetails = this.orderDetailMapper.getOrderDetailByOrderId(orderId);
-        if (CollectionUtils.isEmpty(orderDetails)){
-            log.error("取消订单失败，失败原因：没有该订单详细信息，订单号为：{}",orderId);
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+        if (CollectionUtils.isEmpty(orderDetails)) {
+            log.error("取消订单失败，失败原因：没有该订单详细信息，订单号为：{}", orderId);
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
         }
         // 将其所有子集订单状态改为5，交易关闭
         List<Long> orderDetailIds = orderDetails.stream().map(OrderDetail::getDetailId).collect(Collectors.toList());
         // 放入到队列中异步取消
-        this.amqpTemplate.convertAndSend("order.cancel",orderDetailIds);
+        this.amqpTemplate.convertAndSend("order.cancel", orderDetailIds);
         // 删除redis中的缓存
         // 删除redis中的订单id
         this.stringRedisTemplate.delete(String.valueOf(order.getId()));
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_CANCEL_SUCCESS.getMsg());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_CANCEL_SUCCESS.getMsg());
     }
 
     /**
@@ -979,7 +977,7 @@ public class OrderServiceImpl implements OrderService {
     public FCResponse<MerchantDashBoardData> getMerchantDashBoardData() {
         // 获取当前登录商户
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (ObjectUtils.isEmpty(loginInfoData)){
+        if (ObjectUtils.isEmpty(loginInfoData)) {
             throw new FCException("登录过期，请重新登录");
         }
         // 根据商户id获取商户信息
@@ -1011,7 +1009,7 @@ public class OrderServiceImpl implements OrderService {
         // 查询待售后总数
         Integer afterSaleCount = this.orderDetailMapper.getMerchantDashBoardAfterSaleCount(merchantResponse.getNumber());
         merchantDashBoardData.setAfterSaleCount(afterSaleCount);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),merchantDashBoardData);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(), merchantDashBoardData);
     }
 
     /**
@@ -1039,8 +1037,35 @@ public class OrderServiceImpl implements OrderService {
         orderStatus.setCloseTime(new Date());
         try {
             this.orderStatusMapper.updateOrderStatus(orderStatus);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_CONFIRM_RECEIPT_SUCCESS.getMsg());
-        }catch (Exception e){
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_CONFIRM_RECEIPT_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 订单商品评价
+     *
+     * @param orderEvaluationRequest
+     * @return
+     */
+    @Override
+    public FCResponse<Void> orderProductEvaluation(OrderEvaluationRequest orderEvaluationRequest) {
+        OrderEvaluation orderEvaluation = new OrderEvaluation();
+        BeanUtil.copyProperties(orderEvaluationRequest, orderEvaluation);
+        String evaluationImage = orderEvaluationRequest.getEvaluationImages().stream().map(String::valueOf).collect(Collectors.joining(","));
+        orderEvaluation.setEvaluationImage(evaluationImage);
+        orderEvaluation.setEvaluationTime(new Date());
+        try {
+            this.orderEvaluationMapper.orderProductEvaluation(orderEvaluation);
+            // 修改订单状态
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrderId(orderEvaluation.getOrderDetailId());
+            orderStatus.setOrderStatus(6);
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderEvaluation.ORDER_EVALUATION_SUCCESS.getMsg());
+        } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }

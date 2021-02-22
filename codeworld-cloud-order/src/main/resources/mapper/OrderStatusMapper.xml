@@ -38,16 +38,16 @@
         update
         codeworld_order_status
         set
-        t_order_status = #{orderStatus},
         <if test="payTime != null">
-            t_order_pay_time = #{payTime}
+            t_order_pay_time = #{payTime},
         </if>
         <if test="closeTime != null">
-            t_order_close_time = #{closeTime}
+            t_order_close_time = #{closeTime},
         </if>
         <if test="consignTime != null">
-            t_order_consign_time = #{consignTime}
+            t_order_consign_time = #{consignTime},
         </if>
+        t_order_status = #{orderStatus}
         where
         t_order_id = #{orderId}
     </update>

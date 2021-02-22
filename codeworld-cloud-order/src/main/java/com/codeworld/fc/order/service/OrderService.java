@@ -4,6 +4,7 @@ import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.order.domain.OrderDeliveryMessage;
 import com.codeworld.fc.order.request.OrderAddRequest;
+import com.codeworld.fc.order.request.OrderEvaluationRequest;
 import com.codeworld.fc.order.request.OrderSearchRequest;
 import com.codeworld.fc.order.request.PayOrderRequest;
 import com.codeworld.fc.order.response.*;
@@ -149,4 +150,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> confirmReceipt(Long orderDetailId);
+
+    /**
+     * 订单商品评价
+     * @param orderEvaluationRequest
+     * @return
+     */
+    FCResponse<Void> orderProductEvaluation(OrderEvaluationRequest orderEvaluationRequest);
 }
