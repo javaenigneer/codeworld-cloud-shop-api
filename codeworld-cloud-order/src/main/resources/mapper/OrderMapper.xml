@@ -156,11 +156,21 @@
         co.t_order_buyer_name AS buyerName,
         cod.t_order_delivery_company AS orderDeliveryCompany,
         cod.t_order_delivery_number AS orderDeliveryNumber,
-        cos.t_order_status AS orderStatus
+        cos.t_order_status AS orderStatus,
+        cos.t_order_create_time AS createTime,
+        cos.t_order_pay_time AS payTime,
+        cos.t_order_consign_time AS consignTime,
+        cos.t_order_end_time AS endTime,
+        cos.t_order_close_time AS closeTime,
+        coe.t_order_evaluation_time AS evaluationTime,
+        cor.t_return_order_apply_time AS orderReturnApplyTime,
+        cor.t_return_handle_time AS orderReturnHandleTime
         from
         codeworld_order_detail AS cod
         left join codeworld_order AS co on cod.t_order_id = co.t_order_id
         left join codeworld_order_status AS cos on cod.t_order_detail_id = cos.t_order_id
+        left join codeworld_order_evaluation AS coe on cod.t_order_detail_id = coe.t_order_detail_id
+        left join codeworld_order_return AS cor on cod.t_order_detail_id = cor.t_order_id
         where
         cod.t_order_detail_id = #{orderDetailId}
     </select>
