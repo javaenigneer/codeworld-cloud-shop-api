@@ -164,7 +164,8 @@
         cos.t_order_close_time AS closeTime,
         coe.t_order_evaluation_time AS evaluationTime,
         cor.t_return_order_apply_time AS orderReturnApplyTime,
-        cor.t_return_handle_time AS orderReturnHandleTime
+        cor.t_return_handle_time AS orderReturnHandleTime,
+        cor.t_return_order_status AS orderReturnStatus
         from
         codeworld_order_detail AS cod
         left join codeworld_order AS co on cod.t_order_id = co.t_order_id

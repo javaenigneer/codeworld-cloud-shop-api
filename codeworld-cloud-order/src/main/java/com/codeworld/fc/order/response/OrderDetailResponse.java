@@ -89,4 +89,7 @@ public class OrderDetailResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderReturnHandleTime;
 
+    @ApiModelProperty("订单退货退款状态")
+    private Integer orderReturnStatus;
+
 }
