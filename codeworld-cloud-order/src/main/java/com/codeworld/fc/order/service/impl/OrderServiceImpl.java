@@ -507,7 +507,7 @@ public class OrderServiceImpl implements OrderService {
                     orderStatusCount.setCompletedCount(orderCount.getOrderCount());
                     break;
                 // 待评价
-                case 6:
+                case 9:
                     orderStatusCount.setComment(orderCount.getOrderCount());
                     break;
             }
@@ -1032,8 +1032,8 @@ public class OrderServiceImpl implements OrderService {
         if (orderStatus.getOrderStatus() != 3) {
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
         }
-        // 修改订单信息为已收货
-        orderStatus.setOrderStatus(4);
+        // 修改订单信息为未评价
+        orderStatus.setOrderStatus(9);
         orderStatus.setCloseTime(new Date());
         try {
             this.orderStatusMapper.updateOrderStatus(orderStatus);
@@ -1062,7 +1062,8 @@ public class OrderServiceImpl implements OrderService {
             // 修改订单状态
             OrderStatus orderStatus = new OrderStatus();
             orderStatus.setOrderId(orderEvaluation.getOrderDetailId());
-            orderStatus.setOrderStatus(6);
+            // 设置订单已完成
+            orderStatus.setOrderStatus(4);
             this.orderStatusMapper.updateOrderStatus(orderStatus);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderEvaluation.ORDER_EVALUATION_SUCCESS.getMsg());
         } catch (Exception e) {

@@ -21,6 +21,10 @@ public class OrderStatus {
     @ApiModelProperty("订单Id")
     private Long orderId;
 
+    /**
+     * 订单状态 1、未付款 2、已付款,未发货 3、已发货,未确认 4、交易成功 5、交易关闭 6、已评价 7、失效订单
+     * 8、售后服务 9、未评价
+     */
     @ApiModelProperty("订单状态")
     private Integer orderStatus;
 
