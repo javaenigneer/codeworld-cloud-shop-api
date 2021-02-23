@@ -118,8 +118,9 @@ order by cu.t_create_time DESC
     <!-- 根据用户id查询用户信息 -->
     <select id="getUserById" parameterType="java.lang.Long" resultType="com.codeworld.fc.system.user.entity.User">
         select
-        t_user_id,
-        t_user_avatar
+        t_user_id AS userId,
+        t_user_avatar AS avatar,
+        t_user_status AS userStatus
         from
         codeworld_user
         where
