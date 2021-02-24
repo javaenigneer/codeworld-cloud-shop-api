@@ -482,7 +482,9 @@ public class HttpMsg {
         CAROUSE_DATA_SUCCESS("轮播图数据查询成功"),
         CAROUSE_ADD_SUCCESS("轮播图添加成功"),
         CAROUSE_END_DATE_ERROR("结束时间不能小于开始时间"),
-        CAROUSE_DATE_ERROR("开始时间或结束时间不能小于当前时间");
+        CAROUSE_DATE_ERROR("开始时间或结束时间不能小于当前时间"),
+        CAROUSE_REVIEW_SUCCESS("轮播图审核成功")
+        ;
 
         carouse(String msg) {
             this.msg = msg;

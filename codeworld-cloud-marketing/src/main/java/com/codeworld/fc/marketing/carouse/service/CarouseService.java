@@ -5,6 +5,7 @@ import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.marketing.carouse.entity.Carouse;
 import com.codeworld.fc.marketing.carouse.request.CarouseAddRequest;
 import com.codeworld.fc.marketing.carouse.request.CarouseSearchRequest;
+import com.codeworld.fc.marketing.carouse.request.ReviewCarouseRequest;
 
 import java.util.List;
 
@@ -54,4 +55,11 @@ public interface CarouseService {
      * @return
      */
     FCResponse<DataResponse<List<Carouse>>> getPageCarouseMarketingSystem(CarouseSearchRequest carouseSearchRequest);
+
+    /**
+     * 审核轮播图
+     * @param reviewCarouseRequest
+     * @return
+     */
+    FCResponse<Void> reviewCarouse(ReviewCarouseRequest reviewCarouseRequest);
 }

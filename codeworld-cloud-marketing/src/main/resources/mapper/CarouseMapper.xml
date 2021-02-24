@@ -144,7 +144,12 @@
         update
         codeworld_carouse
         set
-        t_carouse_status = #{status}
+        <if test="status != null">
+            t_carouse_status = #{status}
+        </if>
+        <if test="reviewStatus != null">
+            t_carouse_review_status = #{reviewStatus}
+        </if>
         where
         t_carouse_id = #{id}
     </update>

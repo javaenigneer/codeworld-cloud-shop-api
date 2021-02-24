@@ -14,6 +14,7 @@ import com.codeworld.fc.marketing.carouse.entity.Carouse;
 import com.codeworld.fc.marketing.carouse.mapper.CarouseMapper;
 import com.codeworld.fc.marketing.carouse.request.CarouseAddRequest;
 import com.codeworld.fc.marketing.carouse.request.CarouseSearchRequest;
+import com.codeworld.fc.marketing.carouse.request.ReviewCarouseRequest;
 import com.codeworld.fc.marketing.carouse.service.CarouseService;
 import com.codeworld.fc.marketing.client.MerchantClient;
 import com.codeworld.fc.marketing.domain.MerchantResponse;
@@ -119,11 +120,6 @@ public class CarouseServiceImpl implements CarouseService {
         // 默认这是为app首页
         carouse.setPosition(carouseAddRequest.getPosition());
         this.carouseMapper.addCarouse(carouse);
-        // 实现异步操作
-        //现将carouse序列化
-        String json = JsonUtils.serialize(carouse);
-        this.amqpTemplate.convertAndSend("carouse.update.status.enable", json);
-        this.amqpTemplate.convertAndSend("carouse.update.status.disable",json);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.carouse.CAROUSE_ADD_SUCCESS.getMsg());
     }
 
@@ -199,5 +195,46 @@ public class CarouseServiceImpl implements CarouseService {
         }
         PageInfo<Carouse> pageInfo = new PageInfo<>(carouses);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.carouse.CAROUSE_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
+    }
+
+    /**
+     * 审核轮播图
+     *
+     * @param reviewCarouseRequest
+     * @return
+     */
+    @Override
+    public FCResponse<Void> reviewCarouse(ReviewCarouseRequest reviewCarouseRequest) {
+        // 判断开始时间和结束时间的比较
+        if (DateUtil.compare(reviewCarouseRequest.getStartTime(), new Date()) < 0
+                || DateUtil.compare(reviewCarouseRequest.getEndTime(), new Date()) < 0) {
+            // 开始时间和结束时间要大于当前时间
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.carouse.CAROUSE_DATE_ERROR.getMsg());
+        }
+        // 判断开始时间和结束时间
+        if (DateUtil.compare(reviewCarouseRequest.getStartTime(), reviewCarouseRequest.getEndTime()) > 0) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.carouse.CAROUSE_END_DATE_ERROR.getMsg());
+        }
+        Carouse carouse = new Carouse();
+        carouse.setId(reviewCarouseRequest.getId());
+        carouse.setReviewStatus(reviewCarouseRequest.getReviewStatus());
+        carouse.setStartTime(reviewCarouseRequest.getStartTime());
+        carouse.setEndTime(reviewCarouseRequest.getEndTime());
+        try {
+            this.carouseMapper.updateCarouseStatus(carouse);
+            // 判断轮播图是否通过
+            if (reviewCarouseRequest.getReviewStatus() == 1){
+                // 通过
+                // 实现异步操作
+                //现将carouse序列化
+                String json = JsonUtils.serialize(carouse);
+                this.amqpTemplate.convertAndSend("carouse.update.status.enable", json);
+                this.amqpTemplate.convertAndSend("carouse.update.status.disable",json);
+            }
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.carouse.CAROUSE_REVIEW_SUCCESS.getMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

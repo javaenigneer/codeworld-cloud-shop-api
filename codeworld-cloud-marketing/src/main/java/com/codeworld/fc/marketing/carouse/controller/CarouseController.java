@@ -6,6 +6,7 @@ import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.marketing.carouse.entity.Carouse;
 import com.codeworld.fc.marketing.carouse.request.CarouseAddRequest;
 import com.codeworld.fc.marketing.carouse.request.CarouseSearchRequest;
+import com.codeworld.fc.marketing.carouse.request.ReviewCarouseRequest;
 import com.codeworld.fc.marketing.carouse.service.CarouseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,5 +54,11 @@ public class CarouseController {
     @ApiOperation("营销管理员分页获取首页轮播图")
     public FCResponse<DataResponse<List<Carouse>>> getPageCarouseMarketingSystem(@RequestBody CarouseSearchRequest carouseSearchRequest){
         return this.carouseService.getPageCarouseMarketingSystem(carouseSearchRequest);
+    }
+
+    @PostMapping("review-carouse")
+    @ApiOperation("审核轮播图")
+    public FCResponse<Void> reviewCarouse(@RequestBody @Valid ReviewCarouseRequest reviewCarouseRequest){
+        return this.carouseService.reviewCarouse(reviewCarouseRequest);
     }
 }
