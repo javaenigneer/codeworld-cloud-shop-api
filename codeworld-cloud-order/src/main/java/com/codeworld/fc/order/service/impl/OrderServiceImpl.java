@@ -18,10 +18,7 @@ import com.codeworld.fc.order.entity.*;
 import com.codeworld.fc.order.interceptor.AuthInterceptor;
 import com.codeworld.fc.order.mapper.*;
 import com.codeworld.fc.order.properties.OrderExcelProperties;
-import com.codeworld.fc.order.request.OrderAddRequest;
-import com.codeworld.fc.order.request.OrderEvaluationRequest;
-import com.codeworld.fc.order.request.OrderSearchRequest;
-import com.codeworld.fc.order.request.PayOrderRequest;
+import com.codeworld.fc.order.request.*;
 import com.codeworld.fc.order.response.*;
 import com.codeworld.fc.order.service.OrderService;
 import com.github.pagehelper.PageHelper;
@@ -1067,6 +1064,48 @@ public class OrderServiceImpl implements OrderService {
             this.orderStatusMapper.updateOrderStatus(orderStatus);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderEvaluation.ORDER_EVALUATION_SUCCESS.getMsg());
         } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 订单退货申请
+     *
+     * @param orderReturnRequest
+     * @return
+     */
+    @Override
+    public FCResponse<Void> orderReturnApply(OrderReturnRequest orderReturnRequest) {
+        // 根据订单明细id查询是否存在
+        OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderDetailId(orderReturnRequest.getOrderDetailId());
+        if (ObjectUtils.isEmpty(orderStatus)) {
+            log.info("退款订单不存在，订单id为{}", orderReturnRequest.getOrderDetailId());
+            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+
+        }
+        // 判断该订单状态是否是已完成
+        if (orderStatus.getOrderStatus() != 4){
+            log.error("订单状态错误：订单号为{}",orderReturnRequest.getOrderDetailId());
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
+        }
+
+        OrderReturn orderReturn = new OrderReturn();
+        orderReturn.setOrderReturnId(idWorker.nextId());
+        orderReturn.setOrderId(orderReturnRequest.getOrderDetailId());
+        // 设置状态为未处理
+        orderReturn.setOrderReturnStatus(0);
+        // 设置订单服务为退货申请
+        orderReturn.setOrderReturnType(3);
+        orderReturn.setOrderReturnApplyTime(new Date());
+        orderReturn.setOrderReturnReason(orderReturnRequest.getReason());
+        try {
+            this.orderReturnMapper.addOrderReturn(orderReturn);
+            // 修改订单状态为售后服务状态为8
+            orderStatus.setOrderStatus(8);
+            this.orderStatusMapper.updateOrderStatus(orderStatus);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_RETURN_APPLY_SUCCESS.getMsg());
+        }catch (Exception e){
             e.printStackTrace();
             throw new FCException("系统错误");
         }

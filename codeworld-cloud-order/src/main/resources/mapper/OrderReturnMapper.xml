@@ -21,7 +21,8 @@
         t_order_id,
         t_return_order_status,
         t_return_order_apply_time,
-        t_return_order_type
+        t_return_order_type,
+        t_return_order_reason
         )
         values
         (
@@ -29,7 +30,8 @@
         #{orderId},
         #{orderReturnStatus},
         #{orderReturnApplyTime},
-        #{orderReturnType}
+        #{orderReturnType},
+        #{orderReturnReason}
         )
     </insert>
 

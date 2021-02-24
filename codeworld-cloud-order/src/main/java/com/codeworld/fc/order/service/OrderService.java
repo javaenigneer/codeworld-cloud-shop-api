@@ -3,10 +3,7 @@ package com.codeworld.fc.order.service;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.order.domain.OrderDeliveryMessage;
-import com.codeworld.fc.order.request.OrderAddRequest;
-import com.codeworld.fc.order.request.OrderEvaluationRequest;
-import com.codeworld.fc.order.request.OrderSearchRequest;
-import com.codeworld.fc.order.request.PayOrderRequest;
+import com.codeworld.fc.order.request.*;
 import com.codeworld.fc.order.response.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -157,4 +154,11 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> orderProductEvaluation(OrderEvaluationRequest orderEvaluationRequest);
+
+    /**
+     * 订单退货申请
+     * @param orderReturnRequest
+     * @return
+     */
+    FCResponse<Void> orderReturnApply(OrderReturnRequest orderReturnRequest);
 }
