@@ -30,4 +30,7 @@ public class CarouseSearchRequest extends PageQuery {
     @ApiModelProperty("结束时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
+
+    @ApiModelProperty("商户号")
+    private String merchantNumber;
 }

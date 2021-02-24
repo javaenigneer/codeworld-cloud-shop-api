@@ -40,4 +40,8 @@ public class CarouseAddRequest {
     @ApiModelProperty("图片")
     @NotNull(message = "请上传图片")
     private String image;
+
+    @ApiModelProperty("轮播图位置 1--app首页 2--店铺")
+    @NotNull(message = "请选择轮播图位置")
+    private Integer position;
 }

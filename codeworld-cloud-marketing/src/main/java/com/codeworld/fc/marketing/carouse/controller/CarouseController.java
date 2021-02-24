@@ -31,7 +31,7 @@ public class CarouseController {
     private CarouseService carouseService;
 
     @PostMapping("get-page-carouse")
-    @ApiOperation("分页获取首页轮播图")
+    @ApiOperation("商户分页获取首页轮播图")
     public FCResponse<DataResponse<List<Carouse>>> getPageCarouse(@RequestBody CarouseSearchRequest carouseSearchRequest){
         return this.carouseService.getPageCarouse(carouseSearchRequest);
     }
@@ -47,5 +47,11 @@ public class CarouseController {
     @PassToken
     public FCResponse<List<Carouse>> getCarouseEnable(){
         return this.carouseService.getCarouseEnable();
+    }
+
+    @PostMapping("get-page-carouse-marketing-system")
+    @ApiOperation("营销管理员分页获取首页轮播图")
+    public FCResponse<DataResponse<List<Carouse>>> getPageCarouseMarketingSystem(@RequestBody CarouseSearchRequest carouseSearchRequest){
+        return this.carouseService.getPageCarouseMarketingSystem(carouseSearchRequest);
     }
 }

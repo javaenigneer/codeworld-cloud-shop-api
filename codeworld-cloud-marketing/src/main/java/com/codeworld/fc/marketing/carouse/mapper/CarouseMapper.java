@@ -46,4 +46,11 @@ public interface CarouseMapper {
      * @return
      */
     List<Long> getCarouseEndTimeGtNow();
+
+    /**
+     * 分页获取营销管理员轮播图
+     * @param carouseSearchRequest
+     * @return
+     */
+    List<Carouse> getPageCarouseMarketingSystem(CarouseSearchRequest carouseSearchRequest);
 }

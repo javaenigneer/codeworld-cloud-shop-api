@@ -10,6 +10,8 @@
         <result property="status" column="t_carouse_status"/>
         <result property="startTime" column="t_carouse_start_time"/>
         <result property="endTime" column="t_carouse_end_time"/>
+        <result property="reviewStatus" column="t_carouse_review_status"/>
+        <result property="position" column="t_carouse_position"/>
     </resultMap>
 
     <!-- 分页查询轮播图 -->
@@ -22,7 +24,9 @@
         t_carouse_image,
         t_carouse_status,
         t_carouse_start_time,
-        t_carouse_end_time
+        t_carouse_end_time,
+        t_carouse_review_status,
+        t_carouse_position
         from
         codeworld_carouse
         <where>
@@ -31,7 +35,7 @@
             </if>
             <if test="startTime != null ">
                 <![CDATA[
-                    and   t_carouse_start_time >= #{startTime}
+                    and  t_carouse_start_time >= #{startTime}
                  ]]>
             </if>
             <if test="endTime != null ">
@@ -39,6 +43,7 @@
                    and  t_carouse_end_time <= #{endTime}
                  ]]>
             </if>
+            and t_merchant_number = #{merchantNumber}
         </where>
         order by t_carouse_start_time DESC
     </select>
@@ -70,6 +75,38 @@
         and
         datediff(now(),t_carouse_end_time) > 1
     </select>
+
+    <select id="getPageCarouseMarketingSystem"
+            parameterType="com.codeworld.fc.marketing.carouse.request.CarouseSearchRequest"
+            resultMap="BaseCarouseMap">
+        select
+        t_carouse_id,
+        t_carouse_title,
+        t_carouse_image,
+        t_carouse_status,
+        t_carouse_start_time,
+        t_carouse_end_time,
+        t_carouse_review_status,
+        t_carouse_position
+        from
+        codeworld_carouse
+        <where>
+            <if test="status != null">
+                and t_carouse_status = #{status}
+            </if>
+            <if test="startTime != null ">
+                <![CDATA[
+                    and   t_carouse_start_time >= #{startTime}
+                 ]]>
+            </if>
+            <if test="endTime != null ">
+                <![CDATA[
+                   and  t_carouse_end_time <= #{endTime}
+                 ]]>
+            </if>
+        </where>
+        order by t_carouse_start_time DESC
+    </select>
     <!-- 添加轮播图 -->
     <insert id="addCarouse" parameterType="com.codeworld.fc.marketing.carouse.entity.Carouse">
 
@@ -80,7 +117,11 @@
         t_carouse_image,
         t_carouse_status,
         t_carouse_start_time,
-        t_carouse_end_time
+        t_carouse_end_time,
+        t_carouse_create_time,
+        t_carouse_review_status,
+        t_carouse_position,
+        t_merchant_number
         )
         values
         (
@@ -89,7 +130,11 @@
         #{image},
         #{status},
         #{startTime},
-        #{endTime}
+        #{endTime},
+        #{createTime},
+        #{reviewStatus},
+        #{position},
+        #{merchantNumber}
         )
     </insert>
 

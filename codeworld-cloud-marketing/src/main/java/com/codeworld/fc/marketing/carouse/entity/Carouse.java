@@ -42,4 +42,13 @@ public class Carouse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
+    @ApiModelProperty("审核状态 0--未审核 1--审核通过 -1--审核未通过")
+    private Integer reviewStatus;
+
+    @ApiModelProperty("轮播图位置 1--app首页 2--店铺")
+    private Integer position;
+
+    @ApiModelProperty("商户号")
+    private String merchantNumber;
+
 }

@@ -2,8 +2,10 @@ package com.codeworld.fc.marketing.carouse.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+import com.codeworld.fc.common.domain.LoginInfoData;
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.enums.HttpMsg;
+import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
@@ -13,6 +15,9 @@ import com.codeworld.fc.marketing.carouse.mapper.CarouseMapper;
 import com.codeworld.fc.marketing.carouse.request.CarouseAddRequest;
 import com.codeworld.fc.marketing.carouse.request.CarouseSearchRequest;
 import com.codeworld.fc.marketing.carouse.service.CarouseService;
+import com.codeworld.fc.marketing.client.MerchantClient;
+import com.codeworld.fc.marketing.domain.MerchantResponse;
+import com.codeworld.fc.marketing.interceptor.AuthInterceptor;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.ObjectUtils;
@@ -44,6 +49,9 @@ public class CarouseServiceImpl implements CarouseService {
 
     private static final String CAROUSE_ENABLE = "carouse_enable";
 
+    @Autowired(required = false)
+    private MerchantClient merchantClient;
+
     /**
      * 分页获取轮播图
      *
@@ -51,6 +59,18 @@ public class CarouseServiceImpl implements CarouseService {
      * @return
      */
     public FCResponse<DataResponse<List<Carouse>>> getPageCarouse(CarouseSearchRequest carouseSearchRequest) {
+        // 判断是否登录
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            throw new FCException("登录失效，请重新登录");
+        }
+        // 根据id获取商户号
+        FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
+        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            throw new FCException(merchantFcResponse.getMsg());
+        }
+        MerchantResponse merchantResponse = merchantFcResponse.getData();
+        carouseSearchRequest.setMerchantNumber(merchantResponse.getNumber());
         PageHelper.startPage(carouseSearchRequest.getPage(), carouseSearchRequest.getLimit());
         List<Carouse> carouses = this.carouseMapper.getPageCarouse(carouseSearchRequest);
         if (CollectionUtils.isEmpty(carouses)) {
@@ -68,6 +88,17 @@ public class CarouseServiceImpl implements CarouseService {
      */
     @Override
     public FCResponse<Void> addCarouse(CarouseAddRequest carouseAddRequest) {
+        // 判断是否登录
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            throw new FCException("登录失效，请重新登录");
+        }
+        // 根据id获取商户号
+        FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(loginInfoData.getId());
+        if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+            throw new FCException(merchantFcResponse.getMsg());
+        }
+        MerchantResponse merchantResponse = merchantFcResponse.getData();
         // 判断开始时间和结束时间的比较
         if (DateUtil.compare(carouseAddRequest.getStartTime(), new Date()) < 0
                 || DateUtil.compare(carouseAddRequest.getEndTime(), new Date()) < 0) {
@@ -82,6 +113,11 @@ public class CarouseServiceImpl implements CarouseService {
         BeanUtil.copyProperties(carouseAddRequest, carouse);
         carouse.setId(IDGeneratorUtil.getNextId());
         carouse.setCreateTime(new Date());
+        carouse.setMerchantNumber(merchantResponse.getNumber());
+        // 设置为未审核状态
+        carouse.setReviewStatus(0);
+        // 默认这是为app首页
+        carouse.setPosition(carouseAddRequest.getPosition());
         this.carouseMapper.addCarouse(carouse);
         // 实现异步操作
         //现将carouse序列化
@@ -146,5 +182,22 @@ public class CarouseServiceImpl implements CarouseService {
     @Override
     public List<Long> getCarouseEndTimeGtNow() {
         return this.carouseMapper.getCarouseEndTimeGtNow();
+    }
+
+    /**
+     * 分页获取营销管理员轮播图
+     *
+     * @param carouseSearchRequest
+     * @return
+     */
+    @Override
+    public FCResponse<DataResponse<List<Carouse>>> getPageCarouseMarketingSystem(CarouseSearchRequest carouseSearchRequest) {
+        PageHelper.startPage(carouseSearchRequest.getPage(), carouseSearchRequest.getLimit());
+        List<Carouse> carouses = this.carouseMapper.getPageCarouseMarketingSystem(carouseSearchRequest);
+        if (CollectionUtils.isEmpty(carouses)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.carouse.CAROUSE_DATA_EMPTY.getMsg(), DataResponse.dataResponse(carouses, 0L));
+        }
+        PageInfo<Carouse> pageInfo = new PageInfo<>(carouses);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.carouse.CAROUSE_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
     }
 }
