@@ -107,8 +107,8 @@ xxl-job-marketing ----> 9004
 
 #### 项目链接
 
-前端Web项目：[前端项目](https://github.com/javaenigneer/code-shop-system)
-
+前端Web项目(系统后台)：[系统后台](https://github.com/javaenigneer/code-shop-system)
+前端Web项目(商户后台)：[商户后台](https://github.com/javaenigneer/code-merchant-system)
 前端app：[前端App](https://github.com/javaenigneer/code-shop-app)
 
 #### 系统截图
