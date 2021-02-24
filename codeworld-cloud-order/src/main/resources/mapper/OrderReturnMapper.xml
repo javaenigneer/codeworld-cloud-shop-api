@@ -76,6 +76,7 @@
         cor.t_return_order_status AS orderReturnStatus,
         cor.t_order_id AS orderId,
         cor.t_return_order_apply_time AS orderReturnApplyTime,
+        cor.t_return_order_remark AS orderReturnRemark,
         co.t_order_buyer_name AS buyerName,
         co.t_order_address_id AS addressId
         from
@@ -100,7 +101,8 @@
         codeworld_order_return
         set
         t_return_order_status = #{orderReturnStatus},
-        t_return_handle_time = #{orderReturnHandleTime}
+        t_return_handle_time = #{orderReturnHandleTime},
+        t_return_order_remark = #{orderReturnRemark}
         where
         t_return_order_id = #{orderReturnId}
     </update>

@@ -678,19 +678,19 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 接受处理订单服务
      *
-     * @param orderReturnId
+     * @param orderProcessingRequest
      * @return
      */
     @Override
-    public FCResponse<Void> receiveProcessingServiceOrder(Long orderReturnId) {
-        if (ObjectUtils.isEmpty(orderReturnId) || orderReturnId <= 0) {
-            log.error("服务订单号错误,服务订单号为：{}", orderReturnId);
+    public FCResponse<Void> receiveProcessingServiceOrder(OrderProcessingRequest orderProcessingRequest) {
+        if (ObjectUtils.isEmpty(orderProcessingRequest.getOrderReturnId()) || orderProcessingRequest.getOrderReturnId() <= 0) {
+            log.error("服务订单号错误,服务订单号为：{}", orderProcessingRequest.getOrderReturnId());
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ID_ERROR.getMsg());
         }
         // 根据服务订单id查询信息
-        OrderReturn orderReturn = this.orderReturnMapper.getOrderReturnById(orderReturnId);
+        OrderReturn orderReturn = this.orderReturnMapper.getOrderReturnById(orderProcessingRequest.getOrderReturnId());
         if (ObjectUtils.isEmpty(orderReturn)) {
-            log.error("没有服务订单信息，服务订单号为：{}", orderReturnId);
+            log.error("没有服务订单信息，服务订单号为：{}", orderProcessingRequest.getOrderReturnId());
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_DATA_EMPTY.getMsg());
         }
         // 判断订单状态是否为未处理
@@ -700,6 +700,7 @@ public class OrderServiceImpl implements OrderService {
         }
         // 修改服务订单信息
         orderReturn.setOrderReturnStatus(1);
+        orderReturn.setOrderReturnRemark(orderProcessingRequest.getRemark());
         orderReturn.setOrderReturnHandleTime(new Date());
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
@@ -751,20 +752,20 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 拒绝处理订单服务
      *
-     * @param orderReturnId
+     * @param orderProcessingRequest
      * @return
      */
     @Override
-    public FCResponse<Void> refuseProcessServiceOrder(Long orderReturnId) {
+    public FCResponse<Void> refuseProcessServiceOrder(OrderProcessingRequest orderProcessingRequest) {
 
-        if (ObjectUtils.isEmpty(orderReturnId) || orderReturnId <= 0) {
-            log.error("服务订单号错误,服务订单号为：{}", orderReturnId);
+        if (ObjectUtils.isEmpty(orderProcessingRequest.getOrderReturnId()) || orderProcessingRequest.getOrderReturnId() <= 0) {
+            log.error("服务订单号错误,服务订单号为：{}", orderProcessingRequest.getOrderReturnId());
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ID_ERROR.getMsg());
         }
         // 根据服务订单id查询信息
-        OrderReturn orderReturn = this.orderReturnMapper.getOrderReturnById(orderReturnId);
+        OrderReturn orderReturn = this.orderReturnMapper.getOrderReturnById(orderProcessingRequest.getOrderReturnId());
         if (ObjectUtils.isEmpty(orderReturn)) {
-            log.error("没有服务订单信息，服务订单号为：{}", orderReturnId);
+            log.error("没有服务订单信息，服务订单号为：{}", orderProcessingRequest.getOrderReturnId());
             return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.orderReturn.ORDER_RETURN_DATA_EMPTY.getMsg());
         }
         // 判断订单状态是否为未处理
@@ -774,6 +775,7 @@ public class OrderServiceImpl implements OrderService {
         }
         // 修改服务订单信息，拒绝退款
         orderReturn.setOrderReturnStatus(5);
+        orderReturn.setOrderReturnRemark(orderProcessingRequest.getRemark());
         orderReturn.setOrderReturnHandleTime(new Date());
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);

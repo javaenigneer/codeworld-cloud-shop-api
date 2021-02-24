@@ -96,10 +96,10 @@ public interface OrderService {
 
     /**
      * 接受处理订单服务
-     * @param orderReturnId
+     * @param orderProcessingRequest
      * @return
      */
-    FCResponse<Void> receiveProcessingServiceOrder(Long orderReturnId);
+    FCResponse<Void> receiveProcessingServiceOrder(OrderProcessingRequest orderProcessingRequest);
 
     /**
      * 导出订单数据
@@ -109,10 +109,10 @@ public interface OrderService {
 
     /**
      * 拒绝处理订单服务
-     * @param orderReturnId
+     * @param orderProcessingRequest
      * @return
      */
-    FCResponse<Void> refuseProcessServiceOrder(Long orderReturnId);
+    FCResponse<Void> refuseProcessServiceOrder(OrderProcessingRequest orderProcessingRequest);
 
     /**
      * 异步创建订单

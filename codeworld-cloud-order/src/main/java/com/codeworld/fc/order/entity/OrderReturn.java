@@ -40,4 +40,7 @@ public class OrderReturn {
     @ApiModelProperty("订单退款退货申请时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderReturnApplyTime;
+
+    @ApiModelProperty("订单退款退货备注")
+    private String orderReturnRemark;
 }

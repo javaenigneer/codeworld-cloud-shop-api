@@ -107,14 +107,14 @@ public class OrderController {
 
     @PostMapping("/web/receive-processing-service-order")
     @ApiOperation("接受处理订单服务")
-    public FCResponse<Void> receiveProcessingServiceOrder(@RequestParam("orderReturnId") Long orderReturnId){
-        return this.orderService.receiveProcessingServiceOrder(orderReturnId);
+    public FCResponse<Void> receiveProcessingServiceOrder(@RequestBody @Valid OrderProcessingRequest orderProcessingRequest){
+        return this.orderService.receiveProcessingServiceOrder(orderProcessingRequest);
     }
 
     @PostMapping("/web/refuse-process-service-order")
     @ApiOperation("拒绝处理订单服务")
-    public FCResponse<Void> refuseProcessServiceOrder(@RequestParam("orderReturnId") Long orderReturnId){
-        return this.orderService.refuseProcessServiceOrder(orderReturnId);
+    public FCResponse<Void> refuseProcessServiceOrder(@RequestBody @Valid OrderProcessingRequest orderProcessingRequest){
+        return this.orderService.refuseProcessServiceOrder(orderProcessingRequest);
     }
 
     @PostMapping("/web/export-order")
