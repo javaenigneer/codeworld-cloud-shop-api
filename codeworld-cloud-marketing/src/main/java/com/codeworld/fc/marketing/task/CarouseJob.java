@@ -45,6 +45,7 @@ public class CarouseJob {
         }
         // 修改轮播图的状态
         try {
+            assert carouse != null;
             carouse.setStatus(1);
             this.carouseService.updateCarouseStatus(carouse);
             Long endTime = System.currentTimeMillis();
@@ -72,6 +73,7 @@ public class CarouseJob {
         }
         // 修改轮播图的状态
         try {
+            assert carouse != null;
             carouse.setStatus(0);
             this.carouseService.updateCarouseStatus(carouse);
             Long endTime = System.currentTimeMillis();

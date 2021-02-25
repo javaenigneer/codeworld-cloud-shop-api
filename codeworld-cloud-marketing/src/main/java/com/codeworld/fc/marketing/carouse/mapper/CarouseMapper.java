@@ -53,4 +53,11 @@ public interface CarouseMapper {
      * @return
      */
     List<Carouse> getPageCarouseMarketingSystem(CarouseSearchRequest carouseSearchRequest);
+
+    /**
+     * 根据id查询轮播图信息
+     * @param id
+     * @return
+     */
+    Carouse getCarouseById(Long id);
 }

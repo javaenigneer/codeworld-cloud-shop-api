@@ -62,7 +62,7 @@ public class CarouseServiceImpl implements CarouseService {
     public FCResponse<DataResponse<List<Carouse>>> getPageCarouse(CarouseSearchRequest carouseSearchRequest) {
         // 判断是否登录
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (ObjectUtils.isEmpty(loginInfoData)){
+        if (ObjectUtils.isEmpty(loginInfoData)) {
             throw new FCException("登录失效，请重新登录");
         }
         // 根据id获取商户号
@@ -91,7 +91,7 @@ public class CarouseServiceImpl implements CarouseService {
     public FCResponse<Void> addCarouse(CarouseAddRequest carouseAddRequest) {
         // 判断是否登录
         LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
-        if (ObjectUtils.isEmpty(loginInfoData)){
+        if (ObjectUtils.isEmpty(loginInfoData)) {
             throw new FCException("登录失效，请重新登录");
         }
         // 根据id获取商户号
@@ -143,26 +143,28 @@ public class CarouseServiceImpl implements CarouseService {
     @Override
     public FCResponse<List<Carouse>> getCarouseEnable() {
         // 先从redis中获取已上线的轮播图
-        if (this.stringRedisTemplate.hasKey(CAROUSE_ENABLE)){
+        if (this.stringRedisTemplate.hasKey(CAROUSE_ENABLE)) {
             String json = this.stringRedisTemplate.opsForValue().get(CAROUSE_ENABLE);
-            if (ObjectUtils.isNotEmpty(json)){
+            if (ObjectUtils.isNotEmpty(json)) {
                 List<Carouse> carouses = JsonUtils.parseList(json, Carouse.class);
-                return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.carouse.CAROUSE_DATA_SUCCESS.getMsg(),carouses);
+                return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.carouse.CAROUSE_DATA_SUCCESS.getMsg(), carouses);
             }
         }
         // 从数据库中查询数据
         List<Carouse> carouses = this.carouseMapper.getCarouseEnable();
-        if (CollectionUtils.isEmpty(carouses)){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.carouse.CAROUSE_DATA_EMPTY.getMsg());
+        if (CollectionUtils.isEmpty(carouses)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.carouse.CAROUSE_DATA_EMPTY.getMsg());
         }
         // 添加到redis中
         String json = JsonUtils.serialize(carouses);
-        this.stringRedisTemplate.opsForValue().set(CAROUSE_ENABLE,json);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.carouse.CAROUSE_DATA_SUCCESS.getMsg(),carouses);
+        assert json != null;
+        this.stringRedisTemplate.opsForValue().set(CAROUSE_ENABLE, json);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.carouse.CAROUSE_DATA_SUCCESS.getMsg(), carouses);
     }
 
     /**
      * 定时删除结束时间大于于当前时间1天的数据
+     *
      * @param carouseIds
      */
     @Override
@@ -223,15 +225,46 @@ public class CarouseServiceImpl implements CarouseService {
         try {
             this.carouseMapper.updateCarouseStatus(carouse);
             // 判断轮播图是否通过
-            if (reviewCarouseRequest.getReviewStatus() == 1){
+            if (reviewCarouseRequest.getReviewStatus() == 1) {
                 // 通过
                 // 实现异步操作
                 //现将carouse序列化
                 String json = JsonUtils.serialize(carouse);
                 this.amqpTemplate.convertAndSend("carouse.update.status.enable", json);
-                this.amqpTemplate.convertAndSend("carouse.update.status.disable",json);
+                this.amqpTemplate.convertAndSend("carouse.update.status.disable", json);
             }
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.carouse.CAROUSE_REVIEW_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.carouse.CAROUSE_REVIEW_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 删除轮播图
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public FCResponse<Void> deleteCarouse(Long id) {
+        if (ObjectUtils.isEmpty(id) || id <= 0) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.carouse.CAROUSE_ID_ERROR.getMsg());
+        }
+        // 查询轮播图是否过期
+        Carouse carouse = this.carouseMapper.getCarouseById(id);
+        if (ObjectUtils.isEmpty(carouse)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.carouse.CAROUSE_DATA_EMPTY.getMsg());
+        }
+        // 若轮播图状态不为过期状态
+        if (carouse.getStatus() != 0){
+            return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(),HttpMsg.carouse.CAROUSE_STATUS_ERROR.getMsg());
+        }
+        // 修改轮播图状态为删除状态
+        carouse.setStatus(-1);
+        try {
+            this.carouseMapper.updateCarouseStatus(carouse);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.carouse.CAROUSE_DELETE_SUCCESS.getMsg());
         }catch (Exception e){
             e.printStackTrace();
             throw new FCException("系统错误");

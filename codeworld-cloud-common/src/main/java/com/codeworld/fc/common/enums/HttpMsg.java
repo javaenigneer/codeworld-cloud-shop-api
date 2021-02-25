@@ -483,7 +483,10 @@ public class HttpMsg {
         CAROUSE_ADD_SUCCESS("轮播图添加成功"),
         CAROUSE_END_DATE_ERROR("结束时间不能小于开始时间"),
         CAROUSE_DATE_ERROR("开始时间或结束时间不能小于当前时间"),
-        CAROUSE_REVIEW_SUCCESS("轮播图审核成功")
+        CAROUSE_REVIEW_SUCCESS("轮播图审核成功"),
+        CAROUSE_ID_ERROR("ID为空或者ID无效"),
+        CAROUSE_STATUS_ERROR("轮播图状态错误"),
+        CAROUSE_DELETE_SUCCESS("轮播图删除成功")
         ;
 
         carouse(String msg) {

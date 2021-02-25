@@ -104,8 +104,20 @@
                    and  t_carouse_end_time <= #{endTime}
                  ]]>
             </if>
+                 and t_carouse_status != -1
         </where>
         order by t_carouse_start_time DESC
+    </select>
+
+    <select id="getCarouseById" parameterType="java.lang.Long"
+    resultMap="BaseCarouseMap">
+        select
+        t_carouse_id,
+        t_carouse_status
+        from
+        codeworld_carouse
+        where
+        t_carouse_id = #{id}
     </select>
     <!-- 添加轮播图 -->
     <insert id="addCarouse" parameterType="com.codeworld.fc.marketing.carouse.entity.Carouse">

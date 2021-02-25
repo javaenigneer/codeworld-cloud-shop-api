@@ -62,4 +62,11 @@ public interface CarouseService {
      * @return
      */
     FCResponse<Void> reviewCarouse(ReviewCarouseRequest reviewCarouseRequest);
+
+    /**
+     * 删除轮播图
+     * @param id
+     * @return
+     */
+    FCResponse<Void> deleteCarouse(Long id);
 }

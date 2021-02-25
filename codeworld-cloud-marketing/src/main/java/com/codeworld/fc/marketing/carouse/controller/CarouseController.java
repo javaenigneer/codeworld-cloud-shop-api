@@ -61,4 +61,10 @@ public class CarouseController {
     public FCResponse<Void> reviewCarouse(@RequestBody @Valid ReviewCarouseRequest reviewCarouseRequest){
         return this.carouseService.reviewCarouse(reviewCarouseRequest);
     }
+
+    @PostMapping("delete-carouse")
+    @ApiOperation("删除轮播图")
+    public FCResponse<Void> deleteCarouse(@RequestParam("id") Long id){
+        return this.carouseService.deleteCarouse(id);
+    }
 }
