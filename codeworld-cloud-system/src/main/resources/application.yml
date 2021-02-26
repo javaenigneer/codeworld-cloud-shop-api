@@ -18,6 +18,8 @@ spring:
   redis:
     host: 192.168.2.4
     database: 5
+  main:
+    allow-bean-definition-overriding: true
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
@@ -26,3 +28,13 @@ codeworld:
     area:
       tree: areaTree
       list: areaList
+  jwt:
+    secret: codeworld@Login(Auth}*^31)&codeworld% # 用于生存rsa公钥和私钥的密文,越复杂越好
+    pubKeyPath: D:\\temp\\rsa\\rsa.pub # 公钥地址
+    priKeyPath: D:\\temp\\rsa\\rsa.pri # 私钥地址
+    expire: 30   # 过期时间,单位分钟
+    cookieMaxAge: 1800
+    cookieName: token
+  worker:
+    workerId: 1
+    datacenterId: 1

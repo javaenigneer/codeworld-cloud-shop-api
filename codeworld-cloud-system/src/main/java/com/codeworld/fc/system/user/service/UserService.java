@@ -76,4 +76,11 @@ public interface UserService {
      * @return
      */
     FCResponse<User> getUserById(Long userId);
+
+    /**
+     * 获取区域商户管理员
+     * @return
+     * @param userName
+     */
+    FCResponse<List<User>> getAreaMerchantUser(String userName);
 }

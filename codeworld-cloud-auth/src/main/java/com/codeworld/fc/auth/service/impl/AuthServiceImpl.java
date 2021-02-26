@@ -187,7 +187,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public FCResponse<Map<String, Object>> systemLogin(SystemLoginRequest systemLoginRequest, HttpServletRequest request, HttpServletResponse response) {
 
-        // 否则是系统管理员登录
         // 根据用户名查询用户
         FCResponse<User> userFCResponse = this.userClient.getUserByName(systemLoginRequest.getUsername());
         if (!userFCResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {

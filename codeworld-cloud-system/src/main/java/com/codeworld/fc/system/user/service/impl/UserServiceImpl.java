@@ -1,6 +1,7 @@
 package com.codeworld.fc.system.user.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.codeworld.fc.common.domain.LoginInfoData;
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.enums.HttpMsg;
 import com.codeworld.fc.common.enums.StatusEnum;
@@ -9,6 +10,7 @@ import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
 
+import com.codeworld.fc.system.interceptor.AuthInterceptor;
 import com.codeworld.fc.system.role.mapper.RoleMapper;
 import com.codeworld.fc.system.user.dto.UserDeptResponse;
 import com.codeworld.fc.system.user.dto.UserResponse;
@@ -30,7 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName UserServiceImpl
@@ -279,5 +283,28 @@ public class UserServiceImpl implements UserService {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_DISABLE.getMsg());
         }
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.user.USER_GET_SUCCESS.getMsg(),user);
+    }
+
+    /**
+     * 获取区域商户管理员
+     *
+     * @return
+     * @param userName
+     */
+    @Override
+    public FCResponse<List<User>> getAreaMerchantUser(String userName) {
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginInfo();
+        if (ObjectUtils.isEmpty(loginInfoData)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_AUTH_ERROR.getMsg());
+        }
+        // 查询同区域下的商户管理员
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId",loginInfoData.getId());
+        map.put("userName",userName);
+        List<User> users = this.userMapper.getAreaMerchantUser(map);
+        if (CollectionUtils.isEmpty(users)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.user.USE_DATA_EMPTY.getMsg());
+        }
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.user.USER_GET_SUCCESS.getMsg(),users);
     }
 }

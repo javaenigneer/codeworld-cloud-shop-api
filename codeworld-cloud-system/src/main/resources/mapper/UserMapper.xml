@@ -127,6 +127,29 @@ order by cu.t_create_time DESC
         t_user_id = #{userId}
     </select>
 
+    <!-- 查询同区域下的商户管理员 -->
+    <select id="getAreaMerchantUser" parameterType="hashmap" resultType="com.codeworld.fc.system.user.entity.User">
+        SELECT
+	cu.t_user_id AS userId,
+	cu.t_user_name AS userName
+FROM
+	codeworld_user AS cu
+	LEFT JOIN codeworld_user_role AS cur ON cu.t_user_id = cur.t_user_id
+WHERE
+	cu.t_area_name = ( SELECT t_area_name FROM codeworld_user AS cu2 WHERE cu2.t_user_id = #{userId}
+	)
+	AND cur.t_role_id = (
+	SELECT
+		t_role_id
+	FROM
+		codeworld_user_role AS cur2
+	WHERE
+		cur2.t_user_id = #{userId}
+	)
+	and cu.t_user_id != #{userId}
+	and cu.t_user_name like "%"#{userName}"%"
+    </select>
+
     <!-- 修改语句 -->
     <!-- 修改用户状态 -->
     <update id="updateUserStatus" parameterType="com.codeworld.fc.system.user.entity.User">

@@ -39,6 +39,7 @@ public class UserController {
 
     @GetMapping("get-user-name")
     @ApiOperation("根据用户名获取用户")
+    @PassToken
     public FCResponse<User> getUserByName(@RequestParam("username") String username){
         return this.userService.getUserByName(username);
     }
@@ -97,4 +98,11 @@ public class UserController {
     public FCResponse<User> getUserById(@RequestParam("userId") Long userId) {
         return this.userService.getUserById(userId);
     }
+
+    @GetMapping("get-area-merchant-user")
+    @ApiOperation("获取区域的商户管理员")
+    public FCResponse<List<User>> getAreaMerchantUser(@RequestParam("userName") String userName){
+        return this.userService.getAreaMerchantUser(userName);
+    }
+
 }

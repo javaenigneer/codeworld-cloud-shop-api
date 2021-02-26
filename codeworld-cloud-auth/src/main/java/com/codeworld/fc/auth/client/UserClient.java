@@ -2,6 +2,7 @@ package com.codeworld.fc.auth.client;
 
 
 import com.codeworld.fc.auth.client.impl.UserClientFallBack;
+import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.auth.domain.User;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ public interface UserClient {
 
     @GetMapping("/codeworld-system/user/get-user-name")
     @ApiOperation("根据用户名获取用户")
+    @PassToken
     FCResponse<User> getUserByName(@RequestParam("username") String username);
 
     @PostMapping("/codeworld-system/user/get-user-id")

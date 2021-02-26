@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -71,4 +72,11 @@ public interface UserMapper {
      * @return
      */
     User getUserById(Long userId);
+
+    /**
+     * 查询同区域下的商户管理员
+     * @param map
+     * @return
+     */
+    List<User> getAreaMerchantUser(Map<String, Object> map);
 }
