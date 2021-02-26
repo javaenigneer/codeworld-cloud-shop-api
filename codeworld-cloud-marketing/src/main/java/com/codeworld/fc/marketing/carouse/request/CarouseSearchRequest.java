@@ -33,4 +33,7 @@ public class CarouseSearchRequest extends PageQuery {
 
     @ApiModelProperty("商户号")
     private String merchantNumber;
+
+    @ApiModelProperty("审核状态")
+    private Integer reviewStatus;
 }

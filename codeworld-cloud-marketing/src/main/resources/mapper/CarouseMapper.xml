@@ -33,6 +33,9 @@
             <if test="status != null">
                 and t_carouse_status = #{status}
             </if>
+            <if test="reviewStatus != null">
+                and t_carouse_review_status = #{reviewStatus}
+            </if>
             <if test="startTime != null ">
                 <![CDATA[
                     and  t_carouse_start_time >= #{startTime}
