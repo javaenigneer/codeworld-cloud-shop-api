@@ -39,7 +39,7 @@ import java.util.List;
  * Author Lenovo
  * Date 2020/12/30
  * Version 1.0
-**/
+ **/
 @Service
 @Slf4j
 public class MerchantServiceImpl implements MerchantService {
@@ -69,17 +69,17 @@ public class MerchantServiceImpl implements MerchantService {
         String number = this.merchantMapper.getMerchantByMerchantId(loginInfoData.getId());
         // 查询商户是否入驻
         Integer status = this.merChantDetailMapper.getMerchantStatusByMerchantNumber(number);
-        if (status != 3){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(),HttpMsg.merchant.MERCHANT_EXIST.getMsg());
+        if (status != 3) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(), HttpMsg.merchant.MERCHANT_EXIST.getMsg());
         }
         MerChantDetail merChantDetail = new MerChantDetail();
-        BeanUtil.copyProperties(merchantAddRequest,merChantDetail);
+        BeanUtil.copyProperties(merchantAddRequest, merChantDetail);
         merChantDetail.setMerchantNumber(number);
         // 设置为未审核
         merChantDetail.setStatus(2);
         merChantDetail.setCreateTime(new Date());
         this.merChantDetailMapper.merchantSettled(merChantDetail);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_SETTLED_ADD_SUCCESS.getMsg());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_SETTLED_ADD_SUCCESS.getMsg());
     }
 
     /**
@@ -91,10 +91,10 @@ public class MerchantServiceImpl implements MerchantService {
     public FCResponse<String> registerMerchantWeb(MerchantRegisterRequest merchantRegisterRequest) {
         // 先从数据库中获取改手机号是否被注册
         Integer count = this.merchantMapper.checkMerchantByPhone(merchantRegisterRequest.getPhone());
-        if (count != 0){
+        if (count != 0) {
             // 清空redis中手机号验证码
             this.stringRedisTemplate.delete(PHONE_CODE + merchantRegisterRequest.getPhone());
-            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(),HttpMsg.merchant.MERCHANT_PHONE_REGISTER.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(), HttpMsg.merchant.MERCHANT_PHONE_REGISTER.getMsg());
         }
         // 从Redis中获取验证码
         // 判断验证码是否存在
@@ -110,8 +110,8 @@ public class MerchantServiceImpl implements MerchantService {
         }
         // 获取当前登录用户
         LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
-        if (ObjectUtils.isEmpty(loginInfoData)){
-            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_AUTH_ERROR.getMsg());
+        if (ObjectUtils.isEmpty(loginInfoData)) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.user.USER_AUTH_ERROR.getMsg());
         }
         // 验证通过实现注册
         Merchant merchant = new Merchant();
@@ -137,7 +137,7 @@ public class MerchantServiceImpl implements MerchantService {
         userRole.setCreateTime(new Date());
         userRole.setUpdateTime(userRole.getCreateTime());
         this.roleClient.addUserRole(userRole);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_ADD_SUCCESS.getMsg(),merchant.getNumber());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_ADD_SUCCESS.getMsg(), merchant.getNumber());
     }
 
     /**
@@ -172,6 +172,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     /**
      * 分页查询商户
+     *
      * @param merchantSearchRequest
      * @return
      */
@@ -179,17 +180,17 @@ public class MerchantServiceImpl implements MerchantService {
     public FCResponse<DataResponse<List<MerchantResponse>>> getPageMerchant(MerchantSearchRequest merchantSearchRequest) {
         // 获取当前登录用户
         LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
-        if (ObjectUtils.isEmpty(loginInfoData)){
-            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.user.USER_AUTH_ERROR.getMsg());
+        if (ObjectUtils.isEmpty(loginInfoData)) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.user.USER_AUTH_ERROR.getMsg());
         }
         merchantSearchRequest.setMerchantFollowUser(loginInfoData.getId());
-        PageHelper.startPage(merchantSearchRequest.getPage(),merchantSearchRequest.getLimit());
+        PageHelper.startPage(merchantSearchRequest.getPage(), merchantSearchRequest.getLimit());
         List<MerchantResponse> merchantResponses = this.merchantMapper.getPageMerchant(merchantSearchRequest);
-        if (CollectionUtils.isEmpty(merchantResponses)){
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_EMPTY.getMsg(),DataResponse.dataResponse(merchantResponses,0L));
+        if (CollectionUtils.isEmpty(merchantResponses)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_EMPTY.getMsg(), DataResponse.dataResponse(merchantResponses, 0L));
         }
         PageInfo<MerchantResponse> pageInfo = new PageInfo<>(merchantResponses);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),DataResponse.dataResponse(pageInfo.getList(),pageInfo.getTotal()));
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
     }
 
     /**
@@ -200,11 +201,11 @@ public class MerchantServiceImpl implements MerchantService {
      */
     @Override
     public FCResponse<Integer> checkMerchantByMerchantNumber(String merchantNumber) {
-       if (ObjectUtils.isEmpty(merchantNumber)){
-           return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.merchant.MERCHANT_ID_ERROR.getMsg());
-       }
-       Integer count = this.merchantMapper.checkMerchantByMerchantNumber(merchantNumber);
-       return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),count);
+        if (ObjectUtils.isEmpty(merchantNumber)) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.merchant.MERCHANT_ID_ERROR.getMsg());
+        }
+        Integer count = this.merchantMapper.checkMerchantByMerchantNumber(merchantNumber);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), count);
     }
 
     /**
@@ -215,8 +216,8 @@ public class MerchantServiceImpl implements MerchantService {
      */
     @Override
     public FCResponse<MerchantResponse> getMerchantByMerchantNumber(String merchantNumber) {
-        if (ObjectUtils.isEmpty(merchantNumber)){
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.merchant.MERCHANT_ID_ERROR.getMsg());
+        if (ObjectUtils.isEmpty(merchantNumber)) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.merchant.MERCHANT_ID_ERROR.getMsg());
         }
         MerchantResponse merchantResponse = this.merchantMapper.getMerchantByMerchantNumber(merchantNumber);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), merchantResponse);
@@ -235,7 +236,7 @@ public class MerchantServiceImpl implements MerchantService {
         merChantDetail.setStatus(examineMerchantRequest.getStatus());
         // 审核
         this.merChantDetailMapper.examineMerchant(merChantDetail);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_EXAMINE_SUCCESS.getMsg());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_EXAMINE_SUCCESS.getMsg());
     }
 
     /**
@@ -247,14 +248,14 @@ public class MerchantServiceImpl implements MerchantService {
     @Override
     public FCResponse<MerchantResponse> getMerchantNumberAndNameById(Long merchantId) {
 
-        if (ObjectUtils.isEmpty(merchantId) || merchantId <= 0){
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.merchant.MERCHANT_ID_ERROR.getMsg());
+        if (ObjectUtils.isEmpty(merchantId) || merchantId <= 0) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.merchant.MERCHANT_ID_ERROR.getMsg());
         }
         MerchantResponse merchantResponse = this.merchantMapper.getMerchantNumberAndNameById(merchantId);
-        if (ObjectUtils.isEmpty(merchantResponse)){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.merchant.MERCHANT_DATA_EMPTY.getMsg());
+        if (ObjectUtils.isEmpty(merchantResponse)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.merchant.MERCHANT_DATA_EMPTY.getMsg());
         }
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),merchantResponse);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), merchantResponse);
     }
 
     /**
@@ -266,12 +267,12 @@ public class MerchantServiceImpl implements MerchantService {
     public FCResponse<Integer> judgmentMerchantSet() {
         // 获取当前登录商户
         LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
-        if (ObjectUtils.isEmpty(loginInfoData)){
-            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
+        if (ObjectUtils.isEmpty(loginInfoData)) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
         }
         // 根据商户id查询商户状态
         Integer status = this.merchantMapper.judgmentMerchantSet(loginInfoData.getId());
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),status);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), status);
     }
 
     /**
@@ -283,11 +284,11 @@ public class MerchantServiceImpl implements MerchantService {
     public FCResponse<MerchantResponse> getMerchantInfo() {
         // 获取当前登录商户
         LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
-        if (ObjectUtils.isEmpty(loginInfoData)){
-            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(),HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
+        if (ObjectUtils.isEmpty(loginInfoData)) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
         }
         MerchantResponse merchantResponse = this.merchantMapper.getMerchantInfoById(loginInfoData.getId());
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(),merchantResponse);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_SUCCESS.getMsg(), merchantResponse);
     }
 
     /**
@@ -305,7 +306,7 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setMerchantFollowUser(editMerchantInfo.getMerchantFollower());
         merchant.setNickName(editMerchantInfo.getNickName());
         this.merchantMapper.updateMerchantInfo(merchant);
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_UPDATE_SUCCESS.getMsg());
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_DATA_UPDATE_SUCCESS.getMsg());
     }
 
     /**
@@ -321,7 +322,37 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setNumber(transferMerchantRequest.getMerchantNumber());
         try {
             this.merchantMapper.transferMerchantWeb(merchant);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_TRANSFER_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_TRANSFER_SUCCESS.getMsg());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * Web端修改密码
+     *
+     * @param editPasswordRequest
+     * @return
+     */
+    @Override
+    public FCResponse<Void> resetPassword(EditPasswordRequest editPasswordRequest) {
+        // 根据手机号商户信息
+        MerchantResponse merchantResponse = this.merchantMapper.getMerchantByPhone(editPasswordRequest.getSetPhone());
+        if (ObjectUtils.isEmpty(merchantResponse)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.merchant.MERCHANT_SET_PHONE_ERROR.getMsg());
+        }
+        // 判断旧密码是否正确
+        if (!merchantResponse.getPassword().equals(editPasswordRequest.getOldPassword())) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.merchant.MERCHANT_OLD_PASSWORD_ERROR.getMsg());
+        }
+        // 修改密码
+        Merchant merchant = new Merchant();
+        merchant.setNumber(merchantResponse.getNumber());
+        merchant.setPassword(editPasswordRequest.getNewPassword());
+        try {
+            this.merchantMapper.resetPassword(merchant);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_UPDATE_PASSWORD_SUCCESS.getMsg());
         }catch (Exception e){
             e.printStackTrace();
             throw new FCException("系统错误");

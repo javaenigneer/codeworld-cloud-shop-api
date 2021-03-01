@@ -53,6 +53,7 @@
             resultType="com.codeworld.fc.merchant.response.MerchantResponse">
 
         select
+        t_merchant_number AS number,
         t_merchant_id AS id,
         t_merchant_nick_name AS nickName,
         t_merchant_phone AS phone,
@@ -215,6 +216,16 @@
         codeworld_merchant
         set
         t_merchant_follow_user = #{merchantFollowUser}
+        where
+        t_merchant_number = #{number}
+    </update>
+
+    <!-- 修改密码 -->
+    <update id="resetPassword" parameterType="com.codeworld.fc.merchant.entity.Merchant">
+        update
+        codeworld_merchant
+        set
+        t_merchant_password = #{password}
         where
         t_merchant_number = #{number}
     </update>

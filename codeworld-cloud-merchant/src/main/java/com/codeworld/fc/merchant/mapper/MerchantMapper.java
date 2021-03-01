@@ -105,4 +105,10 @@ public interface MerchantMapper {
      * @param merchant
      */
     void transferMerchantWeb(Merchant merchant);
+
+    /**
+     * 修改密码
+     * @param merchant
+     */
+    void resetPassword(Merchant merchant);
 }

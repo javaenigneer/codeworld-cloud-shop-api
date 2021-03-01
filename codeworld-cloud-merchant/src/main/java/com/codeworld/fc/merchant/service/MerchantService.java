@@ -96,4 +96,11 @@ public interface MerchantService {
      * @return
      */
     FCResponse<Void> transferMerchantWeb(TransferMerchantRequest transferMerchantRequest);
+
+    /**
+     * Web端修改密码
+     * @param editPasswordRequest
+     * @return
+     */
+    FCResponse<Void> resetPassword(EditPasswordRequest editPasswordRequest);
 }

@@ -110,4 +110,10 @@ public class MerchantController {
     public FCResponse<Void> transferMerchantWeb(@RequestBody @Valid TransferMerchantRequest transferMerchantRequest){
         return this.merchantService.transferMerchantWeb(transferMerchantRequest);
     }
+
+    @PostMapping("/web/reset-password")
+    @ApiOperation("修改密码Web端")
+    public FCResponse<Void> resetPassword(@RequestBody @Valid EditPasswordRequest editPasswordRequest){
+        return this.merchantService.resetPassword(editPasswordRequest);
+    }
 }

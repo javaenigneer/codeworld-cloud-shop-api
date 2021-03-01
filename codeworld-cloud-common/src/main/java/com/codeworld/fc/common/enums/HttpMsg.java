@@ -459,7 +459,11 @@ public class HttpMsg {
         MERCHANT_PHONE_REGISTER("该手机号已注册"),
         MERCHANT_LOGIN_EXPIRE("商户登录失效"),
         MERCHANT_DATA_UPDATE_SUCCESS("商户更新成功"),
-        MERCHANT_TRANSFER_SUCCESS("商户转移成功");
+        MERCHANT_TRANSFER_SUCCESS("商户转移成功"),
+        MERCHANT_SET_PHONE_ERROR("入驻手机号错误"),
+        MERCHANT_OLD_PASSWORD_ERROR("旧密码错误"),
+        MERCHANT_UPDATE_PASSWORD_SUCCESS("密码修改成功")
+        ;
 
         merchant(String msg) {
             this.msg = msg;
