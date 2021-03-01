@@ -7,6 +7,7 @@ import com.codeworld.fc.common.enums.HttpMsg;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.common.utils.CodecUtils;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
 import com.codeworld.fc.common.utils.StringUtil;
 import com.codeworld.fc.merchant.client.RoleClient;
@@ -119,7 +120,14 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setNumber(String.valueOf(IDGeneratorUtil.getMerchantNumber()));
         merchant.setNickName(merchantRegisterRequest.getNickName());
         merchant.setPhone(merchantRegisterRequest.getPhone());
-        merchant.setPassword(merchantRegisterRequest.getPassword());
+        // 生成盐值
+        String salt = CodecUtils.generateSalt();
+        // 将密码加盐加密
+        String password = CodecUtils.md5Hex(merchantRegisterRequest.getPassword(), salt);
+        // 设置盐值
+        merchant.setPasswordSalt(salt);
+        // 设置密码
+        merchant.setPassword(password);
         merchant.setCreateTime(new Date());
         merchant.setMerchantFollowUser(loginInfoData.getId());
         this.merchantMapper.registerMerchant(merchant);

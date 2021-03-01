@@ -61,4 +61,7 @@ public class MerchantResponse {
 
     @ApiModelProperty("商户头像")
     private String avatar;
+
+    @ApiModelProperty("密码盐值")
+    private String passwordSalt;
 }

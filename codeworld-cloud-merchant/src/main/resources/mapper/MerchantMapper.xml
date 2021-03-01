@@ -24,7 +24,8 @@
         t_merchant_phone,
         t_merchant_password,
         t_merchant_follow_user,
-        t_merchant_create_time
+        t_merchant_create_time,
+        t_merchant_password_salt
         )
         values
         (
@@ -34,7 +35,8 @@
         #{phone},
         #{password},
         #{merchantFollowUser},
-        #{createTime}
+        #{createTime},
+        #{passwordSalt}
         )
     </insert>
 
@@ -71,7 +73,8 @@
         cm.t_merchant_number AS number,
         cm.t_merchant_nick_name AS nickName,
         cm.t_merchant_phone AS phone,
-        cm.t_merchant_password AS password
+        cm.t_merchant_password AS password,
+        cm.t_merchant_password_salt AS passwordSalt
         from codeworld_merchant AS cm
         where
         t_merchant_number = #{merchantNumber}

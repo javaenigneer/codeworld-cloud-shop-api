@@ -369,7 +369,9 @@ public class AuthServiceImpl implements AuthService {
         // 校验密码
         // 比对密码
         MerchantResponse merchantResponse = merchantFcResponse.getData();
-        if (!StringUtils.equals(merchantResponse.getPassword(), systemLoginRequest.getPassword())) {
+        // 对用户的密码进行加盐加密
+        String password = CodecUtils.md5Hex(systemLoginRequest.getPassword(), merchantResponse.getPasswordSalt());
+        if (!StringUtils.equals(merchantResponse.getPassword(), password)) {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_MESSAGE_ERROR.getMsg(), null);
         }
         // 执行登录

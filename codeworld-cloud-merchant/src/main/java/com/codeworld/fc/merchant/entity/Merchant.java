@@ -40,4 +40,7 @@ public class Merchant {
 
     @ApiModelProperty("商户跟进人")
     private Long merchantFollowUser;
+
+    @ApiModelProperty("密码盐值")
+    private String passwordSalt;
 }
