@@ -1,6 +1,5 @@
 package com.codeworld.fc;
 
-import com.codeworld.fc.common.utils.CodecUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

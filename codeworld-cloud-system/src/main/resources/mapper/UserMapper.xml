@@ -6,18 +6,14 @@
     <resultMap id="BaseUserMap" type="com.codeworld.fc.system.user.entity.User">
 
         <id property="userId" column="t_user_id"/>
-
         <result property="userName" column="t_user_name"/>
-
         <result property="userEmail" column="t_user_email"/>
-
         <result property="userPhone" column="t_user_phone"/>
-
         <result property="userStatus" column="t_user_status"/>
-
         <result property="createTime" column="t_create_time"/>
-
         <result property="updateTime" column="t_update_time"/>
+        <result property="password" column="t_user_password"/>
+        <result property="passwordSalt" column="t_user_password_salt"/>
 
     </resultMap>
 
@@ -78,7 +74,9 @@
         u.t_user_id,
         u.t_user_name,
         u.t_user_status,
-        u.t_user_email
+        u.t_user_email,
+        u.t_user_password,
+        u.t_user_password_salt
         from codeworld_user u
         where t_user_name = #{userName}
     </select>
@@ -191,7 +189,10 @@ WHERE
         t_area_name,
         t_area_id,
         t_create_time,
-        t_update_time)
+        t_update_time,
+        t_user_password,
+        t_user_password_salt
+        )
         values (
         #{userId},
         #{userName},
@@ -201,7 +202,9 @@ WHERE
         #{areaName},
         #{areaId},
         #{createTime},
-        #{updateTime}
+        #{updateTime},
+        #{password},
+        #{passwordSalt}
         );
 
     </insert>

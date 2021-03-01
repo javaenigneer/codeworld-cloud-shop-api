@@ -196,8 +196,10 @@ public class AuthServiceImpl implements AuthService {
         if (user.getUserStatus().equals(StatusEnum.USER_DISABLE)) {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.user.USER_DISABLE.getMsg(), null);
         }
+        // 将密码加盐加密
+        String password = CodecUtils.md5Hex(systemLoginRequest.getPassword(), user.getPasswordSalt());
         // 校验密码
-        if (!StringUtils.equals("123456", systemLoginRequest.getPassword())) {
+        if (!StringUtils.equals(systemLoginRequest.getPassword(),password)) {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.user.USER_MESSAGE_ERROR.getMsg(), null);
         }
         // 执行登录

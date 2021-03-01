@@ -8,6 +8,7 @@ import com.codeworld.fc.common.enums.StatusEnum;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.common.utils.CodecUtils;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
 
 import com.codeworld.fc.system.interceptor.AuthInterceptor;
@@ -156,6 +157,12 @@ public class UserServiceImpl implements UserService {
             user.setUserId(IDGeneratorUtil.getNextId());
             user.setCreateTime(new Date());
             user.setUpdateTime(user.getCreateTime());
+            // 密码默认为123456
+            String salt = CodecUtils.generateSalt();
+            // 将密码加盐加密
+            String password = CodecUtils.md5Hex("123456", salt);
+            user.setPassword(password);
+            user.setPasswordSalt(salt);
             this.userMapper.addUser(user);
 
             // 设置用户类型
