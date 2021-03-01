@@ -110,6 +110,11 @@
                    and  cm.t_merchant_create_time <= #{updateTime}
                  ]]>
             </if>
+            <if test=" settlementTime != null ">
+                <![CDATA[
+                   and  cmd.t_merchant_set_create_time <= #{settlementTime}
+                 ]]>
+            </if>
             and t_merchant_follow_user = #{merchantFollowUser}
         </where>
         order by cm.t_merchant_create_time DESC
