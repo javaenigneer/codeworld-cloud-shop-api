@@ -104,4 +104,10 @@ public class MerchantController {
     public FCResponse<Void> updateMerchantInfo(@RequestBody EditMerchantInfo editMerchantInfo){
         return this.merchantService.updateMerchantInfo(editMerchantInfo);
     }
+
+    @PostMapping("/web/transfer-merchant")
+    @ApiOperation("转移商户web端")
+    public FCResponse<Void> transferMerchantWeb(@RequestBody @Valid TransferMerchantRequest transferMerchantRequest){
+        return this.merchantService.transferMerchantWeb(transferMerchantRequest);
+    }
 }

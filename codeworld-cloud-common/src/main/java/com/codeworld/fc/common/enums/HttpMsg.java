@@ -426,8 +426,7 @@ public class HttpMsg {
         ORDER_RETURN_APPLY_SUCCESS("订单售后申请成功"),
         ORDER_EXPORT_SUCCESS("订单数据导出成功"),
         ORDER_CANCEL_SUCCESS("订单取消成功"),
-        ORDER_CONFIRM_RECEIPT_SUCCESS("订单收货成功")
-        ;
+        ORDER_CONFIRM_RECEIPT_SUCCESS("订单收货成功");
 
         order(String msg) {
             this.msg = msg;
@@ -459,8 +458,8 @@ public class HttpMsg {
         MERCHANT_NO_REGISTER("该商户未注册"),
         MERCHANT_PHONE_REGISTER("该手机号已注册"),
         MERCHANT_LOGIN_EXPIRE("商户登录失效"),
-        MERCHANT_DATA_UPDATE_SUCCESS("商户更新成功")
-        ;
+        MERCHANT_DATA_UPDATE_SUCCESS("商户更新成功"),
+        MERCHANT_TRANSFER_SUCCESS("商户转移成功");
 
         merchant(String msg) {
             this.msg = msg;
@@ -486,8 +485,7 @@ public class HttpMsg {
         CAROUSE_REVIEW_SUCCESS("轮播图审核成功"),
         CAROUSE_ID_ERROR("ID为空或者ID无效"),
         CAROUSE_STATUS_ERROR("轮播图状态错误"),
-        CAROUSE_DELETE_SUCCESS("轮播图删除成功")
-        ;
+        CAROUSE_DELETE_SUCCESS("轮播图删除成功");
 
         carouse(String msg) {
             this.msg = msg;
@@ -546,8 +544,7 @@ public class HttpMsg {
         ORDER_RETURN_ID_ERROR("服务订单号错误"),
         ORDER_RETURN_DATA_EMPTY("服务订单数据为空"),
         ORDER_RETURN_PROCESSED("服务订单已被处理"),
-        ORDER_RETURN_ACCPECTED_SUCCESS("服务订单受理成功")
-        ;
+        ORDER_RETURN_ACCPECTED_SUCCESS("服务订单受理成功");
 
         orderReturn(String msg) {
             this.msg = msg;
@@ -566,8 +563,7 @@ public class HttpMsg {
      */
     public enum orderEvaluation {
 
-        ORDER_EVALUATION_SUCCESS("评价成功")
-        ;
+        ORDER_EVALUATION_SUCCESS("评价成功");
 
         orderEvaluation(String msg) {
             this.msg = msg;

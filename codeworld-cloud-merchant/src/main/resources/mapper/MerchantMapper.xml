@@ -204,6 +204,16 @@
         t_merchant_number = #{number}
     </update>
 
+    <!-- 转移商户 -->
+    <update id="transferMerchantWeb" parameterType="com.codeworld.fc.merchant.entity.Merchant">
+        update
+        codeworld_merchant
+        set
+        t_merchant_follow_user = #{merchantFollowUser}
+        where
+        t_merchant_number = #{number}
+    </update>
+
     <!-- 删除商户注册未入驻信息 -->
     <delete id="deleteNoMerchantSet">
         delete

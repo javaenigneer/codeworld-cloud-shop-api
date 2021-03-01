@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.codeworld.fc.common.domain.LoginInfoData;
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.enums.HttpMsg;
+import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
@@ -305,5 +306,25 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setNickName(editMerchantInfo.getNickName());
         this.merchantMapper.updateMerchantInfo(merchant);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_DATA_UPDATE_SUCCESS.getMsg());
+    }
+
+    /**
+     * 转移商户Web端
+     *
+     * @param transferMerchantRequest
+     * @return
+     */
+    @Override
+    public FCResponse<Void> transferMerchantWeb(TransferMerchantRequest transferMerchantRequest) {
+        Merchant merchant = new Merchant();
+        merchant.setMerchantFollowUser(transferMerchantRequest.getUserId());
+        merchant.setNumber(transferMerchantRequest.getMerchantNumber());
+        try {
+            this.merchantMapper.transferMerchantWeb(merchant);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_TRANSFER_SUCCESS.getMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

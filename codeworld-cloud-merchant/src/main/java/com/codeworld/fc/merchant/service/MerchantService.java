@@ -89,4 +89,11 @@ public interface MerchantService {
      * @return
      */
     FCResponse<Void> updateMerchantInfo(EditMerchantInfo editMerchantInfo);
+
+    /**
+     * 转移商户Web端
+     * @param transferMerchantRequest
+     * @return
+     */
+    FCResponse<Void> transferMerchantWeb(TransferMerchantRequest transferMerchantRequest);
 }

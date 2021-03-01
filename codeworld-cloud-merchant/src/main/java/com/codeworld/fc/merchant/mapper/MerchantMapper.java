@@ -99,4 +99,10 @@ public interface MerchantMapper {
      * @param merchant
      */
     void updateMerchantInfo(Merchant merchant);
+
+    /**
+     * 商户转移
+     * @param merchant
+     */
+    void transferMerchantWeb(Merchant merchant);
 }
