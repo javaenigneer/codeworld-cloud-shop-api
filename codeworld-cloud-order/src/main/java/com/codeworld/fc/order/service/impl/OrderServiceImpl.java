@@ -13,6 +13,7 @@ import com.codeworld.fc.common.utils.*;
 import com.codeworld.fc.order.client.CartClient;
 import com.codeworld.fc.order.client.MemberClient;
 import com.codeworld.fc.order.client.MerchantClient;
+import com.codeworld.fc.order.client.StockClient;
 import com.codeworld.fc.order.domain.*;
 import com.codeworld.fc.order.entity.*;
 import com.codeworld.fc.order.interceptor.AuthInterceptor;
@@ -28,7 +29,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
     private MerchantClient merchantClient;
     @Autowired(required = false)
     private CartClient cartClient;
+    @Autowired(required = false)
+    private StockClient stockClient;
 
     @Autowired(required = false)
     private OrderMapper orderMapper;
@@ -704,7 +706,7 @@ public class OrderServiceImpl implements OrderService {
         orderReturn.setOrderReturnHandleTime(new Date());
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCEPTED_SUCCESS.getMsg());
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
@@ -779,7 +781,7 @@ public class OrderServiceImpl implements OrderService {
         orderReturn.setOrderReturnHandleTime(new Date());
         try {
             this.orderReturnMapper.updateOrderReturn(orderReturn);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCPECTED_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderReturn.ORDER_RETURN_ACCEPTED_SUCCESS.getMsg());
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
@@ -812,46 +814,57 @@ public class OrderServiceImpl implements OrderService {
         order.setBuyerName(memberInfo.getMemberName());
         order.setAddressId(orderAddAsync.getAddressId());
         order.setCreateTime(new Date());
+        List<CommodityStocks> commodityStockses = new ArrayList<>();
         // 创建订单
         try {
             this.orderMapper.createOrder(order);
             // 循环商品信息，保存订单明细
             productInfoSkuModels.forEach(productInfoSkuModel -> {
-
-                // 进行商品拆分订单
-                OrderDetail orderDetail = new OrderDetail();
-                orderDetail.setDetailId(idWorker.nextId());
-                orderDetail.setOrderId(order.getId());
-                orderDetail.setCreateTime(new Date());
-                orderDetail.setMerchantNumber(productInfoSkuModel.getMerchantNumber());
-                orderDetail.setProductCount(productInfoSkuModel.getProductCount());
-                orderDetail.setProductImage(productInfoSkuModel.getProductImage());
-                orderDetail.setProductPrice(productInfoSkuModel.getPrice());
-                orderDetail.setProductSkuId(productInfoSkuModel.getId());
-                orderDetail.setProductTitle(productInfoSkuModel.getProductTitle());
-                // 创建SkuModel
-                ProductSkuModel productSkuModel = new ProductSkuModel();
-                productSkuModel.setId(productInfoSkuModel.getId());
-                productSkuModel.setImages(productInfoSkuModel.getImages());
-                productSkuModel.setPrice(productInfoSkuModel.getPrice());
-                productSkuModel.setTitle(productInfoSkuModel.getTitle());
-                // 将其序列化
-                String skuDetail = JsonUtils.serialize(productSkuModel);
-                orderDetail.setProductSkuDetail(skuDetail);
-                // 添加订单明细
-                this.orderDetailMapper.saveOrderDetail(orderDetail);
-                // 保存子订单状态
-                OrderStatus orderStatus = new OrderStatus();
-                orderStatus.setOrderId(orderDetail.getDetailId());
-                orderStatus.setCreateTime(orderDetail.getCreateTime());
-                // 默认这是为未支付状态
-                orderStatus.setOrderStatus(1);
-                this.orderStatusMapper.saveOrderStatus(orderStatus);
+                // 首先查询商品库库存是否充足
+                CommodityStocks commodityStocks = new CommodityStocks();
+                commodityStocks.setProductSkuId(productInfoSkuModel.getId());
+                commodityStocks.setLockedNumber(productInfoSkuModel.getProductCount());
+                FCResponse<Boolean> response = this.stockClient.judgeStockAdequate(commodityStocks);
+                if (!response.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode()) | !response.getData()) {
+                    throw new FCException(response.getMsg());
+                } else {
+                    // 进行商品拆分订单
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setDetailId(idWorker.nextId());
+                    orderDetail.setOrderId(order.getId());
+                    orderDetail.setCreateTime(new Date());
+                    orderDetail.setMerchantNumber(productInfoSkuModel.getMerchantNumber());
+                    orderDetail.setProductCount(productInfoSkuModel.getProductCount());
+                    orderDetail.setProductImage(productInfoSkuModel.getProductImage());
+                    orderDetail.setProductPrice(productInfoSkuModel.getPrice());
+                    orderDetail.setProductSkuId(productInfoSkuModel.getId());
+                    orderDetail.setProductTitle(productInfoSkuModel.getProductTitle());
+                    // 创建SkuModel
+                    ProductSkuModel productSkuModel = new ProductSkuModel();
+                    productSkuModel.setId(productInfoSkuModel.getId());
+                    productSkuModel.setImages(productInfoSkuModel.getImages());
+                    productSkuModel.setPrice(productInfoSkuModel.getPrice());
+                    productSkuModel.setTitle(productInfoSkuModel.getTitle());
+                    // 将其序列化
+                    String skuDetail = JsonUtils.serialize(productSkuModel);
+                    orderDetail.setProductSkuDetail(skuDetail);
+                    // 添加订单明细
+                    this.orderDetailMapper.saveOrderDetail(orderDetail);
+                    // 保存子订单状态
+                    OrderStatus orderStatus = new OrderStatus();
+                    orderStatus.setOrderId(orderDetail.getDetailId());
+                    orderStatus.setCreateTime(orderDetail.getCreateTime());
+                    // 默认这是为未支付状态
+                    orderStatus.setOrderStatus(1);
+                    this.orderStatusMapper.saveOrderStatus(orderStatus);
+                    // 将库存减掉
+                    this.stockClient.updateProductStockMinus(commodityStocks);
+                }
             });
             log.info("生成订单，订单编号：{}，用户id：{}", order.getId(), memberInfo.getMemberId());
             // 将订单信息保存到redis缓存中,时间为10分钟，10分钟过后将其置为失效订单
             // 将订单id作为Key，订单信息作为value
-            Map<String, Object> newMap = new HashMap<>(2);
+            Map<String, Object> newMap = new HashMap<>(3);
             newMap.put("orderId", order.getId());
             newMap.put("totalPay", order.getTotalPay());
             // 将map进行序列化
@@ -1064,7 +1077,7 @@ public class OrderServiceImpl implements OrderService {
             // 设置订单已完成
             orderStatus.setOrderStatus(4);
             this.orderStatusMapper.updateOrderStatus(orderStatus);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.orderEvaluation.ORDER_EVALUATION_SUCCESS.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.orderEvaluation.ORDER_EVALUATION_SUCCESS.getMsg());
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
@@ -1083,12 +1096,12 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus orderStatus = this.orderStatusMapper.getOrderStatusByOrderDetailId(orderReturnRequest.getOrderDetailId());
         if (ObjectUtils.isEmpty(orderStatus)) {
             log.info("退款订单不存在，订单id为{}", orderReturnRequest.getOrderDetailId());
-            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(),HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.DATAEXIST.getCode(), HttpMsg.order.ORDER_DATA_EMPTY.getMsg());
 
         }
         // 判断该订单状态是否是已完成
-        if (orderStatus.getOrderStatus() != 4){
-            log.error("订单状态错误：订单号为{}",orderReturnRequest.getOrderDetailId());
+        if (orderStatus.getOrderStatus() != 4) {
+            log.error("订单状态错误：订单号为{}", orderReturnRequest.getOrderDetailId());
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.order.ORDER_STATUS_ERROR.getMsg());
         }
 
@@ -1106,8 +1119,8 @@ public class OrderServiceImpl implements OrderService {
             // 修改订单状态为售后服务状态为8
             orderStatus.setOrderStatus(8);
             this.orderStatusMapper.updateOrderStatus(orderStatus);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_RETURN_APPLY_SUCCESS.getMsg());
-        }catch (Exception e){
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.order.ORDER_RETURN_APPLY_SUCCESS.getMsg());
+        } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }

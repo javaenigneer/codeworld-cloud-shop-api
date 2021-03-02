@@ -548,7 +548,7 @@ public class HttpMsg {
         ORDER_RETURN_ID_ERROR("服务订单号错误"),
         ORDER_RETURN_DATA_EMPTY("服务订单数据为空"),
         ORDER_RETURN_PROCESSED("服务订单已被处理"),
-        ORDER_RETURN_ACCPECTED_SUCCESS("服务订单受理成功");
+        ORDER_RETURN_ACCEPTED_SUCCESS("服务订单受理成功");
 
         orderReturn(String msg) {
             this.msg = msg;
@@ -570,6 +570,49 @@ public class HttpMsg {
         ORDER_EVALUATION_SUCCESS("评价成功");
 
         orderEvaluation(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 店铺
+     */
+    public enum store {
+
+        STORE_DATA_EMPTY("店铺数据为空"),
+        STORE_DATA_SUCCESS("店铺数据查询成功")
+        ;
+
+        store(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 库存
+     */
+    public enum stock {
+
+        STOCK_UPDATE_SUCCESS("库存更新成功"),
+        STOCK_COUNT_INSUFFICIENT("库存不足"),
+        STOCK_COUNT_ADEQUATE("库存充足")
+        ;
+
+        stock(String msg) {
             this.msg = msg;
         }
 

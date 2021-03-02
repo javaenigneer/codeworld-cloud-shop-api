@@ -76,7 +76,7 @@ spring:
           filters:
             - AddRequestHeader=X-Request-Foo, Bar
           predicates:
-            - Path=/codeworld-merchant/**
+            - Path=/codeworld-merchant/**,/codeworld-store/**
         - id: code-marketing # 营销
           uri: lb://codeworld-cloud-marketing
           filters:

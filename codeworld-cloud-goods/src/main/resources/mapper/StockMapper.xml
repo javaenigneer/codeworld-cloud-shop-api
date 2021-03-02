@@ -23,4 +23,24 @@
         #{stock}
         )
     </insert>
+
+    <!-- 更新库存（删减）-->
+    <update id="updateProductStockMinus" parameterType="com.codeworld.fc.goods.stock.domain.CommodityStocks">
+        update
+        codeworld_stock
+        set
+        t_product_stock = t_product_stock - lockedNumber
+        where
+        t_product_sku_id = #{productSkuId}
+    </update>
+
+    <!-- 查询商品库存 -->
+    <select id="getStockByProductSkuId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select
+        t_product_stock
+        from
+        codeworld_stock
+        where
+        t_product_sku_id = #{productSkuId}
+    </select>
 </mapper>
