@@ -859,6 +859,7 @@ public class OrderServiceImpl implements OrderService {
                     this.orderStatusMapper.saveOrderStatus(orderStatus);
                     // 将库存减掉
                     this.stockClient.updateProductStockMinus(commodityStocks);
+                    commodityStockses.add(commodityStocks);
                 }
             });
             log.info("生成订单，订单编号：{}，用户id：{}", order.getId(), memberInfo.getMemberId());
@@ -867,6 +868,7 @@ public class OrderServiceImpl implements OrderService {
             Map<String, Object> newMap = new HashMap<>(3);
             newMap.put("orderId", order.getId());
             newMap.put("totalPay", order.getTotalPay());
+            newMap.put("commodityStocks",JsonUtils.serialize(commodityStockses));
             // 将map进行序列化
             String json = JsonUtils.serialize(map);
             assert json != null;
