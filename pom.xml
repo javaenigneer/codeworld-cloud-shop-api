@@ -30,6 +30,7 @@
     <module>codeworld-cloud-order</module>
     <module>codeworld-cloud-merchant</module>
     <module>codeworld-cloud-marketing</module>
+    <module>codeworld-cloud-logistics</module>
   </modules>
   <dependencies>
 

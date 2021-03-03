@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="codeworld-cloud-goods" />
         <module name="codeworld-cloud-gateway" />
+        <module name="codeworld-cloud-logistics" />
         <module name="codeworld-cloud-order" />
         <module name="codeworld-cloud-auth" />
         <module name="codeworld-cloud-sms" />
@@ -32,6 +33,7 @@
       <module name="codeworld-cloud-common" options="" />
       <module name="codeworld-cloud-gateway" options="" />
       <module name="codeworld-cloud-goods" options="" />
+      <module name="codeworld-cloud-logistics" options="" />
       <module name="codeworld-cloud-marketing" options="" />
       <module name="codeworld-cloud-member" options="" />
       <module name="codeworld-cloud-merchant" options="" />

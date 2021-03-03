@@ -1,9 +1,9 @@
 server:
-  port: 2001
+  port: 2002
 
 spring:
   application:
-    name: codeworld-cloud-order
+    name: codeworld-cloud-logistics
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/codeworld-cloud-shop?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
@@ -52,11 +52,11 @@ logging:
 #  ReadTimeout: 10000 #处理请求的超时时间，默认为1秒
 #  ConnectTimeout: 10000 #连接建立的超时时长，默认1秒
 #  MaxAutoRetries: 1 #同一台实例的最大重试次数，但是不包括首次调用，默认为1次
-#feign:
-#  httpclient:
-#    enabled: false
-#    connection-timeout: 3000
-#  okhttp:
-#    enabled: true
-#  hystrix:
-#    enabled: false
+feign:
+  httpclient:
+    enabled: false
+    connection-timeout: 3000
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: false

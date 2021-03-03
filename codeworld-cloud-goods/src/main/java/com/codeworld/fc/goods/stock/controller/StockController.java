@@ -27,7 +27,7 @@ public class StockController {
         return this.stockService.updateProductStockMinus(commodityStocks);
     }
 
-    @PostMapping("judgeStockAdequate")
+    @PostMapping("judge-stock-adequate")
     @ApiOperation("判断库存是否充足")
     public FCResponse<Boolean> judgeStockAdequate(@RequestBody CommodityStocks commodityStocks){
         return this.stockService.judgeStockAdequate(commodityStocks);

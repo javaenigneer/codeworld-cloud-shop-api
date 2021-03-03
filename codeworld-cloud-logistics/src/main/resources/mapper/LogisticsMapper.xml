@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.logistics.mapper.LogisticsMapper">
+
+    <!-- 物流MQ监听发货（自动更新）-->
+    <insert id="logisticsDelivery" parameterType="com.codeworld.fc.logistics.entity.Logistics">
+
+        insert into
+        codeworld_logistics
+        (
+        t_logistics_id,
+        t_logistics_delivery_number,
+        t_logistics_order_id,
+        t_logistics_arrive_time,
+        t_logistics_content,
+        t_logistics_delivery_sn
+        )
+        values(
+        #{id},
+        #{deliveryNumber},
+        #{orderId},
+        #{arriveTime},
+        #{content},
+        #{deliverySn}
+        )
+    </insert>
+</mapper>

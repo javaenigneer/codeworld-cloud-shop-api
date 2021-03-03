@@ -83,7 +83,12 @@ spring:
             - AddRequestHeader=X-Request-Foo, Bar
           predicates:
             - Path=/codeworld-marketing/**
-
+        - id: code-logistics # 物流
+          uri: lb://codeworld-cloud-logistics
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - Path=/codeworld-logistics/**
 
 
 

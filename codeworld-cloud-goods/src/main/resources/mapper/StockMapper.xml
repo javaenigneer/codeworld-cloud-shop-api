@@ -29,7 +29,7 @@
         update
         codeworld_stock
         set
-        t_product_stock = t_product_stock - lockedNumber
+        t_product_stock = t_product_stock - #{lockedNumber}
         where
         t_product_sku_id = #{productSkuId}
     </update>

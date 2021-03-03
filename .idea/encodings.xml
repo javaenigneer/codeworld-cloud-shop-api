@@ -12,6 +12,8 @@
     <file url="file://$PROJECT_DIR$/codeworld-cloud-gateway/src/main/resources/bootstrap.yml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-goods/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-goods/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/codeworld-cloud-logistics/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/codeworld-cloud-logistics/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-marketing/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-marketing/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/codeworld-cloud-member/src/main/java" charset="UTF-8" />

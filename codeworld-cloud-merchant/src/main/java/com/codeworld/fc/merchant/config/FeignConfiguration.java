@@ -22,6 +22,7 @@ public class FeignConfiguration implements RequestInterceptor {
     public void apply(RequestTemplate requestTemplate) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
+        assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
         String token = request.getHeader("token");
         requestTemplate.header("token", token);
