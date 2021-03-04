@@ -191,7 +191,8 @@ WHERE
         t_create_time,
         t_update_time,
         t_user_password,
-        t_user_password_salt
+        t_user_password_salt,
+        t_user_remark
         )
         values (
         #{userId},
@@ -204,7 +205,8 @@ WHERE
         #{createTime},
         #{updateTime},
         #{password},
-        #{passwordSalt}
+        #{passwordSalt},
+        #{remark}
         );
 
     </insert>

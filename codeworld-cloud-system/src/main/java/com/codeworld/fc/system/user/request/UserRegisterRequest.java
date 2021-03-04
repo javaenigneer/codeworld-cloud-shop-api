@@ -50,4 +50,8 @@ public class UserRegisterRequest {
     @ApiModelProperty("区域id")
     @NotNull(message = "请选择用户区域")
     private Long areaId;
+
+    @ApiModelProperty("用户备注")
+    @NotNull(message = "请输入用户备注信息")
+    private String remark;
 }

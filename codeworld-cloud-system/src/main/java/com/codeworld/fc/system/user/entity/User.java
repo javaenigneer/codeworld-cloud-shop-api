@@ -55,4 +55,7 @@ public class User {
 
     @ApiModelProperty("密码盐值")
     private String passwordSalt;
+
+    @ApiModelProperty("用户备注")
+    private String remark;
 }
