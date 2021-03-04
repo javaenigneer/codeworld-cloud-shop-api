@@ -150,6 +150,18 @@
         where
         cod.t_merchant_number = #{merchantNumber} and cor.t_return_order_status = 0
     </select>
+
+    <!-- 根据订单号和物流号查询是否存在 -->
+    <select id="checkOrderIdAndDeliveryNumberExist" parameterType="hashmap" resultType="com.codeworld.fc.order.entity.OrderDetail">
+        select
+        t_order_detail_id AS detailId
+        from
+        codeworld_order_detail
+        where
+        t_order_detail_id = #{orderId}
+        and
+        t_order_delivery_number = #{deliveryNumber}
+    </select>
     <!-- 订单发货 -->
     <update id="orderDelivery" parameterType="com.codeworld.fc.order.entity.OrderDetail">
         update

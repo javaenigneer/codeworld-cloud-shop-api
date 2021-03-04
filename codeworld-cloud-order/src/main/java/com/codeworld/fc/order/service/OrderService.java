@@ -161,4 +161,12 @@ public interface OrderService {
      * @return
      */
     FCResponse<Void> orderReturnApply(OrderReturnRequest orderReturnRequest);
+
+    /**
+     * 根据订单号和物流号查询是否存在
+     * @param orderId
+     * @param deliveryNumber
+     * @return
+     */
+    FCResponse<Boolean> checkOrderIdAndDeliveryNumberExist(Long orderId, String deliveryNumber);
 }

@@ -34,4 +34,10 @@ public class Logistics {
 
     @ApiModelProperty("物流更新内容")
     private String content;
+    
+    @ApiModelProperty("操作员Id")
+    private Long operationId;
+    
+    @ApiModelProperty("操作员姓名")
+    private String operationName;
 }

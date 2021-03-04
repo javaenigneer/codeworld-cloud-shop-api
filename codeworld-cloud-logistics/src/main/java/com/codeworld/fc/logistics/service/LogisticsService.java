@@ -1,6 +1,8 @@
 package com.codeworld.fc.logistics.service;
 
+import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.logistics.entity.Logistics;
+import com.codeworld.fc.logistics.request.LogisticsRequest;
 
 public interface LogisticsService {
     /**
@@ -9,4 +11,11 @@ public interface LogisticsService {
      * @return
      */
     Integer logisticsDelivery(Logistics logistics);
+
+    /**
+     * 物流更新
+     * @param logisticsRequest
+     * @return
+     */
+    FCResponse<Void> updateLogistics(LogisticsRequest logisticsRequest);
 }

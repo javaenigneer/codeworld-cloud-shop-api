@@ -92,4 +92,11 @@ public interface OrderDetailMapper {
      * @return
      */
     Integer getMerchantDashBoardAfterSaleCount(String number);
+
+    /**
+     * 根据订单号和物流号查询是否存在
+     * @param map
+     * @return
+     */
+    OrderDetail checkOrderIdAndDeliveryNumberExist(Map<String, Object> map);
 }

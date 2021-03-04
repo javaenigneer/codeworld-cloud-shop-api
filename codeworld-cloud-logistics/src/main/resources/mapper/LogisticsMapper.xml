@@ -14,7 +14,9 @@
         t_logistics_order_id,
         t_logistics_arrive_time,
         t_logistics_content,
-        t_logistics_delivery_sn
+        t_logistics_delivery_sn,
+        t_logistics_operation_id,
+        t_logistics_operation_name
         )
         values(
         #{id},
@@ -22,7 +24,9 @@
         #{orderId},
         #{arriveTime},
         #{content},
-        #{deliverySn}
+        #{deliverySn},
+        #{operationId},
+        #{operationName}
         )
     </insert>
 </mapper>

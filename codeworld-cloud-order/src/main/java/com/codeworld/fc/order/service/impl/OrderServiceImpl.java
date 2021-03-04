@@ -1142,6 +1142,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 根据订单号和物流号查询是否存在
+     *
+     * @param orderId
+     * @param deliveryNumber
+     * @return
+     */
+    @Override
+    public FCResponse<Boolean> checkOrderIdAndDeliveryNumberExist(Long orderId, String deliveryNumber) {
+
+        if (ObjectUtils.isEmpty(orderId) || orderId <= 0 || ObjectUtils.isEmpty(deliveryNumber)){
+            log.error("订单号或物流号错误，订单号：{},物流号：{}",orderId,deliveryNumber);
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.order.ORDER_OR_DELIVERY_NUMBER_ERROR.getMsg(),false);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderId",orderId);
+        map.put("deliveryNumber",deliveryNumber);
+        OrderDetail orderDetail = this.orderDetailMapper.checkOrderIdAndDeliveryNumberExist(map);
+        if (ObjectUtils.isEmpty(orderDetail)){
+            log.error("订单数据为空，原因：可能是订单号或物流编号错误");
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.order.ORDER_DELIVERY_DATA_EMPTY.getMsg(),false);
+        }
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.order.ORDER_DATA_SUCCESS.getMsg(),true);
+    }
+
+    /**
      * 改变导出订单信息
      *
      * @param orderExcels

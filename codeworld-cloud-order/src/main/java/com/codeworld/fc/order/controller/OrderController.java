@@ -152,4 +152,11 @@ public class OrderController {
     public FCResponse<Void> orderReturnApply(@RequestBody @Valid OrderReturnRequest orderReturnRequest){
         return this.orderService.orderReturnApply(orderReturnRequest);
     }
+
+    @PostMapping("check-order-id-and-delivery-number-exist")
+    @ApiOperation("根据订单号和物流号查询是否存在")
+    public FCResponse<Boolean> checkOrderIdAndDeliveryNumberExist(@RequestParam("orderId") Long orderId,
+                                                                  @RequestParam("deliveryNumber") String deliveryNumber){
+        return this.orderService.checkOrderIdAndDeliveryNumberExist(orderId,deliveryNumber);
+    }
 }

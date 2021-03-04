@@ -426,7 +426,10 @@ public class HttpMsg {
         ORDER_RETURN_APPLY_SUCCESS("订单售后申请成功"),
         ORDER_EXPORT_SUCCESS("订单数据导出成功"),
         ORDER_CANCEL_SUCCESS("订单取消成功"),
-        ORDER_CONFIRM_RECEIPT_SUCCESS("订单收货成功");
+        ORDER_CONFIRM_RECEIPT_SUCCESS("订单收货成功"),
+        ORDER_OR_DELIVERY_NUMBER_ERROR("订单号或物流号错误"),
+        ORDER_DELIVERY_DATA_EMPTY("订单数据为空,可能是订单号或物流单号错误")
+        ;
 
         order(String msg) {
             this.msg = msg;
@@ -613,6 +616,26 @@ public class HttpMsg {
         ;
 
         stock(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 物流
+     */
+    public enum logistics {
+
+        LOGISTICS_UPDATE_SUCCESS("物流更新成功"),
+        ;
+
+        logistics(String msg) {
             this.msg = msg;
         }
 
