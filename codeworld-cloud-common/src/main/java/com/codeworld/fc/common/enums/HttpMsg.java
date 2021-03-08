@@ -590,7 +590,8 @@ public class HttpMsg {
     public enum store {
 
         STORE_DATA_EMPTY("店铺数据为空"),
-        STORE_DATA_SUCCESS("店铺数据查询成功")
+        STORE_DATA_SUCCESS("店铺数据查询成功"),
+        STORE_ADD_SUCCESS("店铺新增成功")
         ;
 
         store(String msg) {

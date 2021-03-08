@@ -63,4 +63,7 @@ public class OrderResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderReturnApplyTime;
 
+    @ApiModelProperty("物流单号")
+    private String deliveryNumber;
+
 }

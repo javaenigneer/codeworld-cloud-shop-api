@@ -17,7 +17,7 @@ import java.util.Date;
 public class StorePageResponse {
 
     @ApiModelProperty("店铺Id")
-    private Long storeId;
+    private Long id;
 
     @ApiModelProperty("店铺名")
     private String name;

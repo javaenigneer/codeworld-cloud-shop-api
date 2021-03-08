@@ -2,6 +2,7 @@ package com.codeworld.fc.store.controller;
 
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.store.request.StoreAddRequest;
 import com.codeworld.fc.store.request.StoreSearchRequest;
 import com.codeworld.fc.store.response.StorePageResponse;
 import com.codeworld.fc.store.service.StoreService;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -30,5 +32,11 @@ public class StoreController {
     @ApiOperation("分页获取商户店铺列表")
     public FCResponse<DataResponse<List<StorePageResponse>>> getMerchantStoreByPage(@RequestBody StoreSearchRequest storeSearchRequest){
         return this.storeService.getMerchantStoreByPage(storeSearchRequest);
+    }
+
+    @PostMapping("/web/create-store")
+    @ApiOperation("新增店铺")
+    public FCResponse<Void> createStore(@RequestBody @Valid StoreAddRequest storeAddRequest){
+        return this.storeService.createStore(storeAddRequest);
     }
 }

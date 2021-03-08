@@ -54,7 +54,8 @@
         cos.t_order_status AS orderStatus,
         cor.t_return_order_status AS orderReturnStatus,
         cod.t_order_detail_id AS orderDetailId,
-        cor.t_return_order_apply_time AS orderReturnApplyTime
+        cor.t_return_order_apply_time AS orderReturnApplyTime,
+        cod.t_order_delivery_number AS deliveryNumber
         from
         codeworld_order AS co
         left join codeworld_order_detail AS cod on co.t_order_id = cod.t_order_id
@@ -78,7 +79,8 @@
         co.t_order_create_time AS createTime,
         co.t_order_member_id AS memberId,
         co.t_order_buyer_name AS buyerName,
-        cos.t_order_status AS orderStatus
+        cos.t_order_status AS orderStatus,
+        cod.t_order_delivery_number AS deliveryNumber
         from
         codeworld_order_detail AS cod
         inner join codeworld_order AS co on cod.t_order_id = co.t_order_id

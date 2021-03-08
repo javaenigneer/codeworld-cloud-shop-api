@@ -1,5 +1,6 @@
 package com.codeworld.fc.logistics.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,14 +31,15 @@ public class Logistics {
     private Long orderId;
 
     @ApiModelProperty("物流到达时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date arriveTime;
 
     @ApiModelProperty("物流更新内容")
     private String content;
-    
+
     @ApiModelProperty("操作员Id")
     private Long operationId;
-    
+
     @ApiModelProperty("操作员姓名")
     private String operationName;
 }

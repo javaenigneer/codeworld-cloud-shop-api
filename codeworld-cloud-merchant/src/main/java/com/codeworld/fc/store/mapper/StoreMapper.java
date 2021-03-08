@@ -1,5 +1,6 @@
 package com.codeworld.fc.store.mapper;
 
+import com.codeworld.fc.store.entity.Store;
 import com.codeworld.fc.store.request.StoreSearchRequest;
 import com.codeworld.fc.store.response.StorePageResponse;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,4 +17,10 @@ public interface StoreMapper {
      * @return
      */
     List<StorePageResponse> getMerchantStoreByPage(StoreSearchRequest storeSearchRequest);
+
+    /**
+     * 新增店铺
+     * @param store
+     */
+    void createStore(Store store);
 }

@@ -26,4 +26,28 @@
         where
         cs.t_merchant_number = #{merchantNumber}
     </select>
+
+    <!-- 新增店铺 -->
+    <insert id="createStore" parameterType="com.codeworld.fc.store.entity.Store">
+        insert
+        into
+        codeworld_store
+        (
+        t_store_id,
+        t_store_name,
+        t_store_status,
+        t_store_create_time,
+        t_store_update_time,
+        t_merchant_number
+        )
+        values
+        (
+        #{id},
+        #{name},
+        #{status},
+        #{createTime},
+        #{updateTime},
+        #{merchantNumber}
+        )
+    </insert>
 </mapper>
