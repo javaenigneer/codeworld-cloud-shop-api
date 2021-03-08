@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.codeworld.fc.client.OrderClient;
 import com.codeworld.fc.client.UserClient;
 import com.codeworld.fc.common.domain.LoginInfoData;
+import com.codeworld.fc.common.enums.DeliveryEnum;
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.enums.HttpMsg;
 import com.codeworld.fc.common.exception.FCException;
@@ -11,15 +12,22 @@ import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
 import com.codeworld.fc.domain.User;
 import com.codeworld.fc.interceptor.AuthInterceptor;
+import com.codeworld.fc.logistics.domain.LogisticsInformation;
 import com.codeworld.fc.logistics.entity.Logistics;
 import com.codeworld.fc.logistics.mapper.LogisticsMapper;
 import com.codeworld.fc.logistics.request.LogisticsRequest;
+import com.codeworld.fc.logistics.request.LogisticsSelectRequest;
+import com.codeworld.fc.logistics.response.LogisticsInformationCollection;
 import com.codeworld.fc.logistics.service.LogisticsService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName LogisticsServiceImpl
@@ -93,5 +101,34 @@ public class LogisticsServiceImpl implements LogisticsService {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
+    }
+
+    /**
+     * 获取物流信息
+     *
+     * @param logisticsSelectRequest
+     * @return
+     */
+    @Override
+    public FCResponse<LogisticsInformationCollection> getLogisticsInformation(LogisticsSelectRequest logisticsSelectRequest) {
+        List<Logistics> logisticsEs = this.logisticsMapper.getLogisticsByDeliveruNumberAndOrderId(logisticsSelectRequest);
+        if (CollectionUtils.isEmpty(logisticsEs)){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.logistics.LOGISTICS_DATA_EMPTY.getMsg());
+        }
+        // 创建数据返回对象
+        LogisticsInformationCollection logisticsInformationCollection = new LogisticsInformationCollection();
+        // 创建物流基本信息
+        LogisticsInformation logisticsInformation = new LogisticsInformation();
+        Logistics logistics = logisticsEs.get(0);
+        logisticsInformation.setDeliveryCompany(DeliveryEnum.getDeliveryNameByKey(logistics.getDeliverySn()));
+        logisticsInformation.setDeliveryNumber(logistics.getDeliveryNumber());
+        // 设置物流基本信息
+        logisticsInformationCollection.setInformation(logisticsInformation);
+        // 设置物流动态信息
+        logisticsInformationCollection.setLogistics(logisticsEs);
+        // 默认设置信息
+        logisticsInformationCollection.setUpdateTime(new Date());
+        logisticsInformationCollection.setState(3);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.logistics.LOGISTICS_DATA_SUCCESS.getMsg(),logisticsInformationCollection);
     }
 }

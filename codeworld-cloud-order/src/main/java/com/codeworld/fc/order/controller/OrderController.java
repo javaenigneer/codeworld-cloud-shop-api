@@ -1,6 +1,5 @@
 package com.codeworld.fc.order.controller;
 
-import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.order.domain.OrderDeliveryMessage;

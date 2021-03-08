@@ -14,6 +14,7 @@
         <result property="productPrice" column="t_product_price"/>
         <result property="productImage" column="t_product_image"/>
         <result property="createTime" column="t_order_create_time"/>
+        <result property="orderDeliveryNumber" column="t_order_delivery_number"/>
     </resultMap>
 
     <!-- 添加订单明细 -->

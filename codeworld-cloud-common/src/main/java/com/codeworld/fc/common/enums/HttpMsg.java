@@ -633,6 +633,8 @@ public class HttpMsg {
     public enum logistics {
 
         LOGISTICS_UPDATE_SUCCESS("物流更新成功"),
+        LOGISTICS_DATA_EMPTY("物流信息为空"),
+        LOGISTICS_DATA_SUCCESS("物流信息查询成功")
         ;
 
         logistics(String msg) {

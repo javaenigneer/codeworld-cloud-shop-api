@@ -29,4 +29,23 @@
         #{operationName}
         )
     </insert>
+
+    <!-- 根据订单编号和物流单号查询物流信息 -->
+    <select id="getLogisticsByDeliveruNumberAndOrderId" resultType="com.codeworld.fc.logistics.entity.Logistics" parameterType="com.codeworld.fc.logistics.request.LogisticsSelectRequest">
+        select
+        t_logistics_id AS id,
+        t_logistics_delivery_number AS deliveryNumber,
+        t_logistics_order_id AS  orderId,
+        t_logistics_arrive_time AS arriveTime,
+        t_logistics_content AS content,
+        t_logistics_delivery_sn AS deliverySn
+        from
+        codeworld_logistics
+        where
+        t_logistics_delivery_number = #{deliveryNumber}
+        and
+        t_logistics_order_id = #{orderId}
+        order by
+        t_logistics_arrive_time DESC
+    </select>
 </mapper>
