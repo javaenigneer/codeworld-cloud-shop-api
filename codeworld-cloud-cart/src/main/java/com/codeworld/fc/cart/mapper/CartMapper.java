@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -30,4 +31,17 @@ public interface CartMapper {
      * @param cartId
      */
     void deleteCartByIds(List<Long> cartId);
+
+    /**
+     * 判断购物车中是否已加入该商品
+     * @param map
+     * @return
+     */
+    Long checkCartExist(Map<String, Object> map);
+
+    /**
+     * 修改购物车中已添加商品数量
+     * @param cart
+     */
+    void updateCartProductCount(Cart cart);
 }

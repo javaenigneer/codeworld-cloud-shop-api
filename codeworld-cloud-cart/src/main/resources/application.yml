@@ -33,7 +33,7 @@ mybatis:
 logging:
   config: classpath:log/logback-spring.xml
   level:
-    com.codeworld.fc.member.mapper: debug
+    com.codeworld.fc.cart.mapper: debug
 codeworld:
   jwt:
     secret: codeworld@Login(Auth}*^31)&codeworld% # 用于生存rsa公钥和私钥的密文,越复杂越好

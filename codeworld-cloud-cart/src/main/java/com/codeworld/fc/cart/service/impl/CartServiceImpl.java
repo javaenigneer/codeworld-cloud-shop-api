@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName CartServiceImpl
@@ -81,7 +83,22 @@ public class CartServiceImpl implements CartService {
             cart.setProductPrice(productSkuModel.getPrice());
             cart.setCreateTime(new Date());
             // 添加到购物车
-            this.cartMapper.addCart(cart);
+            // 首先判断商品是否加入过购物车
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("memberId",cartAddRequest.getMemberId());
+            map.put("productId",productModel.getProductId());
+            map.put("productSkuId",productSkuModel.getId());
+            Long cartId = this.cartMapper.checkCartExist(map);
+            if (ObjectUtils.isNotEmpty(cartId)){
+                // 已存在,直接修改数量
+                Cart updateCart = new Cart();
+                updateCart.setId(cartId);
+                updateCart.setProductCount(productModel.getProductCount());
+                this.cartMapper.updateCartProductCount(updateCart);
+            }else {
+                // 不存在，新增到购物车中
+                this.cartMapper.addCart(cart);
+            }
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.cart.CART_ADD_SUCCESS.getMsg());
         }catch (Exception e){
             e.printStackTrace();

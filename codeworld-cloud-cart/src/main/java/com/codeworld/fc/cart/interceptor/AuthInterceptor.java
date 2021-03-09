@@ -52,12 +52,17 @@ public class AuthInterceptor implements HandlerInterceptor {
                 throw new FCException("登录失效，请重新登录");
             }
             // 根据token获取信息
-            LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(token, jwtProperties.getPublicKey());
-            if (ObjectUtils.isEmpty(loginInfoData)){
-                throw new FCException("登录失效，请重新登录");
+            try {
+                LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(token, jwtProperties.getPublicKey());
+                if (ObjectUtils.isEmpty(loginInfoData)){
+                    throw new FCException("登录失效，请重新登录");
+                }
+                // 验证通过
+                return HandlerInterceptor.super.preHandle(request, response, handler);
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new FCException("系统错误");
             }
-            // 验证通过
-            return HandlerInterceptor.super.preHandle(request, response, handler);
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

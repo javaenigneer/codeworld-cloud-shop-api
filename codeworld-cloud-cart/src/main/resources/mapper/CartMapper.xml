@@ -39,6 +39,22 @@
         order by cc.t_cart_create_time DESC
     </select>
 
+    <!-- 判断购物车中是否已加入商品 -->
+    <select id="checkCartExist" parameterType="hashmap" resultType="java.lang.Long">
+        select
+        t_cart_id
+        from
+        codeworld_cart
+        where
+        t_cart_member_id = #{memberId}
+        and
+        t_cart_product_id = #{productId}
+        and
+        t_cart_product_sku_id = #{productSkuId}
+        and
+        t_cart_status = 1
+    </select>
+
     <!-- 添加到购物车 -->
     <insert id="addCart" parameterType="com.codeworld.fc.cart.entity.Cart">
 
@@ -89,4 +105,13 @@
         </foreach>
     </update>
 
+    <!-- 修改购物车中商品已存在的数量 -->
+    <update id="updateCartProductCount" parameterType="com.codeworld.fc.cart.entity.Cart">
+        update
+        codeworld_cart
+        set
+        t_cart_product_count = t_cart_product_count + #{productCount}
+        where
+        t_cart_id = #{id}
+    </update>
 </mapper>
