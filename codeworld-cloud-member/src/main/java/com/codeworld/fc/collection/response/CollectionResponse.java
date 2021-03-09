@@ -36,4 +36,9 @@ public class CollectionResponse {
      * 商品单价
      */
     private Integer productPrice;
+
+    /**
+     * 商品标题
+     */
+    private String productTitle;
 }
