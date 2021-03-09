@@ -13,6 +13,9 @@ spring:
     elasticsearch:
       cluster-name: elasticsearch
       cluster-nodes: 192.168.2.7:9300
+  redis:
+    database: 3 # 保存商品浏览量、点击量、销量
+    host: 192.168.2.4
   main:
     allow-bean-definition-overriding: true
 #feign:

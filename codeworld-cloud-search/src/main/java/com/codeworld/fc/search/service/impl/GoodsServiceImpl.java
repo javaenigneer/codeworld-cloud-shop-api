@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -57,6 +58,8 @@ public class GoodsServiceImpl implements GoodsService {
     private ElasticsearchTemplate elasticsearchTemplate;
     @Autowired
     private SearchRepository searchRepository;
+    @Autowired(required = false)
+    private StringRedisTemplate stringRedisTemplate;
 
 
     /**
@@ -171,6 +174,9 @@ public class GoodsServiceImpl implements GoodsService {
         }
         SearchItem searchItem = search.getContent().get(0);
         ProductResponse productResponse = this.buildProductResponse(searchItem);
+        // 每点击一次增加一次点击量
+        this.stringRedisTemplate.opsForValue().increment(productId.toString(), 1L);
+        log.info("商品浏览量增加，商品Id：{}",productId);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_GET_SUCCESS.getMsg(), productResponse);
     }
 
