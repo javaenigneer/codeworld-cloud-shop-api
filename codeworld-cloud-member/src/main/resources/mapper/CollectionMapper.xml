@@ -30,8 +30,16 @@
 
     <select id="getMemberCollectionByPage" parameterType="java.lang.Long" resultType="com.codeworld.fc.collection.response.CollectionResponse">
         select
-        t_collection_id,
-        t_product_id
+        t_collection_id AS id,
+        t_product_id AS productId,
+        t_product_sku_id AS productSkuId,
+        t_product_image AS productImage,
+        t_product_title AS productTitle,
+        t_product_price AS productPrice
+        from
+        codeworld_collection
+        where
+        t_member_id = #{memberId}
     </select>
 
 </mapper>
