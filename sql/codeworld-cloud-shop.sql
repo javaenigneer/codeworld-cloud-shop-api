@@ -11,7 +11,7 @@
  Target Server Version : 50640
  File Encoding         : 65001
 
- Date: 04/03/2021 10:38:40
+ Date: 09/03/2021 15:37:53
 */
 
 SET NAMES utf8mb4;
@@ -3681,6 +3681,7 @@ INSERT INTO `codeworld_cart` VALUES (629957, 838395, 668339, 185457, 'Iphone20 �
 INSERT INTO `codeworld_cart` VALUES (638965, 491313, 711211, 129735, 'VivoX100 红色 1000G', 1, 1, 1, NULL, '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/07/8381610010655296.jpg\",\"price\":1,\"id\":129735,\"title\":\"VivoX100 红色 1000G\"}', '21181611095746339', '2021-02-03 14:59:46', 0);
 INSERT INTO `codeworld_cart` VALUES (647609, 838395, 711211, 129735, 'VivoX100 红色 1000G', 1, 1, 1, NULL, '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/07/8381610010655296.jpg\",\"price\":1,\"id\":129735,\"title\":\"VivoX100 红色 1000G\"}', '21181611095746339', '2021-02-06 15:46:35', 0);
 INSERT INTO `codeworld_cart` VALUES (719696, 838395, 897175, 756668, '小米MIX2 绿色 20G', 99, 1, 1, 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/20121608258832021.jpg', '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/39601608258814803.jpg\",\"price\":99,\"id\":756668,\"title\":\"小米MIX2 红色 20G\"}', NULL, '2020-12-27 15:54:34', 0);
+INSERT INTO `codeworld_cart` VALUES (768070, 838395, 234364, 31914, '小米MIX5 黑色 2000G', 11, 3, 1, NULL, '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/77881612598154251.jpg\",\"price\":11,\"id\":31914,\"title\":\"小米MIX5 黑色 2000G\"}', '21181611095746339', '2021-03-09 15:01:37', 1);
 INSERT INTO `codeworld_cart` VALUES (800400, 838395, 711211, 129735, 'VivoX100 红色 1000G', 1, 1, 1, NULL, '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/07/8381610010655296.jpg\",\"price\":1,\"id\":129735,\"title\":\"VivoX100 红色 1000G\"}', '21181611095746339', '2021-02-04 17:11:18', 0);
 INSERT INTO `codeworld_cart` VALUES (814325, 838395, 897175, 189609, '小米MIX2 绿色 20G', 9999, 1, 1, NULL, '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/20121608258832021.jpg\",\"price\":9999,\"id\":189609,\"title\":\"小米MIX2 绿色 20G\"}', '21181608848696318', '2021-02-04 09:09:24', 0);
 INSERT INTO `codeworld_cart` VALUES (873154, 838395, 668339, 86869, 'Iphone20 红色 1000G', 1, 1, 1, NULL, '{\"images\":\"https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/06/96101609919575712.jpg\",\"price\":1,\"id\":86869,\"title\":\"Iphone20 红色 1000G\"}', '21181608848696318', '2021-02-03 16:47:03', 0);
@@ -3733,6 +3734,27 @@ CREATE TABLE `codeworld_category_attribute`  (
 INSERT INTO `codeworld_category_attribute` VALUES (128070, 500117, 709554, '2020-12-18 10:30:57', '2020-12-18 10:30:57');
 INSERT INTO `codeworld_category_attribute` VALUES (232737, 500117, 513162, '2020-12-18 10:31:03', '2020-12-18 10:31:03');
 INSERT INTO `codeworld_category_attribute` VALUES (368983, 500117, 225185, '2020-12-18 10:31:03', '2020-12-18 10:31:03');
+
+-- ----------------------------
+-- Table structure for codeworld_collection
+-- ----------------------------
+DROP TABLE IF EXISTS `codeworld_collection`;
+CREATE TABLE `codeworld_collection`  (
+  `t_collection_id` bigint(20) NOT NULL COMMENT '收藏id主键',
+  `t_product_id` bigint(20) NULL DEFAULT NULL COMMENT '商品Id',
+  `t_product_sku_id` bigint(20) NULL DEFAULT NULL COMMENT '商品SkuId',
+  `t_member_id` bigint(20) NULL DEFAULT NULL COMMENT '会员Id',
+  `t_collection_time` datetime(0) NULL DEFAULT NULL COMMENT '收藏时间',
+  `t_product_image` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品图片',
+  `t_product_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品标题',
+  `t_product_price` int(10) NULL DEFAULT NULL COMMENT '商品单价',
+  PRIMARY KEY (`t_collection_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of codeworld_collection
+-- ----------------------------
+INSERT INTO `codeworld_collection` VALUES (629630, 234364, NULL, 838395, '2021-03-09 14:16:17', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/77881612598154251.jpg', '小米MIX5 黑色 2000G', 11);
 
 -- ----------------------------
 -- Table structure for codeworld_dept
@@ -4382,6 +4404,7 @@ CREATE TABLE `codeworld_store`  (
 -- ----------------------------
 -- Records of codeworld_store
 -- ----------------------------
+INSERT INTO `codeworld_store` VALUES (859010, '测试店铺', 2, '2021-03-08 16:40:06', '2021-03-08 16:40:06', '21181611095746339');
 
 -- ----------------------------
 -- Table structure for codeworld_user
