@@ -1,4 +1,4 @@
-package com.codeworld.fc.member.properties;
+package com.codeworld.fc.properties;
 
 
 import com.codeworld.fc.common.utils.RsaUtils;

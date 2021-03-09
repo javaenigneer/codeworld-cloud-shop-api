@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.collection.mapper.CollectionMapper">
+
+    <insert id="collectionProduct" parameterType="com.codeworld.fc.collection.entity.Collection">
+        insert into codeworld_collection
+        (
+        t_collection_id,
+        t_product_id,
+        t_product_sku_id,
+        t_member_id,
+        t_collection_time,
+        t_product_image,
+        t_product_title,
+        t_product_price
+        )
+        values
+        (
+        #{id},
+        #{productId},
+        #{skuId},
+        #{memberId},
+        #{collectionTime},
+        #{image},
+        #{title},
+        #{price}
+        )
+    </insert>
+
+    <select id="getMemberCollectionByPage" parameterType="java.lang.Long" resultType="com.codeworld.fc.collection.response.CollectionResponse">
+        select
+        t_collection_id,
+        t_product_id
+    </select>
+
+</mapper>

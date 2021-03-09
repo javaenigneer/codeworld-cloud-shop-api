@@ -58,7 +58,7 @@ spring:
           filters:
             - AddRequestHeader=X-Request-Foo, Bar
           predicates:
-            - Path=/codeworld-member/**
+            - Path=/codeworld-member/**,/codeworld-collection/**
         - id: code-cart # 购物车
           uri: lb://codeworld-cloud-cart
           filters:

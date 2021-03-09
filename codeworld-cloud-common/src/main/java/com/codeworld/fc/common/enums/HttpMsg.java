@@ -649,4 +649,26 @@ public class HttpMsg {
             return msg;
         }
     }
+
+    /**
+     * 收藏
+     */
+    public enum collection {
+
+        COLLECTION_PRODUCT__SUCCESS("商品收藏成功"),
+        COLLECTION_DATA_EMPTY("收藏列表为空"),
+        COLLECTION_DATA_SUCCESS("收藏列表查询成功")
+        ;
+
+        collection(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
 }

@@ -1,6 +1,6 @@
-package com.codeworld.fc.member.config;
+package com.codeworld.fc.config;
 
-import com.codeworld.fc.member.interceptor.AuthInterceptor;
+import com.codeworld.fc.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
