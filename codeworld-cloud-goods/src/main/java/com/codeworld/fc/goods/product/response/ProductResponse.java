@@ -43,7 +43,8 @@ public class ProductResponse {
     @ApiModelProperty("更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
-
     @ApiModelProperty("商户Id")
     private Long merchantId;
+    @ApiModelProperty("商品浏览量")
+    private Long view;
 }

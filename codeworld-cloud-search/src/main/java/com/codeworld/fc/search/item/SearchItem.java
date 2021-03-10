@@ -64,17 +64,27 @@ public class SearchItem implements Serializable {
     // 商品特有参数
     private String specialParam;
 
+    // 商品浏览量
+    private Long view;
+
     public SearchItem() {
     }
 
-    public SearchItem(Long productId, String title, Long categoryId, Date createTime, Date updateTime, String sku, Map<String, Object> specs) {
+    public SearchItem(Long productId, String title, Long categoryId, String images, String prices, String allTitle, String merchantNumber, String merchantName, Date createTime, Date updateTime, String sku, Map<String, Object> specs, String specialParam, Long view) {
         this.productId = productId;
         this.title = title;
         this.categoryId = categoryId;
+        this.images = images;
+        this.prices = prices;
+        this.allTitle = allTitle;
+        this.merchantNumber = merchantNumber;
+        this.merchantName = merchantName;
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.sku = sku;
         this.specs = specs;
+        this.specialParam = specialParam;
+        this.view = view;
     }
 
     public Long getProductId() {
@@ -131,5 +141,61 @@ public class SearchItem implements Serializable {
 
     public void setSpecs(Map<String, Object> specs) {
         this.specs = specs;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public String getPrices() {
+        return prices;
+    }
+
+    public void setPrices(String prices) {
+        this.prices = prices;
+    }
+
+    public String getAllTitle() {
+        return allTitle;
+    }
+
+    public void setAllTitle(String allTitle) {
+        this.allTitle = allTitle;
+    }
+
+    public String getMerchantNumber() {
+        return merchantNumber;
+    }
+
+    public void setMerchantNumber(String merchantNumber) {
+        this.merchantNumber = merchantNumber;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+    public String getSpecialParam() {
+        return specialParam;
+    }
+
+    public void setSpecialParam(String specialParam) {
+        this.specialParam = specialParam;
+    }
+
+    public Long getView() {
+        return view;
+    }
+
+    public void setView(Long view) {
+        this.view = view;
     }
 }

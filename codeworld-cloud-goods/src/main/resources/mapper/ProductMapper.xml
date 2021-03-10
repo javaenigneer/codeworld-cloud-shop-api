@@ -30,9 +30,11 @@
         cp.t_product_create_time AS createTime,
         cp.t_product_update_time AS updateTime,
         cp.t_product_merchant_id AS merchantId,
-        cc.t_category_name AS categoryName
+        cc.t_category_name AS categoryName,
+        cpd.t_product_view AS view
         from codeworld_product AS cp
         left join codeworld_category AS cc on cp.t_product_category_id = cc.t_category_id
+        left join codeworld_product_detail AS cpd on cp.t_product_id = cpd.t_product_id
         <where>
             <if test="title != null and title != ''">
                 and t_product_title like "%"#{title}"%"
@@ -42,19 +44,19 @@
             </if>
             <if test="createTime != null ">
                 <![CDATA[
-                    and   t_product_create_time >= #{createTime}
+                    and   cp.t_product_create_time >= #{createTime}
                  ]]>
             </if>
             <if test="updateTime != null ">
                 <![CDATA[
-                   and  t_product_update_time <= #{updateTime}
+                   and  cp.t_product_update_time <= #{updateTime}
                  ]]>
             </if>
             <if test="merchantId != null">
                 and t_product_merchant_id = #{merchantId}
             </if>
         </where>
-        order by t_product_create_time DESC
+        order by cp.t_product_create_time DESC
     </select>
 
     <!-- 获取最新商品 -->

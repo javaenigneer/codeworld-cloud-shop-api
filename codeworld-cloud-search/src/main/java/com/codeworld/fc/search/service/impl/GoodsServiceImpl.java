@@ -314,6 +314,7 @@ public class GoodsServiceImpl implements GoodsService {
 //        searchItem.setTitle(productResponse.getTitle());
         searchItem.setCreateTime(productResponse.getCreateTime());
         searchItem.setUpdateTime(productResponse.getUpdateTime());
+        searchItem.setView(productResponse.getView());
 
         // 根据商户Id查询商户号和商家名称
         FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(productResponse.getMerchantId());
