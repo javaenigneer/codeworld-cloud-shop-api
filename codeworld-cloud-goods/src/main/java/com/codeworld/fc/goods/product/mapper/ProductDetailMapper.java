@@ -20,4 +20,10 @@ public interface ProductDetailMapper {
      * @return
      */
     ProductDetail getProductDetailByProductId(Long productId);
+
+    /**
+     * 修改商品浏览量
+     * @param productDetail
+     */
+    void updateProductView(ProductDetail productDetail);
 }

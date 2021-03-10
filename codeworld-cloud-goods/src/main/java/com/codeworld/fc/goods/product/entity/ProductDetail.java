@@ -35,4 +35,6 @@ public class ProductDetail {
     private Date createTime;
     @ApiModelProperty("更新时间")
     private Date updateTime;
+    @ApiModelProperty("商品浏览量")
+    private Long view;
 }

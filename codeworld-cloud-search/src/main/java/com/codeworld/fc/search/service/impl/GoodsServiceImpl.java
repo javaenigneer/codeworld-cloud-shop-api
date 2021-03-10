@@ -55,11 +55,11 @@ public class GoodsServiceImpl implements GoodsService {
     private MerchantClient merchantClient;
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
-    @Autowired
     private SearchRepository searchRepository;
     @Autowired(required = false)
     private StringRedisTemplate stringRedisTemplate;
+    // 用于保存商品浏览到redis中的前缀
+    private static final String PRODUCT_VIEW = "PRODUCT_VIEW:";
 
 
     /**
@@ -175,7 +175,7 @@ public class GoodsServiceImpl implements GoodsService {
         SearchItem searchItem = search.getContent().get(0);
         ProductResponse productResponse = this.buildProductResponse(searchItem);
         // 每点击一次增加一次点击量
-        this.stringRedisTemplate.opsForValue().increment(productId.toString(), 1L);
+        this.stringRedisTemplate.opsForValue().increment(PRODUCT_VIEW + productId.toString(), 1L);
         log.info("商品浏览量增加，商品Id：{}",productId);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_GET_SUCCESS.getMsg(), productResponse);
     }

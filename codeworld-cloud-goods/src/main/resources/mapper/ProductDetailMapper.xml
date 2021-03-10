@@ -52,4 +52,14 @@
         where cpd.t_product_id = #{productId}
 
     </select>
+
+    <!-- 修改商品浏览量 -->
+    <update id="updateProductView" parameterType="com.codeworld.fc.goods.product.entity.ProductDetail">
+        update
+        codeworld_product_detail
+        set
+        t_product_view = t_product_view + #{view}
+        where
+        t_product_id = #{id}
+    </update>
 </mapper>
