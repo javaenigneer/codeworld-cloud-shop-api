@@ -294,6 +294,7 @@ public class GoodsServiceImpl implements GoodsService {
         productResponse.setSku(searchItem.getSku());
         productResponse.setMerchantName(searchItem.getMerchantName());
         productResponse.setMerchantNumber(searchItem.getMerchantNumber());
+        productResponse.setView(searchItem.getView());
         return productResponse;
     }
 

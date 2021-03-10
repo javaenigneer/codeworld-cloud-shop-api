@@ -6,6 +6,7 @@ import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.domain.LoginInfoData;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.utils.JwtUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,17 +56,22 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return HandlerInterceptor.super.preHandle(request, response, handler);
             }
         }else {
-            // 执行认证
-            if (ObjectUtils.isEmpty(token)){
+            try {
+                // 执行认证
+                if (ObjectUtils.isEmpty(token)){
+                    throw new FCException("登录失效，请重新登录");
+                }
+                // 根据token获取信息
+                LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(token, jwtProperties.getPublicKey());
+                if (ObjectUtils.isEmpty(loginInfoData)){
+                    throw new FCException("登录失效，请重新登录");
+                }
+                // 验证通过
+                return HandlerInterceptor.super.preHandle(request, response, handler);
+            }catch (ExpiredJwtException e){
+                e.printStackTrace();
                 throw new FCException("登录失效，请重新登录");
             }
-            // 根据token获取信息
-            LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(token, jwtProperties.getPublicKey());
-            if (ObjectUtils.isEmpty(loginInfoData)){
-                throw new FCException("登录失效，请重新登录");
-            }
-            // 验证通过
-            return HandlerInterceptor.super.preHandle(request, response, handler);
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

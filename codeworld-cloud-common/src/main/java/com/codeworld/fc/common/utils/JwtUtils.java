@@ -3,10 +3,7 @@ package com.codeworld.fc.common.utils;
 
 
 import com.codeworld.fc.common.domain.LoginInfoData;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.joda.time.DateTime;
 
 import java.security.PrivateKey;
@@ -61,7 +58,7 @@ public class JwtUtils {
      * @return
      * @throws Exception
      */
-    private static Jws<Claims> parserToken(String token, PublicKey publicKey) {
+    private static Jws<Claims> parserToken(String token, PublicKey publicKey) throws ExpiredJwtException {
         return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
     }
 
@@ -86,7 +83,7 @@ public class JwtUtils {
      * @return 用户信息
      * @throws Exception
      */
-    public static LoginInfoData getInfoFromToken(String token, PublicKey publicKey) throws Exception {
+    public static LoginInfoData getInfoFromToken(String token, PublicKey publicKey) throws ExpiredJwtException {
         Jws<Claims> claimsJws = parserToken(token, publicKey);
         Claims body = claimsJws.getBody();
         return new LoginInfoData(

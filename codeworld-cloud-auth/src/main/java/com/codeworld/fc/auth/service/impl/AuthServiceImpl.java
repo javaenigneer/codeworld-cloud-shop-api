@@ -15,6 +15,7 @@ import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.*;
 import com.codeworld.fc.auth.response.MemberInfoResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
         // 设置为会员标识
         loginInfoData.setResources("member");
         try {
-            String token = JwtUtils.generateToken(loginInfoData, this.jwtProperties.getPrivateKey(), this.jwtProperties.getExpire());
+            String token = JwtUtils.generateToken(loginInfoData, this.jwtProperties.getPrivateKey(), this.jwtProperties.getExpire() * 24);
             CookieUtils.setCookie(request, response, jwtProperties.getCookieName(), token, jwtProperties.getCookieMaxAge() * 60);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.member.MEMBER_LOGIN_SUCCESS.getMsg(), token);
         } catch (Exception e) {
@@ -105,7 +106,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public FCResponse<MemberInfoResponse> getMemberInfo(TokenRequest tokenRequest) {
         try {
-
             LoginInfoData loginInfoData = JwtUtils.getInfoFromToken(tokenRequest.getToken(), jwtProperties.getPublicKey());
             if (ObjectUtils.isEmpty(loginInfoData)) {
                 return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.member.MEMBER_DATA_EXPIRE.getMsg(), null);
@@ -124,6 +124,9 @@ public class AuthServiceImpl implements AuthService {
             memberInfoResponse.setMemberInfo(memberInfo);
             memberInfoResponse.setReceiverAddresses(memberReceiverAddressInfo.getAddresses());
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.member.MEMBER_DATA_SUCCESS.getMsg(), memberInfoResponse);
+        } catch (ExpiredJwtException e) {
+            e.printStackTrace();
+            throw new FCException("登录失效，请重新登录");
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
@@ -199,7 +202,7 @@ public class AuthServiceImpl implements AuthService {
         // 将密码加盐加密
         String password = CodecUtils.md5Hex(systemLoginRequest.getPassword(), user.getPasswordSalt());
         // 校验密码
-        if (!StringUtils.equals(user.getPassword(),password)) {
+        if (!StringUtils.equals(user.getPassword(), password)) {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.user.USER_MESSAGE_ERROR.getMsg(), null);
         }
         // 执行登录
@@ -255,7 +258,7 @@ public class AuthServiceImpl implements AuthService {
             else if ("merchant".equals(resources)) {
                 // 查询商户信息
                 FCResponse<MerchantResponse> fcResponse = this.merchantClient.getMerchantInfoById(loginInfoData.getId());
-                if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
+                if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
                     return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), fcResponse.getMsg());
                 }
                 MerchantResponse merchantResponse = fcResponse.getData();
