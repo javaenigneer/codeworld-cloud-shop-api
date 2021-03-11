@@ -613,7 +613,8 @@ public class HttpMsg {
      */
     public enum storeCategory {
         STORE_CATEGORY_DATA_EMPTY("店铺分类为空"),
-        STORE_CATEGORY_DATA_SUCCESS("店铺分类查询成功")
+        STORE_CATEGORY_DATA_SUCCESS("店铺分类查询成功"),
+        STORE_CATEGORY_ADD_SUCCESS("店铺分类添加成功")
         ;
 
         storeCategory(String msg) {

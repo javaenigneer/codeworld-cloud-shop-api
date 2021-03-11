@@ -20,4 +20,27 @@
         and
         cs.t_merchant_number = #{merchantNumber}
     </select>
+
+    <insert id="addStoreCategory" parameterType="com.codeworld.fc.store.entity.StoreCategory">
+        insert into codeworld_store_category
+        (
+        t_store_category_id,
+        t_store_id,
+        t_parent_id,
+        t_category_name,
+        t_create_time,
+        t_update_time,
+        t_sort_no
+        )
+        values
+        (
+        #{id},
+        #{storeId},
+        #{parentId},
+        #{name},
+        #{createTime},
+        #{updateTime},
+        #{sortNo}
+        )
+    </insert>
 </mapper>

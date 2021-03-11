@@ -18,4 +18,10 @@ public interface StoreCategoryMapper {
      * @return
      */
     List<StoreCategory> getStoreCategoryByStoreId(Map<String, Object> map);
+
+    /**
+     * 添加店铺分类
+     * @param storeCategory
+     */
+    void addStoreCategory(StoreCategory storeCategory);
 }

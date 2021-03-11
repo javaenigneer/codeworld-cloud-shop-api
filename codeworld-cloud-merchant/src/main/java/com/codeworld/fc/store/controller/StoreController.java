@@ -4,9 +4,11 @@ import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.store.domain.StoreCategoryTreeNode;
 import com.codeworld.fc.store.request.StoreAddRequest;
+import com.codeworld.fc.store.request.StoreCategoryAddRequest;
 import com.codeworld.fc.store.request.StoreSearchRequest;
 import com.codeworld.fc.store.response.StorePageResponse;
 import com.codeworld.fc.store.response.StoreResponse;
+import com.codeworld.fc.store.service.StoreCategoryService;
 import com.codeworld.fc.store.service.StoreService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class StoreController {
 
     @Autowired(required = false)
     private StoreService storeService;
+    @Autowired(required = false)
+    private StoreCategoryService storeCategoryService;
 
     @PostMapping("/web/get-merchant-store-page")
     @ApiOperation("分页获取商户店铺列表")
@@ -52,6 +56,12 @@ public class StoreController {
     @ApiOperation("根据店铺id获取店铺分类")
     public FCResponse<List<StoreCategoryTreeNode>> getStoreCategoryByStoreId(@RequestParam("storeId") Long storeId){
         return this.storeService.getStoreCategoryByStoreId(storeId);
+    }
+
+    @PostMapping("/web/add-store-category")
+    @ApiOperation("添加店铺分类")
+    public FCResponse<Void> addStoreCategory(@RequestBody @Valid StoreCategoryAddRequest storeCategoryAddRequest){
+        return this.storeCategoryService.addStoreCategory(storeCategoryAddRequest);
     }
 
 }
