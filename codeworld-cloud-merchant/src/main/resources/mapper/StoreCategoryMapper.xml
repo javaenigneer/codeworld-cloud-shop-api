@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.codeworld.fc.store.mapper.StoreCategoryMapper">
+
+    <select id="getStoreCategoryByStoreId" parameterType="hashmap" resultType="com.codeworld.fc.store.entity.StoreCategory">
+        select
+        csc.t_store_category_id AS id,
+        csc.t_store_id AS storeId,
+        csc.t_parent_id AS parentId,
+        csc.t_category_name AS name,
+        csc.t_create_time AS createTime,
+        csc.t_update_time AS updateTime,
+        csc.t_sort_no AS sortNo
+        from
+        codeworld_store_category AS csc
+        left join codeworld_store AS cs on csc.t_store_id = cs.t_store_id
+        where
+        csc.t_store_id = #{storeId}
+        and
+        cs.t_merchant_number = #{merchantNumber}
+    </select>
+</mapper>

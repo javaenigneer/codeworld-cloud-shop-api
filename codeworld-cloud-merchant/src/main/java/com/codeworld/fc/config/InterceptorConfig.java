@@ -1,7 +1,7 @@
-package com.codeworld.fc.merchant.config;
+package com.codeworld.fc.config;
 
 
-import com.codeworld.fc.merchant.interceptor.AuthInterceptor;
+import com.codeworld.fc.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

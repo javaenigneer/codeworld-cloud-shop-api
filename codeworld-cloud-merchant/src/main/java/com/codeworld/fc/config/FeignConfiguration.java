@@ -1,4 +1,4 @@
-package com.codeworld.fc.merchant.config;
+package com.codeworld.fc.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

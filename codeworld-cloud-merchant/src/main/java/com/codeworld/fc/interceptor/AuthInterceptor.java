@@ -1,12 +1,11 @@
-package com.codeworld.fc.merchant.interceptor;
+package com.codeworld.fc.interceptor;
 
 
 import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.domain.LoginInfoData;
 import com.codeworld.fc.common.exception.FCException;
 import com.codeworld.fc.common.utils.JwtUtils;
-import com.codeworld.fc.merchant.domain.MerchantInfo;
-import com.codeworld.fc.merchant.properties.JwtProperties;
+import com.codeworld.fc.properties.JwtProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;

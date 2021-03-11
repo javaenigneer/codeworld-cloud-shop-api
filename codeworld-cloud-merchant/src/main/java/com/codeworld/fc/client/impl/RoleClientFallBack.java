@@ -1,8 +1,8 @@
-package com.codeworld.fc.merchant.client.impl;
+package com.codeworld.fc.client.impl;
 
 import com.codeworld.fc.common.enums.HttpFcStatus;
 import com.codeworld.fc.common.response.FCResponse;
-import com.codeworld.fc.merchant.client.RoleClient;
+import com.codeworld.fc.client.RoleClient;
 import com.codeworld.fc.merchant.domain.UserRole;
 import org.springframework.stereotype.Component;
 

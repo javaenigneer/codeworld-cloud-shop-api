@@ -1,4 +1,4 @@
-package com.codeworld.fc.merchant.task;
+package com.codeworld.fc.task;
 
 import cn.hutool.core.date.DateUtil;
 import com.codeworld.fc.common.exception.FCException;

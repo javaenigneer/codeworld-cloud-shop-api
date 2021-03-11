@@ -591,10 +591,32 @@ public class HttpMsg {
 
         STORE_DATA_EMPTY("店铺数据为空"),
         STORE_DATA_SUCCESS("店铺数据查询成功"),
-        STORE_ADD_SUCCESS("店铺新增成功")
+        STORE_ADD_SUCCESS("店铺新增成功"),
+        STORE_NAME_ERROR("请输入店铺名称"),
+        STORE_ID_ERROR("店铺ID错误")
         ;
 
         store(String msg) {
+            this.msg = msg;
+        }
+
+        ;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+    /**
+     * 店铺
+     */
+    public enum storeCategory {
+        STORE_CATEGORY_DATA_EMPTY("店铺分类为空"),
+        STORE_CATEGORY_DATA_SUCCESS("店铺分类查询成功")
+        ;
+
+        storeCategory(String msg) {
             this.msg = msg;
         }
 
@@ -659,11 +681,9 @@ public class HttpMsg {
         COLLECTION_DATA_EMPTY("收藏列表为空"),
         COLLECTION_DATA_SUCCESS("收藏列表查询成功")
         ;
-
         collection(String msg) {
             this.msg = msg;
         }
-
         ;
         private String msg;
 

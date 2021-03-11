@@ -1,4 +1,4 @@
-package com.codeworld.fc.merchant.config;
+package com.codeworld.fc.config;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,9 +2,11 @@ package com.codeworld.fc.store.service;
 
 import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.store.domain.StoreCategoryTreeNode;
 import com.codeworld.fc.store.request.StoreAddRequest;
 import com.codeworld.fc.store.request.StoreSearchRequest;
 import com.codeworld.fc.store.response.StorePageResponse;
+import com.codeworld.fc.store.response.StoreResponse;
 
 import java.util.List;
 
@@ -29,4 +31,18 @@ public interface StoreService {
      * @return
      */
     FCResponse<Void> createStore(StoreAddRequest storeAddRequest);
+
+    /**
+     * 根据店铺名称远程获取
+     * @param name
+     * @return
+     */
+    FCResponse<List<StoreResponse>> getStoreByName(String name);
+
+    /**
+     * 根据店铺id获取店铺分类
+     * @param storeId
+     * @return
+     */
+    FCResponse<List<StoreCategoryTreeNode>> getStoreCategoryByStoreId(Long storeId);
 }

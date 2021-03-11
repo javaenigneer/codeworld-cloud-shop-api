@@ -1,7 +1,6 @@
-package com.codeworld.fc.merchant.client;
+package com.codeworld.fc.client;
 
 import com.codeworld.fc.common.response.FCResponse;
-import com.codeworld.fc.merchant.client.impl.RoleClientFallBack;
 import com.codeworld.fc.merchant.domain.UserRole;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;

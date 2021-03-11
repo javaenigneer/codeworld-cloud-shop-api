@@ -27,6 +27,19 @@
         cs.t_merchant_number = #{merchantNumber}
     </select>
 
+    <!-- 根据店铺名模糊查询 -->
+    <select id="getStoreByName" parameterType="hashmap" resultType="com.codeworld.fc.store.response.StoreResponse">
+        select
+        t_store_id AS id,
+        t_store_name AS name
+        from
+        codeworld_store
+        where
+        t_merchant_number = #{merchantNumber}
+        and
+        t_store_name like "%"#{name}"%"
+    </select>
+
     <!-- 新增店铺 -->
     <insert id="createStore" parameterType="com.codeworld.fc.store.entity.Store">
         insert
