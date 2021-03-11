@@ -5,6 +5,7 @@ import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.store.domain.StoreCategoryTreeNode;
 import com.codeworld.fc.store.request.StoreAddRequest;
 import com.codeworld.fc.store.request.StoreCategoryAddRequest;
+import com.codeworld.fc.store.request.StoreCategoryEditRequest;
 import com.codeworld.fc.store.request.StoreSearchRequest;
 import com.codeworld.fc.store.response.StorePageResponse;
 import com.codeworld.fc.store.response.StoreResponse;
@@ -64,4 +65,9 @@ public class StoreController {
         return this.storeCategoryService.addStoreCategory(storeCategoryAddRequest);
     }
 
+    @PostMapping("/web/edit-store-category")
+    @ApiOperation("修改店铺分类")
+    public FCResponse<Void> editStoreCategory(@RequestBody @Valid StoreCategoryEditRequest storeCategoryEditRequest){
+        return this.storeCategoryService.editStoreCategory(storeCategoryEditRequest);
+    }
 }

@@ -43,4 +43,15 @@
         #{sortNo}
         )
     </insert>
+
+    <update id="editStoreCategory" parameterType="com.codeworld.fc.store.entity.StoreCategory">
+        update
+        codeworld_store_category
+        set
+        t_category_name = #{name},
+        t_update_time = #{updateTime},
+        t_sort_no = #{sortNo}
+        where
+        t_store_category_id = #{id}
+    </update>
 </mapper>

@@ -24,4 +24,10 @@ public interface StoreCategoryMapper {
      * @param storeCategory
      */
     void addStoreCategory(StoreCategory storeCategory);
+
+    /**
+     * 修改店铺分类
+     * @param storeCategory
+     */
+    void editStoreCategory(StoreCategory storeCategory);
 }

@@ -9,6 +9,7 @@ import com.codeworld.fc.common.utils.IDGeneratorUtil;
 import com.codeworld.fc.store.entity.StoreCategory;
 import com.codeworld.fc.store.mapper.StoreCategoryMapper;
 import com.codeworld.fc.store.request.StoreCategoryAddRequest;
+import com.codeworld.fc.store.request.StoreCategoryEditRequest;
 import com.codeworld.fc.store.service.StoreCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,26 @@ public class StoreCategoryServiceImpl implements StoreCategoryService {
         try {
             this.storeCategoryMapper.addStoreCategory(storeCategory);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.storeCategory.STORE_CATEGORY_ADD_SUCCESS.getMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 修改店铺分类
+     *
+     * @param storeCategoryEditRequest
+     * @return
+     */
+    @Override
+    public FCResponse<Void> editStoreCategory(StoreCategoryEditRequest storeCategoryEditRequest) {
+        StoreCategory storeCategory = new StoreCategory();
+        BeanUtil.copyProperties(storeCategoryEditRequest,storeCategory);
+        storeCategory.setUpdateTime(new Date());
+        try {
+            this.storeCategoryMapper.editStoreCategory(storeCategory);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.storeCategory.STORE_CATEGORY_UPDATE_SUCCESS.getMsg());
         }catch (Exception e){
             e.printStackTrace();
             throw new FCException("系统错误");
