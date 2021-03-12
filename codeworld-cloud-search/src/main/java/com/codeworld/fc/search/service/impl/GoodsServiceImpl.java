@@ -135,6 +135,8 @@ public class GoodsServiceImpl implements GoodsService {
         try {
             // 自定义查询构建器
             NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+            // 添加查询条件,查询上架的商品
+            queryBuilder.withQuery(QueryBuilders.termQuery("saleAble", 1));
             // 添加分页
             queryBuilder.withPageable(PageRequest.of(productIndexSearchRequest.getPageFrom(), productIndexSearchRequest.getPageSize()));
             Page<SearchItem> searchResponse = this.searchRepository.search(queryBuilder.build());
@@ -261,6 +263,38 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
+     * 更新商品状态
+     *
+     * @param elProductStatusDTO
+     */
+    @Override
+    public Boolean updateProductStatus(ElProductStatusDTO elProductStatusDTO) {
+
+        // 先根据商品Id查询商品信息
+        // 自定义查询构建器
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        // 添加查询条件
+        queryBuilder.withQuery(QueryBuilders.termQuery("productId", elProductStatusDTO.getProductId()));
+        // 获取结果集
+        Page<SearchItem> search = this.searchRepository.search(queryBuilder.build());
+        if (CollectionUtils.isEmpty(search.getContent())) {
+            log.error("查询到的商品为空,参数：{}",elProductStatusDTO);
+        }
+        SearchItem searchItem = search.getContent().get(0);
+        // 修改状态
+        searchItem.setSaleAble(elProductStatusDTO.getSaleAble());
+        try {
+            this.searchRepository.save(searchItem);
+            log.info("ElasticSearch中商品状态更新成功");
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("ElasticSearch中商品状态更新成功");
+            return false;
+        }
+    }
+
+    /**
      * 从索引库获取商品转化为productResponse
      *
      * @param searchItem
@@ -318,6 +352,7 @@ public class GoodsServiceImpl implements GoodsService {
         searchItem.setUpdateTime(productResponse.getUpdateTime());
         searchItem.setView(productResponse.getView());
         searchItem.setStoreId(productResponse.getStoreId());
+        searchItem.setSaleAble(productResponse.getSaleAble());
         // 根据商户Id查询商户号和商家名称
         FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(productResponse.getMerchantId());
         if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {

@@ -14,6 +14,7 @@ import com.codeworld.fc.goods.category.mapper.CategoryMapper;
 import com.codeworld.fc.goods.interceptor.AuthInterceptor;
 import com.codeworld.fc.goods.param.mapper.ParamMapper;
 import com.codeworld.fc.goods.param.response.ParamResponse;
+import com.codeworld.fc.goods.product.domain.ElProductStatusDTO;
 import com.codeworld.fc.goods.product.entity.Product;
 import com.codeworld.fc.goods.product.entity.ProductDetail;
 import com.codeworld.fc.goods.product.entity.ProductSku;
@@ -30,6 +31,7 @@ import com.codeworld.fc.goods.stock.mapper.StockMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +59,9 @@ public class ProductServiceImpl implements ProductService {
     private ProductSkuMapper productSkuMapper;
     @Autowired(required = false)
     private StockMapper stockMapper;
+
+    @Autowired(required = false)
+    private AmqpTemplate amqpTemplate;
 
     /**
      * 分页查询商品列表
@@ -103,6 +108,12 @@ public class ProductServiceImpl implements ProductService {
         product.setSaleAble(status);
         product.setUpdateTime(new Date());
         this.productMapper.updateProductStatus(product);
+        ElProductStatusDTO elProductStatusDTO = new ElProductStatusDTO();
+        elProductStatusDTO.setProductId(product.getId());
+        elProductStatusDTO.setSaleAble(product.getSaleAble());
+        String json = JsonUtils.serialize(elProductStatusDTO);
+        // 异步更新ElasticSearch商品的状态
+        this.amqpTemplate.convertAndSend("el.product.update.saleable",json);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_UPDATE_STATUS.getMsg());
     }
 

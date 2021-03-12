@@ -18,6 +18,13 @@ spring:
     host: 192.168.2.4
   main:
     allow-bean-definition-overriding: true
+  rabbitmq:
+    virtual-host: /codeworld-shop
+    host: 192.168.2.2
+    username: feicheng
+    password: mengli090420
+    template:
+      exchange: CODEWORLD-SHOP.EXCHANGE #默认交换机CODEWORLD-SHOP.EXCHANGE
 #feign:
 #  hystrix:
 #    enabled: true

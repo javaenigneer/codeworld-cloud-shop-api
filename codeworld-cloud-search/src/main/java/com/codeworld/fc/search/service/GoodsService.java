@@ -1,6 +1,7 @@
 package com.codeworld.fc.search.service;
 
 import com.codeworld.fc.common.response.FCResponse;
+import com.codeworld.fc.search.domain.ElProductStatusDTO;
 import com.codeworld.fc.search.domain.ProductResponse;
 import com.codeworld.fc.search.domain.ProductSearchRequest;
 import com.codeworld.fc.search.request.ProductIndexSearchRequest;
@@ -47,4 +48,10 @@ public interface GoodsService {
      * @return
      */
     FCResponse<List<ProductResponse>> getProductByCategoryId(ProductSearchRequest productSearchRequest);
+
+    /**
+     * 更新商品状态
+     * @param elProductStatusDTO
+     */
+    Boolean updateProductStatus(ElProductStatusDTO elProductStatusDTO);
 }

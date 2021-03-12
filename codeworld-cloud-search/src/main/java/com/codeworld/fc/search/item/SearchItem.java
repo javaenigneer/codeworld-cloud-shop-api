@@ -42,6 +42,9 @@ public class SearchItem implements Serializable {
     // 商品标题
     private String allTitle;
 
+    // 商品状态 1--上架 0--下架
+    private Integer saleAble;
+
     // 商户号
     private String merchantNumber;
 
