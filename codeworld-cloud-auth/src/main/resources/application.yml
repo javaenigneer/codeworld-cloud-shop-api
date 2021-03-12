@@ -12,6 +12,10 @@ spring:
         weight: 1
   main:
     allow-bean-definition-overriding: true
+  boot:
+    admin:
+      client:
+        url: http://localhost:10000
 
 #ribbon:
 #  ReadTimeout: 200000 #处理请求的超时时间，默认为1秒
@@ -28,3 +32,8 @@ codeworld:
     expire: 60   # 过期时间,单位分钟,时间为一周
     cookieMaxAge: 180000
     cookieName: token
+management: # 开放端点用于SpringBoot Admin监控
+  endpoints:
+    web:
+      exposure:
+        include: '*'

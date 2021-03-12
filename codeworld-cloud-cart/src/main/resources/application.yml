@@ -27,6 +27,10 @@ spring:
     password: mengli090420
     template:
       exchange: CODEWORLD-SHOP.EXCHANGE #默认交换机CODEWORLD-SHOP.EXCHANGE
+  boot:
+    admin:
+      client:
+        url: http://localhost:10000
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
@@ -42,3 +46,8 @@ codeworld:
     expire: 30   # 过期时间,单位分钟
     cookieMaxAge: 1800
     cookieName: token
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

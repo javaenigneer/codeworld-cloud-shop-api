@@ -31,6 +31,7 @@
     <module>codeworld-cloud-merchant</module>
     <module>codeworld-cloud-marketing</module>
     <module>codeworld-cloud-logistics</module>
+    <module>codeworld-cloud-admin</module>
   </modules>
   <dependencies>
 

@@ -22,12 +22,14 @@
         <module name="codeworld-cloud-upload" />
         <module name="codeworld-cloud-cart" />
         <module name="codeworld-cloud-search" />
+        <module name="codeworld-cloud-admin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="codeworld-cloud-admin" options="" />
       <module name="codeworld-cloud-auth" options="" />
       <module name="codeworld-cloud-cart" options="" />
       <module name="codeworld-cloud-common" options="" />

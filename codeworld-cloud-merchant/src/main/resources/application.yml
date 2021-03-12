@@ -20,6 +20,10 @@ spring:
     database: 4
   main:
     allow-bean-definition-overriding: true
+  boot:
+    admin:
+      client:
+        url: http://localhost:10000
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 codeworld:
@@ -55,3 +59,8 @@ xxl:
 #feign:
 #  hystrix:
 #    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
