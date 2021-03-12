@@ -116,4 +116,10 @@ public class MerchantController {
     public FCResponse<Void> resetPassword(@RequestBody @Valid EditPasswordRequest editPasswordRequest){
         return this.merchantService.resetPassword(editPasswordRequest);
     }
+
+    @PostMapping("/web/check-merchant-has-store")
+    @ApiOperation("判断商户时候有门店信息")
+    public FCResponse<Boolean> checkMerchantHasStore(){
+        return this.merchantService.checkMerchantHasStore();
+    }
 }

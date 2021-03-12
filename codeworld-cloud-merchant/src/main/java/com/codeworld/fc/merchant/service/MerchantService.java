@@ -103,4 +103,10 @@ public interface MerchantService {
      * @return
      */
     FCResponse<Void> resetPassword(EditPasswordRequest editPasswordRequest);
+
+    /**
+     * 判断商户是否有门店信息
+     * @return
+     */
+    FCResponse<Boolean> checkMerchantHasStore();
 }

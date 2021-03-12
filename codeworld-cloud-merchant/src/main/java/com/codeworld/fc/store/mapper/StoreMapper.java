@@ -32,4 +32,11 @@ public interface StoreMapper {
      * @return
      */
     List<StoreResponse> getStoreByName(Map<String, Object> map);
+
+    /**
+     * 根据商户号获取门店数量
+     * @param number
+     * @return
+     */
+    Integer getStoreByMerchantNumber(String number);
 }

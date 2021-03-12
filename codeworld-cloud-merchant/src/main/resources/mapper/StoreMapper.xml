@@ -39,6 +39,14 @@
         and
         t_store_name like "%"#{name}"%"
     </select>
+    <select id="getStoreByMerchantNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+        count(t_store_id)
+        from
+        codeworld_store
+        where
+        t_merchant_number = #{number}
+    </select>
 
     <!-- 新增店铺 -->
     <insert id="createStore" parameterType="com.codeworld.fc.store.entity.Store">

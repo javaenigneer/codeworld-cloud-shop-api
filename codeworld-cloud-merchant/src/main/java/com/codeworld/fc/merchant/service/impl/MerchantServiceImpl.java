@@ -20,6 +20,7 @@ import com.codeworld.fc.merchant.mapper.MerchantMapper;
 import com.codeworld.fc.merchant.request.*;
 import com.codeworld.fc.merchant.response.MerchantResponse;
 import com.codeworld.fc.merchant.service.MerchantService;
+import com.codeworld.fc.store.mapper.StoreMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -47,12 +48,12 @@ public class MerchantServiceImpl implements MerchantService {
     private final String PHONE_CODE = "PHONE_CODE:";
     @Autowired(required = false)
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired(required = false)
     private MerchantMapper merchantMapper;
-
     @Autowired(required = false)
     private MerChantDetailMapper merChantDetailMapper;
+    @Autowired(required = false)
+    private StoreMapper storeMapper;
 
     @Autowired(required = false)
     private RoleClient roleClient;
@@ -364,5 +365,28 @@ public class MerchantServiceImpl implements MerchantService {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
+    }
+
+    /**
+     * 判断商户是否有门店信息
+     *
+     * @return
+     */
+    @Override
+    public FCResponse<Boolean> checkMerchantHasStore() {
+        // 获取当前登录商户
+        LoginInfoData loginInfoData = AuthInterceptor.getLoginMerchant();
+        if (ObjectUtils.isEmpty(loginInfoData)) {
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
+        }
+        MerchantResponse merchantResponse = this.merchantMapper.getMerchantInfoById(loginInfoData.getId());
+        if (ObjectUtils.isEmpty(merchantResponse)){
+            return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
+        }
+        Integer count = this.storeMapper.getStoreByMerchantNumber(merchantResponse.getNumber());
+        if (count <= 0){
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.store.STORE_DATA_EMPTY.getMsg(),false);
+        }
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.store.STORE_DATA_SUCCESS.getMsg(),true);
     }
 }
