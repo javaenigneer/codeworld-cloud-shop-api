@@ -51,6 +51,9 @@ Codeworld-Cloud-shop是一套比较完整的商城系统，采用的是目前流
   --- 角色管理
   --- 菜单管理
   --- 部门管理
+```
+#### 商户系统模块（Codeworld-Cloud-Shop）后面会继续追加，敬请期待
+```text
 |--- 商品管理
   --- 商品信息
   --- 分类管理
@@ -59,10 +62,13 @@ Codeworld-Cloud-shop是一套比较完整的商城系统，采用的是目前流
   --- 商户信息
 |--- 订单管理
   --- 订单列表
+  --- 订单退款退货列表
 |--- 营销管理
   --- 首页轮播图
+|--- 店铺管理
+  --- 店铺列表
+  --- 店铺分类
 ```
-
 #### 组织结构
 
 ```java
@@ -100,6 +106,8 @@ codeworld-cloud-shop
    --- codeworld-cloud-sms -----> 4001 短信发送
    --- codeworld-cloud-system -----> 8001 系统
    --- codeworld-cloud-upload -----> 6001 上传
+   --- codeworld-cloud-logistics -----> 2002 物流
+   --- codeworld-cloud-admin -----> 10000 监控
 定时任务端口    
 xxl-job-admin ----> 9999
 xxl-job-merchant ----> 5003
