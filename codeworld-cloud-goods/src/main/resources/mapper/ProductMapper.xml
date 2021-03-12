@@ -31,7 +31,8 @@
         cp.t_product_update_time AS updateTime,
         cp.t_product_merchant_id AS merchantId,
         cc.t_category_name AS categoryName,
-        cpd.t_product_view AS view
+        cpd.t_product_view AS view,
+        cp.t_store_id AS storeId
         from codeworld_product AS cp
         left join codeworld_category AS cc on cp.t_product_category_id = cc.t_category_id
         left join codeworld_product_detail AS cpd on cp.t_product_id = cpd.t_product_id

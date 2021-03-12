@@ -67,6 +67,9 @@ public class SearchItem implements Serializable {
     // 商品浏览量
     private Long view;
 
+    // 门店Id
+    private Long storeId;
+
     public SearchItem() {
     }
 

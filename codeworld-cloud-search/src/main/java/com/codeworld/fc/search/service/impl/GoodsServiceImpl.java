@@ -295,6 +295,7 @@ public class GoodsServiceImpl implements GoodsService {
         productResponse.setMerchantName(searchItem.getMerchantName());
         productResponse.setMerchantNumber(searchItem.getMerchantNumber());
         productResponse.setView(searchItem.getView());
+        productResponse.setStoreId(searchItem.getStoreId());
         return productResponse;
     }
 
@@ -316,7 +317,7 @@ public class GoodsServiceImpl implements GoodsService {
         searchItem.setCreateTime(productResponse.getCreateTime());
         searchItem.setUpdateTime(productResponse.getUpdateTime());
         searchItem.setView(productResponse.getView());
-
+        searchItem.setStoreId(productResponse.getStoreId());
         // 根据商户Id查询商户号和商家名称
         FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(productResponse.getMerchantId());
         if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {

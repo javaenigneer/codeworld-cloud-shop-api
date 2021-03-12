@@ -57,4 +57,6 @@ public class ProductResponse {
     private String merchantName;
     @ApiModelProperty("商品浏览量")
     private Long view;
+    @ApiModelProperty("门店Id")
+    private Long storeId;
 }
