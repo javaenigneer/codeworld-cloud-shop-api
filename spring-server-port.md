@@ -11,6 +11,7 @@ codeworld-cloud-upload----> 6001
 codeworld-cloud-order----> 2001
 codeworld-cloud-marketing----> 9003
 codeworld-cloud-logistics----> 2002
+codeworld-cloud-admin----> 10000
 
 
 #任务调度中心

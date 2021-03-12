@@ -80,6 +80,8 @@ codeworld-cloud-shop
     --- codeworld-cloud-sms 短信发送模块
     --- codeworld-cloud-system 系统模块
     --- codeworld-cloud-upload 上传模块
+    --- codeworld-cloud-logistics 物流模块
+    --- codeworld-cloud-admin admin监控模块
 ```
 
 #### 端口信息
