@@ -11,7 +11,7 @@
  Target Server Version : 50640
  File Encoding         : 65001
 
- Date: 09/03/2021 15:37:53
+ Date: 12/03/2021 09:38:43
 */
 
 SET NAMES utf8mb4;
@@ -4227,16 +4227,17 @@ CREATE TABLE `codeworld_product_detail`  (
   `t_product_after_service` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '商品售后服务',
   `t_product_create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `t_product_update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `t_product_view` bigint(20) NULL DEFAULT NULL COMMENT '商品浏览量',
   PRIMARY KEY (`t_product_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of codeworld_product_detail
 -- ----------------------------
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000234364, '终身包换', '{\"671913\":\"\",\"833900\":\"\",\"878010\":\"\",\"879798\":\"\"}', '{\"878010\":[\"黑色\",\"红色\"],\"879798\":[\"1000G\",\"2000G\"]}', '一个小米MIX5', '终生包换', '2021-02-06 15:56:22', '2021-02-06 15:56:22');
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000668339, 'iPhone20又大又好看，还终身包换', '{\"671913\":\"A20\",\"833900\":\"iPhone\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"1000G\",\"2000G\"]}', '1个IPhone20手机', '终生包换', '2021-01-06 15:53:36', '2021-01-06 15:53:36');
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000711211, 'Vivo手机终生包换', '{\"671913\":\"骁龙1000\",\"833900\":\"Android\"}', '{\"878010\":[\"红色\"],\"879798\":[\"1000G\"]}', '一个手机', '终生包换', '2021-01-07 17:10:59', '2021-01-07 17:10:59');
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000897175, '小米值得信赖', '{\"671913\":\"骁龙10000\",\"833900\":\"Android\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"10G\",\"20G\"]}', '一个手机', '终身包换', '2020-12-18 10:33:54', '2020-12-18 10:33:54');
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000234364, '终身包换', '{\"671913\":\"\",\"833900\":\"\",\"878010\":\"\",\"879798\":\"\"}', '{\"878010\":[\"黑色\",\"红色\"],\"879798\":[\"1000G\",\"2000G\"]}', '一个小米MIX5', '终生包换', '2021-02-06 15:56:22', '2021-02-06 15:56:22', 2);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000668339, 'iPhone20又大又好看，还终身包换', '{\"671913\":\"A20\",\"833900\":\"iPhone\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"1000G\",\"2000G\"]}', '1个IPhone20手机', '终生包换', '2021-01-06 15:53:36', '2021-01-06 15:53:36', 0);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000711211, 'Vivo手机终生包换', '{\"671913\":\"骁龙1000\",\"833900\":\"Android\"}', '{\"878010\":[\"红色\"],\"879798\":[\"1000G\"]}', '一个手机', '终生包换', '2021-01-07 17:10:59', '2021-01-07 17:10:59', 0);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000897175, '小米值得信赖', '{\"671913\":\"骁龙10000\",\"833900\":\"Android\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"10G\",\"20G\"]}', '一个手机', '终身包换', '2020-12-18 10:33:54', '2020-12-18 10:33:54', 0);
 
 -- ----------------------------
 -- Table structure for codeworld_product_sku
@@ -4405,6 +4406,44 @@ CREATE TABLE `codeworld_store`  (
 -- Records of codeworld_store
 -- ----------------------------
 INSERT INTO `codeworld_store` VALUES (859010, '测试店铺', 2, '2021-03-08 16:40:06', '2021-03-08 16:40:06', '21181611095746339');
+
+-- ----------------------------
+-- Table structure for codeworld_store_category
+-- ----------------------------
+DROP TABLE IF EXISTS `codeworld_store_category`;
+CREATE TABLE `codeworld_store_category`  (
+  `t_store_category_id` bigint(20) NOT NULL COMMENT '店铺分类Id',
+  `t_store_id` bigint(20) NULL DEFAULT NULL COMMENT '店铺Id',
+  `t_parent_id` bigint(20) NULL DEFAULT NULL COMMENT '店铺分类父级Id',
+  `t_category_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分类名称',
+  `t_create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `t_update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `t_sort_no` int(10) NULL DEFAULT NULL COMMENT '排序',
+  PRIMARY KEY (`t_store_category_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of codeworld_store_category
+-- ----------------------------
+INSERT INTO `codeworld_store_category` VALUES (1000, 859010, 0, '测试分类', '2021-03-11 09:10:25', '2021-03-11 09:10:27', 1);
+INSERT INTO `codeworld_store_category` VALUES (1001, 859010, 1000, '测试分类子集', '2021-03-11 09:10:54', '2021-03-11 09:10:57', 2);
+INSERT INTO `codeworld_store_category` VALUES (110687, 859010, 1001, '子集', '2021-03-11 10:04:20', '2021-03-11 10:53:30', 1);
+INSERT INTO `codeworld_store_category` VALUES (493987, 859010, 1000, '测试分类子集2', '2021-03-11 10:00:23', '2021-03-11 10:00:23', 3);
+
+-- ----------------------------
+-- Table structure for codeworld_store_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `codeworld_store_detail`;
+CREATE TABLE `codeworld_store_detail`  (
+  `t_store_id` bigint(20) NOT NULL COMMENT '店铺Id',
+  `t_store_product_id` bigint(20) NULL DEFAULT NULL COMMENT '商品Id',
+  `t_store_carouse_image` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '店铺首页图片',
+  PRIMARY KEY (`t_store_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of codeworld_store_detail
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for codeworld_user
