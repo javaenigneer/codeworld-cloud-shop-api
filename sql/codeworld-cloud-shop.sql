@@ -11,7 +11,7 @@
  Target Server Version : 50640
  File Encoding         : 65001
 
- Date: 12/03/2021 09:38:43
+ Date: 26/03/2021 13:53:01
 */
 
 SET NAMES utf8mb4;
@@ -4203,16 +4203,17 @@ CREATE TABLE `codeworld_product`  (
   `t_product_merchant_id` bigint(20) NULL DEFAULT NULL COMMENT '商户Id',
   `t_product_create_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
   `t_product_update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `t_store_id` bigint(20) NULL DEFAULT NULL COMMENT '门店id',
   PRIMARY KEY (`t_product_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of codeworld_product
 -- ----------------------------
-INSERT INTO `codeworld_product` VALUES (234364, '小米MIX5', NULL, 500117, NULL, 1, 1608851327, '2021-02-06 15:56:22', '2021-02-06 15:56:29');
-INSERT INTO `codeworld_product` VALUES (668339, 'Iphone20', NULL, 500117, NULL, 1, 1609046703, '2021-01-06 15:53:36', '2021-01-06 15:53:41');
-INSERT INTO `codeworld_product` VALUES (711211, 'VivoX100', NULL, 500117, NULL, 1, 1608851327, '2021-01-07 17:10:59', '2021-01-08 16:59:27');
-INSERT INTO `codeworld_product` VALUES (897175, '小米MIX2', NULL, 500117, NULL, 1, 1609046703, '2020-12-18 10:33:54', '2020-12-18 10:33:56');
+INSERT INTO `codeworld_product` VALUES (234364, '小米MIX5', NULL, 500117, NULL, 1, 1608851327, '2021-02-06 15:56:22', '2021-03-12 16:35:50', NULL);
+INSERT INTO `codeworld_product` VALUES (668339, 'Iphone20', NULL, 500117, NULL, 1, 1609046703, '2021-01-06 15:53:36', '2021-01-06 15:53:41', NULL);
+INSERT INTO `codeworld_product` VALUES (711211, 'VivoX100', NULL, 500117, NULL, 1, 1608851327, '2021-01-07 17:10:59', '2021-01-08 16:59:27', NULL);
+INSERT INTO `codeworld_product` VALUES (897175, '小米MIX2', NULL, 500117, NULL, 1, 1609046703, '2020-12-18 10:33:54', '2020-12-18 10:33:56', NULL);
 
 -- ----------------------------
 -- Table structure for codeworld_product_detail
@@ -4532,5 +4533,19 @@ INSERT INTO `codeworld_user_role` VALUES (840122, 853858, 1609046703, '2021-01-0
 INSERT INTO `codeworld_user_role` VALUES (873996, 853858, 1610749076, '2021-01-29 16:13:43', '2021-01-29 16:13:43');
 INSERT INTO `codeworld_user_role` VALUES (926419, 31845, 500649, '2021-01-29 11:47:56', '2021-01-29 11:47:56');
 INSERT INTO `codeworld_user_role` VALUES (938153, 31845, 594594, '2021-01-29 11:44:45', '2021-01-29 11:44:45');
+
+-- ----------------------------
+-- Table structure for codeworld_wxinfo
+-- ----------------------------
+DROP TABLE IF EXISTS `codeworld_wxinfo`;
+CREATE TABLE `codeworld_wxinfo`  (
+  `t_merchant_number` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商户号',
+  `t_open_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商户OpedId'
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of codeworld_wxinfo
+-- ----------------------------
+INSERT INTO `codeworld_wxinfo` VALUES ('21181611095746339', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
