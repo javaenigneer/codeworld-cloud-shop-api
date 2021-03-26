@@ -37,3 +37,8 @@ management: # 开放端点用于SpringBoot Admin监控
     web:
       exposure:
         include: '*'
+
+wx:
+  code2Session: https://api.weixin.qq.com/sns/jscode2session
+  appid: #小程序Appid
+  secret: # 小程序密钥

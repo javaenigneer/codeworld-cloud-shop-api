@@ -1,7 +1,6 @@
 package com.codeworld.fc.auth.client;
 
 
-import com.codeworld.fc.auth.client.impl.MerchantClientFallBack;
 import com.codeworld.fc.auth.domain.MerchantResponse;
 import com.codeworld.fc.common.auth.PassToken;
 import com.codeworld.fc.common.response.FCResponse;
@@ -36,4 +35,8 @@ public interface MerchantClient {
     @PassToken
     FCResponse<MerchantResponse> getMerchantInfoById(@RequestParam("merchantId") Long merchantId);
 
+    @PostMapping("/codeworld-merchant/applets/get-merchant-open-id")
+    @ApiOperation("根据商户openId获取商户信息")
+    @PassToken
+     FCResponse<MerchantResponse> getMerchantByOpenId(@RequestParam("openId") String openId);
 }

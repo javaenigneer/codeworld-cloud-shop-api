@@ -15,6 +15,7 @@ import com.codeworld.fc.merchant.domain.UserRole;
 import com.codeworld.fc.merchant.entity.MerChantDetail;
 import com.codeworld.fc.merchant.entity.Merchant;
 import com.codeworld.fc.interceptor.AuthInterceptor;
+import com.codeworld.fc.merchant.entity.MerchantWxInfo;
 import com.codeworld.fc.merchant.mapper.MerChantDetailMapper;
 import com.codeworld.fc.merchant.mapper.MerchantMapper;
 import com.codeworld.fc.merchant.request.*;
@@ -352,7 +353,7 @@ public class MerchantServiceImpl implements MerchantService {
         }
         // 判断旧密码是否正确
         if (!merchantResponse.getPassword().equals(editPasswordRequest.getOldPassword())) {
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.merchant.MERCHANT_OLD_PASSWORD_ERROR.getMsg());
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.merchant.MERCHANT_OLD_PASSWORD_ERROR.getMsg());
         }
         // 修改密码
         Merchant merchant = new Merchant();
@@ -360,8 +361,8 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setPassword(editPasswordRequest.getNewPassword());
         try {
             this.merchantMapper.resetPassword(merchant);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.merchant.MERCHANT_UPDATE_PASSWORD_SUCCESS.getMsg());
-        }catch (Exception e){
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_UPDATE_PASSWORD_SUCCESS.getMsg());
+        } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
@@ -380,13 +381,37 @@ public class MerchantServiceImpl implements MerchantService {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
         }
         MerchantResponse merchantResponse = this.merchantMapper.getMerchantInfoById(loginInfoData.getId());
-        if (ObjectUtils.isEmpty(merchantResponse)){
+        if (ObjectUtils.isEmpty(merchantResponse)) {
             return FCResponse.dataResponse(HttpFcStatus.AUTHFAILCODE.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_EXPIRE.getMsg());
         }
         Integer count = this.storeMapper.getStoreByMerchantNumber(merchantResponse.getNumber());
-        if (count <= 0){
-            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),HttpMsg.store.STORE_DATA_EMPTY.getMsg(),false);
+        if (count <= 0) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), HttpMsg.store.STORE_DATA_EMPTY.getMsg(), false);
         }
-        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.store.STORE_DATA_SUCCESS.getMsg(),true);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.store.STORE_DATA_SUCCESS.getMsg(), true);
+    }
+
+    /**
+     * 根据商户微信openId获取商户信息
+     *
+     * @param openId
+     * @return
+     */
+    @Override
+    public FCResponse<MerchantResponse> getMerchantByOpenId(String openId) {
+        if (ObjectUtils.isEmpty(openId)) {
+            log.error("传入的openid为空");
+            return FCResponse.validateErrorResponse("openid为空");
+        }
+        MerchantWxInfo merchantWxInfo = this.merchantMapper.getMerchantByOpenId(openId);
+        if (ObjectUtils.isEmpty(merchantWxInfo)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), "该商户不存在", null);
+        }
+        // 根据商户号获取商户
+        MerchantResponse merchantResponse = this.merchantMapper.getMerchantByMerchantNumber(merchantWxInfo.getMerchantNumber());
+        if (ObjectUtils.isEmpty(merchantResponse)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), "该商户不存在", null);
+        }
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),"商户查询成功",merchantResponse);
     }
 }

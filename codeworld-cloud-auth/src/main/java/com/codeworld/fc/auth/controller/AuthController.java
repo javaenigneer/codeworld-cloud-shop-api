@@ -104,4 +104,14 @@ public class AuthController {
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.user.USER_LOGIN_OUT_SUCCESS.getMsg());
     }
 
+    @PostMapping("/wx/login")
+    @ApiOperation("微信code登录")
+    @PassToken
+    public FCResponse<String> wxLogin(@RequestBody Map<String, String> map,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response){
+        return this.authService.wxLogin(map,request,response);
+    }
+
+
 }

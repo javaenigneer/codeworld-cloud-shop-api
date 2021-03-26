@@ -5,7 +5,6 @@ import com.codeworld.fc.auth.request.*;
 import com.codeworld.fc.auth.response.SystemLoginInfoResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.auth.response.MemberInfoResponse;
-import com.codeworld.fc.auth.response.UserInfoResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,4 +69,13 @@ public interface AuthService {
      * @return
      */
     FCResponse<Map<String, Object>> merchantSystemLogin(SystemLoginRequest systemLoginRequest, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 微信code登录
+     * @param map
+     * @param request
+     * @param response
+     * @return
+     */
+    FCResponse<String> wxLogin(Map<String, String> map,HttpServletRequest request,HttpServletResponse response);
 }

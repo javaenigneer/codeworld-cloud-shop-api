@@ -122,4 +122,12 @@ public class MerchantController {
     public FCResponse<Boolean> checkMerchantHasStore(){
         return this.merchantService.checkMerchantHasStore();
     }
+
+
+    @PostMapping("/applets/get-merchant-open-id")
+    @ApiOperation("根据商户openId获取商户信息")
+    @PassToken
+    public FCResponse<MerchantResponse> getMerchantByOpenId(@RequestParam("openId") String openId){
+        return this.merchantService.getMerchantByOpenId(openId);
+    }
 }

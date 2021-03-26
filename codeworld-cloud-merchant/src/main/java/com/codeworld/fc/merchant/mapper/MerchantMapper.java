@@ -1,6 +1,7 @@
 package com.codeworld.fc.merchant.mapper;
 
 import com.codeworld.fc.merchant.entity.Merchant;
+import com.codeworld.fc.merchant.entity.MerchantWxInfo;
 import com.codeworld.fc.merchant.request.MerchantSearchRequest;
 import com.codeworld.fc.merchant.response.MerchantResponse;
 import org.apache.ibatis.annotations.Mapper;
@@ -111,4 +112,11 @@ public interface MerchantMapper {
      * @param merchant
      */
     void resetPassword(Merchant merchant);
+
+    /**
+     * 根据openid获取商户信息
+     * @param openId
+     * @return
+     */
+    MerchantWxInfo getMerchantByOpenId(String openId);
 }

@@ -39,4 +39,9 @@ public class MerchantClientFallBack implements MerchantClient {
     public FCResponse<MerchantResponse> getMerchantInfoById(Long merchantId) {
         return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(),"请求超时",null);
     }
+
+    @Override
+    public FCResponse<MerchantResponse> getMerchantByOpenId(String openId) {
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(),"请求超时",null);
+    }
 }

@@ -16,11 +16,15 @@ import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.*;
 import com.codeworld.fc.auth.response.MemberInfoResponse;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +38,7 @@ import java.util.*;
  * Version 1.0
  **/
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     @Autowired(required = false)
@@ -48,6 +53,17 @@ public class AuthServiceImpl implements AuthService {
     private MemberClient memberClient;
     @Autowired(required = false)
     private MerchantClient merchantClient;
+
+    @Value("${wx.code2Session}")
+    private String wxLoginUrl;
+    @Value("${wx.appid}")
+    private String appId;
+    @Value("${wx.secret}")
+    private String secret;
+
+    @Autowired(required = false)
+    private RestTemplate restTemplate = new RestTemplate();
+
 
     /**
      * 会员登录接口
@@ -394,6 +410,53 @@ public class AuthServiceImpl implements AuthService {
             Map<String, Object> map = new HashMap<>();
             map.put("token", token);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_SUCCESS.getMsg(), map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
+    }
+
+    /**
+     * 微信code登录
+     *
+     * @param map
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    public FCResponse<String> wxLogin(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
+        log.info("开始微信登录");
+        // 获取参数
+        String code = map.get("code");
+        log.info("传入的code：{}",code);
+        // 小程序获取opedId
+        String url = wxLoginUrl + "?appid=" + appId +"&secret=" + secret + "&js_code=" + code + "&grant_type=authorization_code";
+        log.info("请求小程序登录url：{}",url);
+        // 远程调用
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<String> entity = this.restTemplate.getForEntity(url, String.class);
+        String openId = entity.getBody();
+        // 根据openid获取商户信息
+        FCResponse<MerchantResponse> fcResponse = this.merchantClient.getMerchantByOpenId(openId);
+        if (!fcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
+            return FCResponse.dataResponse(fcResponse.getCode(),fcResponse.getMsg());
+        }
+        MerchantResponse merchantResponse = fcResponse.getData();
+        // 执行登录
+        MerchantInfo merchantInfo = new MerchantInfo();
+        merchantInfo.setId(merchantResponse.getId());
+        merchantInfo.setPhone(merchantResponse.getPhone());
+        LoginInfoData loginInfoData = new LoginInfoData();
+        loginInfoData.setId(merchantInfo.getId());
+        loginInfoData.setPhone(merchantResponse.getPhone());
+        // 设置为商户标识
+        loginInfoData.setResources("merchant");
+        try {
+            String token = JwtUtils.generateToken(loginInfoData, this.jwtProperties.getPrivateKey(), this.jwtProperties.getExpire());
+            CookieUtils.setCookie(request, response, jwtProperties.getCookieName(), token, jwtProperties.getCookieMaxAge() * 60);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.merchant.MERCHANT_LOGIN_SUCCESS.getMsg(), token);
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");

@@ -109,4 +109,11 @@ public interface MerchantService {
      * @return
      */
     FCResponse<Boolean> checkMerchantHasStore();
+
+    /**
+     * 根据商户微信openId获取商户信息
+     * @param openId
+     * @return
+     */
+    FCResponse<MerchantResponse> getMerchantByOpenId(String openId);
 }
