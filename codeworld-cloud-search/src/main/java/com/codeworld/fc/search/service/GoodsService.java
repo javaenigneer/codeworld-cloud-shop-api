@@ -54,4 +54,11 @@ public interface GoodsService {
      * @param elProductStatusDTO
      */
     Boolean updateProductStatus(ElProductStatusDTO elProductStatusDTO);
+
+    /**
+     * 删除商品
+     * @param id
+     * @return
+     */
+    Boolean deleteGoods(Long id);
 }

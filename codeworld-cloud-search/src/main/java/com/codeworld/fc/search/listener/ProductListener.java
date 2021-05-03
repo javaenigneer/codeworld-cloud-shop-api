@@ -56,4 +56,27 @@ public class ProductListener {
             log.error("异步更新ElasticSearch中的商品状态失败，消息消费失败");
         }
     }
+
+    /**
+     * 删除ElasticSearch中商品
+     *
+     * @param id
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "CODEWORLD.CLOUD.EL.PRODUCT.DELETE.QUEUE", declare = "true"),
+            exchange = @Exchange(value = "CODEWORLD-SHOP.EXCHANGE", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),
+            key = {"el.product.delete"}
+    ))
+    public void deleteGoods(Long id) {
+        if (ObjectUtils.isEmpty(id)) {
+            log.error("异步删除ElasticSearch中的商品失败，失败原因参数为空：{}", id);
+        }
+        Boolean flag = this.goodsService.deleteGoods(id);
+        if (flag) {
+            log.info("异步删除ElasticSearch中的商品成功，消息消费成功");
+        } else {
+            log.error("异步删除ElasticSearch中的商品失败，消息消费失败");
+        }
+    }
+
 }

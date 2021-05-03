@@ -74,4 +74,11 @@ public class ProductController {
     public FCResponse<DataResponse<List<ProductResponse>>> getPageProductTime(@RequestBody ProductSearchRequest productSearchRequest){
         return this.productService.getPageProductTime(productSearchRequest);
     }
+
+
+    @PostMapping("/product/delete-goods/{id}")
+    @ApiOperation("删除商品")
+    public FCResponse<Void> deleteGoods(@PathVariable("id") Long id){
+        return this.productService.deleteGoods(id);
+    }
 }

@@ -279,6 +279,7 @@ public class GoodsServiceImpl implements GoodsService {
         Page<SearchItem> search = this.searchRepository.search(queryBuilder.build());
         if (CollectionUtils.isEmpty(search.getContent())) {
             log.error("查询到的商品为空,参数：{}",elProductStatusDTO);
+            return false;
         }
         SearchItem searchItem = search.getContent().get(0);
         // 修改状态
@@ -290,6 +291,22 @@ public class GoodsServiceImpl implements GoodsService {
         }catch (Exception e){
             e.printStackTrace();
             log.error("ElasticSearch中商品状态更新成功");
+            return false;
+        }
+    }
+
+    /**
+     * 删除商品
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean deleteGoods(Long id) {
+        try {
+            this.searchRepository.deleteById(id);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
     }

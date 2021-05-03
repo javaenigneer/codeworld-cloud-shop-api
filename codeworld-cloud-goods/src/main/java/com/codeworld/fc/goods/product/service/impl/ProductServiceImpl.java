@@ -30,6 +30,7 @@ import com.codeworld.fc.goods.stock.entity.Stock;
 import com.codeworld.fc.goods.stock.mapper.StockMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
  * Version 1.0
  **/
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     @Autowired(required = false)
@@ -252,5 +254,42 @@ public class ProductServiceImpl implements ProductService {
         }
         PageInfo<ProductResponse> pageInfo = new PageInfo<>(productResponses);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_GET_SUCCESS.getMsg(), DataResponse.dataResponse(pageInfo.getList(), pageInfo.getTotal()));
+    }
+
+    /**
+     * 删除商品
+     * @param id
+     * @return
+     */
+    @Override
+    public FCResponse<Void> deleteGoods(Long id) {
+        if (ObjectUtils.isEmpty(id)){
+            return FCResponse.validateErrorResponse("商品ID为空");
+        }
+        // 查询商品信息
+        Product product = this.productMapper.getProductById(id);
+        if (ObjectUtils.isEmpty(product)){
+            return FCResponse.validateErrorResponse("商品不存在");
+        }
+        // 判断商品是否已删除
+        if (product.getSaleAble() == -1){
+            return FCResponse.validateErrorResponse("商品已删除");
+        }
+        // 判断是否商品处于上架状态
+        if (product.getSaleAble() ==  1){
+            return FCResponse.validateErrorResponse("商品在架状态，不能删除");
+        }
+        product.setSaleAble(-1);
+        try {
+            this.productMapper.updateProductStatus(product);
+            // 异步通知删除索引库中的内容
+            log.info("发送删除EL中商品的异步通知开始");
+            this.amqpTemplate.convertAndSend("el.product.delete",id);
+            log.info("发送删除EL删除商品异步通知结束");
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),HttpMsg.product.PRODUCT_DELETE_SUCCESS.getMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

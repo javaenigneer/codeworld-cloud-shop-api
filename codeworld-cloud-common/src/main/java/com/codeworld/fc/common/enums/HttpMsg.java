@@ -221,7 +221,9 @@ public class HttpMsg {
         PRODUCT_ADD_SUCCESS("商品添加成功"),
         PRODUCT_PARAM_ERROR("商品参数错误"),
         PRODUCT_IMPORT_SUCCESS("商品导入成功"),
-        PRODUCT_DELETE_ELASTICSEARCH("商品索引库已清空");
+        PRODUCT_DELETE_ELASTICSEARCH("商品索引库已清空"),
+        PRODUCT_DELETE_SUCCESS("商品删除成功")
+        ;
 
         private String msg;
 

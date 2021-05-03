@@ -59,4 +59,11 @@ public interface ProductService {
      * @return
      */
     FCResponse<DataResponse<List<ProductResponse>>> getPageProductTime(ProductSearchRequest productSearchRequest);
+
+    /**
+     * 删除商品
+     * @param id
+     * @return
+     */
+    FCResponse<Void> deleteGoods(Long id);
 }

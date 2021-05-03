@@ -83,6 +83,17 @@
         t_product_category_id = #{categoryId}
     </select>
 
+    <!-- 根据商品id查询商品 -->
+    <select id="getProductById" parameterType="java.lang.Long" resultType="com.codeworld.fc.goods.product.entity.Product">
+        select
+        cp.t_product_id AS  id,
+        cp.t_product_saleable AS saleAble
+        from
+        codeworld_product AS cp
+        where
+        cp.t_product_id = #{id}
+    </select>
+
     <!-- 修改商品状态 -->
     <update id="updateProductStatus" parameterType="com.codeworld.fc.goods.product.entity.Product">
         update codeworld_product

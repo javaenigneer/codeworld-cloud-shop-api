@@ -44,4 +44,11 @@ public interface ProductMapper {
      * @return
      */
     Integer getBindProductByCategoryId(Long categoryId);
+
+    /**
+     * 根据id查询商品
+     * @param id
+     * @return
+     */
+    Product getProductById(Long id);
 }
