@@ -44,16 +44,18 @@ public class ProductListener {
     public void updateProductStatus(String json) {
         if (ObjectUtils.isEmpty(json)) {
             log.error("异步更新ElasticSearch中的商品状态失败，失败原因参数为空：{}", json);
+            return;
         }
         ElProductStatusDTO elProductStatusDTO = JsonUtils.parse(json, ElProductStatusDTO.class);
         if (ObjectUtils.isEmpty(elProductStatusDTO)) {
             log.error("异步更新ElasticSearch中的商品状态失败，失败原因：对象为Null：{}", json);
+            return;
         }
         Boolean flag = this.goodsService.updateProductStatus(elProductStatusDTO);
         if (flag) {
             log.info("异步更新ElasticSearch中的商品状态成功，消息消费成功");
         } else {
-            log.error("异步更新ElasticSearch中的商品状态失败，消息消费失败");
+            log.error("异步更新ElasticSearch中的商品状态失败，消息消费成功");
         }
     }
 
@@ -70,6 +72,7 @@ public class ProductListener {
     public void deleteGoods(Long id) {
         if (ObjectUtils.isEmpty(id)) {
             log.error("异步删除ElasticSearch中的商品失败，失败原因参数为空：{}", id);
+            return;
         }
         Boolean flag = this.goodsService.deleteGoods(id);
         if (flag) {
@@ -78,5 +81,4 @@ public class ProductListener {
             log.error("异步删除ElasticSearch中的商品失败，消息消费失败");
         }
     }
-
 }

@@ -61,4 +61,11 @@ public interface GoodsService {
      * @return
      */
     Boolean deleteGoods(Long id);
+
+    /**
+     * 添加商品后立即导入到ElasticSearch中
+     * @param productResponse
+     * @return
+     */
+    FCResponse<Void> importGoodsSoon(ProductResponse productResponse);
 }

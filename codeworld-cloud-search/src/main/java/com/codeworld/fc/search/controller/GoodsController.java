@@ -65,4 +65,10 @@ public class GoodsController {
     public FCResponse<List<ProductResponse>> getProductByCategoryId(@RequestBody ProductSearchRequest productSearchRequest) {
         return this.goodsService.getProductByCategoryId(productSearchRequest);
     }
+
+    @PostMapping("import-goods-soon")
+    @ApiOperation("添加商品后立即导入到ElasticSearch")
+    public FCResponse<Void> importGoodsSoon(@RequestBody ProductResponse productResponse){
+        return this.goodsService.importGoodsSoon(productResponse);
+    }
 }

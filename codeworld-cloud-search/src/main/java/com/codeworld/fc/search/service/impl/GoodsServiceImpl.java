@@ -19,6 +19,7 @@ import com.codeworld.fc.search.repository.SearchRepository;
 import com.codeworld.fc.search.request.ProductIndexSearchRequest;
 import com.codeworld.fc.search.service.GoodsService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -178,7 +179,7 @@ public class GoodsServiceImpl implements GoodsService {
         ProductResponse productResponse = this.buildProductResponse(searchItem);
         // 每点击一次增加一次点击量
         this.stringRedisTemplate.opsForValue().increment(PRODUCT_VIEW + productId.toString(), 1L);
-        log.info("商品浏览量增加，商品Id：{}",productId);
+        log.info("商品浏览量增加，商品Id：{}", productId);
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_GET_SUCCESS.getMsg(), productResponse);
     }
 
@@ -242,8 +243,8 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public FCResponse<List<ProductResponse>> getProductByCategoryId(ProductSearchRequest productSearchRequest) {
 
-        if (StringUtils.isEmpty(productSearchRequest.getSubCateId())){
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),HttpMsg.category.CATEGORY_ID_ERROR.getMsg());
+        if (StringUtils.isEmpty(productSearchRequest.getSubCateId())) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), HttpMsg.category.CATEGORY_ID_ERROR.getMsg());
         }
         // 自定义查询构建器
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
@@ -278,7 +279,7 @@ public class GoodsServiceImpl implements GoodsService {
         // 获取结果集
         Page<SearchItem> search = this.searchRepository.search(queryBuilder.build());
         if (CollectionUtils.isEmpty(search.getContent())) {
-            log.error("查询到的商品为空,参数：{}",elProductStatusDTO);
+            log.error("查询到的商品为空,参数：{}", elProductStatusDTO);
             return false;
         }
         SearchItem searchItem = search.getContent().get(0);
@@ -288,7 +289,7 @@ public class GoodsServiceImpl implements GoodsService {
             this.searchRepository.save(searchItem);
             log.info("ElasticSearch中商品状态更新成功");
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             log.error("ElasticSearch中商品状态更新成功");
             return false;
@@ -297,6 +298,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 删除商品
+     *
      * @param id
      * @return
      */
@@ -305,9 +307,39 @@ public class GoodsServiceImpl implements GoodsService {
         try {
             this.searchRepository.deleteById(id);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * 添加商品后立即导入到ElasticSearch中
+     *
+     * @param
+     * @return
+     */
+    @Override
+    public FCResponse<Void> importGoodsSoon(ProductResponse productResponse) {
+        log.info("新增商品导入ElasticSearch开始");
+        if (ObjectUtils.isEmpty(productResponse)){
+            log.error("新增商品导入失败，失败原因，商品信息为空");
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(),"商品信息为空");
+        }
+        try {
+            // 将商品信息构建成SearchItem
+            SearchItem searchItem = this.buildSearchItems(productResponse);
+            if (ObjectUtils.isEmpty(searchItem)){
+                FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),"商品部分信息为空");
+            }
+            // 保存到ElasticSearch中
+            this.searchRepository.save(searchItem);
+            log.info("新增商品导入ElasticSearch结束");
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),"商品信息导入成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("新增商品导入ElasticSearch失败");
+            throw new  FCException("系统错误");
         }
     }
 
@@ -374,7 +406,7 @@ public class GoodsServiceImpl implements GoodsService {
         FCResponse<MerchantResponse> merchantFcResponse = this.merchantClient.getMerchantNumberAndNameById(productResponse.getMerchantId());
         if (!merchantFcResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
             log.error("该商品{}无商户号", productResponse.getId());
-            return searchItem;
+            return null;
         }
         MerchantResponse merchantResponse = merchantFcResponse.getData();
         // 设置商户号和商户名称
@@ -384,10 +416,10 @@ public class GoodsServiceImpl implements GoodsService {
         FCResponse<List<ParamResponse>> paramResponse = this.paramClient.getParamByCategoryId(productResponse.getCategoryId());
         if (!paramResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
             log.error("该商品{}无分类参数", productResponse.getId());
-            return searchItem;
+            return null;
         }
         if (CollectionUtils.isEmpty(paramResponse.getData())) {
-            return searchItem;
+            return null;
         }
         List<ParamResponse> paramResponses = paramResponse.getData();
 
@@ -395,10 +427,10 @@ public class GoodsServiceImpl implements GoodsService {
         FCResponse<List<ProductSku>> productSkuResponse = this.goodsClient.getProductSkuByProductId(productResponse.getId());
         if (!productSkuResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
             log.error("该商品{}无Sku", productResponse.getId());
-            return searchItem;
+            return null;
         }
         if (CollectionUtils.isEmpty(productSkuResponse.getData())) {
-            return searchItem;
+            return null;
         }
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder priceStringBuilder = new StringBuilder();
@@ -424,11 +456,11 @@ public class GoodsServiceImpl implements GoodsService {
         // 根据商品获取商品详细信息
         FCResponse<ProductDetail> productDetailResponse = this.goodsClient.getProductDetailByProductId(productResponse.getId());
         if (!productDetailResponse.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
-            log.error("商品{}无详细信息",productResponse.getId());
-            return searchItem;
+            log.error("商品{}无详细信息", productResponse.getId());
+            return null;
         }
         if (ObjectUtil.isEmpty(productDetailResponse.getData())) {
-            return searchItem;
+            return null;
         }
         ProductDetail productDetail = productDetailResponse.getData();
         Map<String, Object> genericParamMap = JsonUtils.parseMap(productDetail.getGenericParam(), String.class, Object.class);

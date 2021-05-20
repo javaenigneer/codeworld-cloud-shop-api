@@ -94,6 +94,26 @@
         cp.t_product_id = #{id}
     </select>
 
+    <select id="getProductResponseById" parameterType="java.lang.Long" resultType="com.codeworld.fc.goods.product.response.ProductResponse">
+        select
+        cp.t_product_id AS id,
+        cp.t_product_title AS title,
+        cp.t_product_category_id AS categoryId,
+        cp.t_product_sub_title AS subTitle,
+        cp.t_product_saleable AS saleAble,
+        cp.t_product_create_time AS createTime,
+        cp.t_product_update_time AS updateTime,
+        cp.t_product_merchant_id AS merchantId,
+        cc.t_category_name AS categoryName,
+        cpd.t_product_view AS view,
+        cp.t_store_id AS storeId
+        from codeworld_product AS cp
+        left join codeworld_category AS cc on cp.t_product_category_id = cc.t_category_id
+        left join codeworld_product_detail AS cpd on cp.t_product_id = cpd.t_product_id
+        where
+        cp.t_product_id = #{id}
+    </select>
+
     <!-- 修改商品状态 -->
     <update id="updateProductStatus" parameterType="com.codeworld.fc.goods.product.entity.Product">
         update codeworld_product

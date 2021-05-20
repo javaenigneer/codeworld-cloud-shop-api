@@ -40,4 +40,10 @@ public class GoodsClientFallback implements GoodsClient {
     public FCResponse<DataResponse<List<ProductResponse>>> getPageProductTime(ProductSearchRequest productSearchRequest) {
         return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
     }
+
+    @Override
+    public FCResponse<ProductResponse> getProductResponseById(Long id) {
+        return FCResponse.dataResponse(HttpFcStatus.RUNTIMECODE.getCode(), "请求超时",null);
+
+    }
 }

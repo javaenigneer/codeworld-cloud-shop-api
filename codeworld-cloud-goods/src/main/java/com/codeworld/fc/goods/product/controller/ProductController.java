@@ -81,4 +81,11 @@ public class ProductController {
     public FCResponse<Void> deleteGoods(@PathVariable("id") Long id){
         return this.productService.deleteGoods(id);
     }
+
+    @GetMapping("/product/get-productResponse/{id}")
+    @ApiOperation("根据商品id获取商品信息")
+    @PassToken
+    public FCResponse<ProductResponse> getProductResponseById(@PathVariable("id") Long id){
+        return this.productService.getProductResponseById(id);
+    }
 }

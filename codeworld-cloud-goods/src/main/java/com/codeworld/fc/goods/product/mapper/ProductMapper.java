@@ -51,4 +51,11 @@ public interface ProductMapper {
      * @return
      */
     Product getProductById(Long id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    ProductResponse getProductResponseById(Long id);
 }

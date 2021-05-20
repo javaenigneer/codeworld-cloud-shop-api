@@ -10,9 +10,7 @@ import com.codeworld.fc.search.domain.ProductSearchRequest;
 import com.codeworld.fc.search.domain.ProductSku;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,4 +35,9 @@ public interface GoodsClient {
     @ApiOperation("定时分页查询商品")
     @PassToken
     FCResponse<DataResponse<List<ProductResponse>>> getPageProductTime(@RequestBody ProductSearchRequest productSearchRequest);
+
+    @GetMapping("/codeworld-goods/product/get-productResponse/{id}")
+    @ApiOperation("根据商品id获取商品信息")
+    @PassToken
+    FCResponse<ProductResponse> getProductResponseById(@PathVariable("id") Long id);
 }

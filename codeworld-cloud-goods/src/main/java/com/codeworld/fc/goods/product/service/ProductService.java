@@ -66,4 +66,7 @@ public interface ProductService {
      * @return
      */
     FCResponse<Void> deleteGoods(Long id);
+
+
+    FCResponse<ProductResponse> getProductResponseById(Long id);
 }
