@@ -38,4 +38,6 @@ public class Product {
     @ApiModelProperty("更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
+    @ApiModelProperty("审核状态 1--审核通过 0--审核未通过 -1--未审核")
+    private Integer approveStatus;
 }

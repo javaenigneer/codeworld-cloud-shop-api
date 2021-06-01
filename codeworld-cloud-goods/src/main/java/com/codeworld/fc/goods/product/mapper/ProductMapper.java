@@ -53,9 +53,15 @@ public interface ProductMapper {
     Product getProductById(Long id);
 
     /**
-     *
+     * 根据商品id获取商品信息
      * @param id
      * @return
      */
     ProductResponse getProductResponseById(Long id);
+
+    /**
+     * 审核商品
+     * @param product
+     */
+    void examineProduct(Product product);
 }

@@ -49,4 +49,6 @@ public class ProductResponse {
     private Long view;
     @ApiModelProperty("门店Id")
     private Long storeId;
+    @ApiModelProperty("审核状态")
+    private Integer approveStatus;
 }

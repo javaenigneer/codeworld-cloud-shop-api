@@ -147,6 +147,8 @@ public class ProductServiceImpl implements ProductService {
             product.setCreateTime(new Date());
             product.setUpdateTime(product.getCreateTime());
             product.setMerchantId(loginInfoData.getId());
+            // 设置为未审核
+            product.setApproveStatus(-1);
             this.productMapper.addProduct(product);
             // 添加商品详细信息
             ProductDetail productDetail = new ProductDetail();
@@ -191,8 +193,8 @@ public class ProductServiceImpl implements ProductService {
             // 根据商品id获取商品信息ProductResponse
             ProductResponse productResponse = this.productMapper.getProductResponseById(product.getId());
             FCResponse<Void> response = this.searchClient.importGoodsSoon(productResponse);
-            if (!response.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())){
-                return FCResponse.dataResponse(response.getCode(),response.getMsg());
+            if (!response.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+                return FCResponse.dataResponse(response.getCode(), response.getMsg());
             }
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_ADD_SUCCESS.getMsg());
         } catch (Exception e) {
@@ -318,5 +320,29 @@ public class ProductServiceImpl implements ProductService {
             return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), "商品为空");
         }
         return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), "商品查询成功", productResponse);
+    }
+
+    /**
+     * 审核商品
+     *
+     * @param productId
+     * @param approveStatus
+     * @return
+     */
+    @Override
+    public FCResponse<Void> examineProduct(Long productId, Integer approveStatus) {
+        if (ObjectUtils.isEmpty(productId) || ObjectUtils.isEmpty(approveStatus)) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), "参数不完整");
+        }
+        try {
+            Product product = new Product();
+            product.setId(productId);
+            product.setApproveStatus(approveStatus);
+            this.productMapper.examineProduct(product);
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),"审核成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FCException("系统错误");
+        }
     }
 }

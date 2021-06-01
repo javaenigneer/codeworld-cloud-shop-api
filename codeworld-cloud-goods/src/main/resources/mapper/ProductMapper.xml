@@ -30,6 +30,7 @@
         cp.t_product_create_time AS createTime,
         cp.t_product_update_time AS updateTime,
         cp.t_product_merchant_id AS merchantId,
+        cp.t_product_approve_status AS approveStatus,
         cc.t_category_name AS categoryName,
         cpd.t_product_view AS view,
         cp.t_store_id AS storeId
@@ -123,6 +124,15 @@
         where t_product_id = #{id}
     </update>
 
+    <!-- 审核商品 -->
+    <update id="examineProduct" parameterType="com.codeworld.fc.goods.product.entity.Product">
+        update
+        set
+        t_product_approve_status = #{approveStatus}
+        where
+        t_product_id = #{productId}
+    </update>
+
     <!-- 添加商品 -->
     <insert id="addProduct" parameterType="com.codeworld.fc.goods.product.entity.Product">
         insert into codeworld_product
@@ -132,7 +142,8 @@
         t_product_saleable,
         t_product_merchant_id,
         t_product_create_time,
-        t_product_update_time)
+        t_product_update_time,
+        t_procuct_approve_status)
         values (
         #{id},
         #{title},
@@ -140,7 +151,8 @@
         #{saleAble},
         #{merchantId},
         #{createTime},
-        #{updateTime}
+        #{updateTime},
+        #{approveStatus}
         );
     </insert>
 </mapper>

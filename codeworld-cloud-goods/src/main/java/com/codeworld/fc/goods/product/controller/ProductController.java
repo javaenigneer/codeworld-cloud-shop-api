@@ -88,4 +88,11 @@ public class ProductController {
     public FCResponse<ProductResponse> getProductResponseById(@PathVariable("id") Long id){
         return this.productService.getProductResponseById(id);
     }
+
+    @PostMapping("/product/examine-product")
+    @ApiOperation("审核商品")
+    public FCResponse<Void> examineProduct(@RequestParam("productId") Long productId,
+                                           @RequestParam("approveStatus") Integer approveStatus){
+        return this.productService.examineProduct(productId,approveStatus);
+    }
 }

@@ -330,7 +330,7 @@ public class GoodsServiceImpl implements GoodsService {
             // 将商品信息构建成SearchItem
             SearchItem searchItem = this.buildSearchItems(productResponse);
             if (ObjectUtils.isEmpty(searchItem)){
-                FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),"商品部分信息为空");
+                return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(),"商品部分信息为空");
             }
             // 保存到ElasticSearch中
             this.searchRepository.save(searchItem);
