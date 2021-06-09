@@ -5,6 +5,7 @@ import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.goods.product.entity.ProductDetail;
 import com.codeworld.fc.goods.product.entity.ProductSku;
+import com.codeworld.fc.goods.product.request.ExamineProductRequest;
 import com.codeworld.fc.goods.product.request.ProductAddRequest;
 import com.codeworld.fc.goods.product.request.ProductSearchRequest;
 import com.codeworld.fc.goods.product.response.ProductResponse;
@@ -90,9 +91,8 @@ public class ProductController {
 
     @PostMapping("/product/examine-product")
     @ApiOperation("审核商品")
-    public FCResponse<Void> examineProduct(@RequestParam("productId") Long productId,
-                                           @RequestParam("approveStatus") Integer approveStatus){
-        return this.productService.examineProduct(productId,approveStatus);
+    public FCResponse<Void> examineProduct(@RequestBody @Valid ExamineProductRequest examineProductRequest){
+        return this.productService.examineProduct(examineProductRequest);
     }
 
     @GetMapping("/product/get-product-info-id")

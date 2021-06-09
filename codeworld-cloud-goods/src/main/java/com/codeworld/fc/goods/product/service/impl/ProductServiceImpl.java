@@ -9,13 +9,10 @@ import com.codeworld.fc.common.response.DataResponse;
 import com.codeworld.fc.common.response.FCResponse;
 import com.codeworld.fc.common.utils.IDGeneratorUtil;
 import com.codeworld.fc.common.utils.JsonUtils;
-import com.codeworld.fc.goods.attribute.mapper.AttributeMapper;
-import com.codeworld.fc.goods.category.mapper.CategoryMapper;
 import com.codeworld.fc.goods.client.SearchClient;
 import com.codeworld.fc.goods.interceptor.AuthInterceptor;
 import com.codeworld.fc.goods.param.entity.Param;
 import com.codeworld.fc.goods.param.mapper.ParamMapper;
-import com.codeworld.fc.goods.param.response.ParamResponse;
 import com.codeworld.fc.goods.product.domain.ElProductStatusDTO;
 import com.codeworld.fc.goods.product.entity.Product;
 import com.codeworld.fc.goods.product.entity.ProductDetail;
@@ -23,6 +20,7 @@ import com.codeworld.fc.goods.product.entity.ProductSku;
 import com.codeworld.fc.goods.product.mapper.ProductDetailMapper;
 import com.codeworld.fc.goods.product.mapper.ProductMapper;
 import com.codeworld.fc.goods.product.mapper.ProductSkuMapper;
+import com.codeworld.fc.goods.product.request.ExamineProductRequest;
 import com.codeworld.fc.goods.product.request.ProductAddRequest;
 import com.codeworld.fc.goods.product.request.ProductSearchRequest;
 import com.codeworld.fc.goods.product.response.ProductResponse;
@@ -194,11 +192,11 @@ public class ProductServiceImpl implements ProductService {
                 this.stockMapper.addStock(stock);
             });
             // 根据商品id获取商品信息ProductResponse
-            ProductResponse productResponse = this.productMapper.getProductResponseById(product.getId());
-            FCResponse<Void> response = this.searchClient.importGoodsSoon(productResponse);
-            if (!response.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
-                return FCResponse.dataResponse(response.getCode(), response.getMsg());
-            }
+//            ProductResponse productResponse = this.productMapper.getProductResponseById(product.getId());
+//            FCResponse<Void> response = this.searchClient.importGoodsSoon(productResponse);
+//            if (!response.getCode().equals(HttpFcStatus.DATASUCCESSGET.getCode())) {
+//                return FCResponse.dataResponse(response.getCode(), response.getMsg());
+//            }
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), HttpMsg.product.PRODUCT_ADD_SUCCESS.getMsg());
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,19 +326,16 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 审核商品
      *
-     * @param productId
-     * @param approveStatus
-     * @return
+     *
+     * @param examineProductRequest@return
      */
     @Override
-    public FCResponse<Void> examineProduct(Long productId, Integer approveStatus) {
-        if (ObjectUtils.isEmpty(productId) || ObjectUtils.isEmpty(approveStatus)) {
-            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), "参数不完整");
-        }
+    public FCResponse<Void> examineProduct(ExamineProductRequest examineProductRequest) {
         try {
             Product product = new Product();
-            product.setId(productId);
-            product.setApproveStatus(approveStatus);
+            product.setId(examineProductRequest.getProductId());
+            product.setApproveStatus(examineProductRequest.getApproveStatus());
+            product.setApproveRemark(examineProductRequest.getApproveRemark());
             this.productMapper.examineProduct(product);
             return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), "审核成功");
         } catch (Exception e) {

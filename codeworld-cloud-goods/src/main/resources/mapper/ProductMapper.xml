@@ -130,11 +130,12 @@
 
     <!-- 审核商品 -->
     <update id="examineProduct" parameterType="com.codeworld.fc.goods.product.entity.Product">
-        update
+        update codeworld_product
         set
-        t_product_approve_status = #{approveStatus}
+        t_product_approve_status = #{approveStatus},
+        t_product_approve_remark = #{approveRemark}
         where
-        t_product_id = #{productId}
+        t_product_id = #{id}
     </update>
 
     <!-- 添加商品 -->
@@ -147,7 +148,8 @@
         t_product_merchant_id,
         t_product_create_time,
         t_product_update_time,
-        t_procuct_approve_status)
+        t_product_approve_status
+        )
         values (
         #{id},
         #{title},
