@@ -46,6 +46,10 @@
     <select id="getProductDetailByProductId" parameterType="java.lang.Long" resultType="com.codeworld.fc.goods.product.entity.ProductDetail">
 
         select
+        cpd.t_product_desc AS 'desc',
+        cpd.t_product_special_param AS specialParam,
+        cpd.t_product_packing_list AS packingList,
+        cpd.t_product_after_service AS afterService,
         cpd.t_product_generic_param AS genericParam
         from
         codeworld_product_detail AS cpd

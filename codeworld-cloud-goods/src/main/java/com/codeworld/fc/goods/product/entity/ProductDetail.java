@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * ClassName ProductDetail
@@ -37,4 +38,6 @@ public class ProductDetail {
     private Date updateTime;
     @ApiModelProperty("商品浏览量")
     private Long view;
+    @ApiModelProperty("通用参数map类型")
+    private Map<String, Object> genericParamMap;
 }

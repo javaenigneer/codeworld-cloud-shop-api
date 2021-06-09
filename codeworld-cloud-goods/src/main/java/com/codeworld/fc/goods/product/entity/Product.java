@@ -40,4 +40,6 @@ public class Product {
     private Date updateTime;
     @ApiModelProperty("审核状态 1--审核通过 0--审核未通过 -1--未审核")
     private Integer approveStatus;
+    @ApiModelProperty("审核备注信息")
+    private String approveRemark;
 }

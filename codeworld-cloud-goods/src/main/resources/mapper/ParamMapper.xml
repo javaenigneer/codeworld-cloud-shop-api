@@ -71,6 +71,15 @@
         and cp.t_special_param = 1
     </select>
 
+    <select id="getParamNameById" parameterType="java.lang.Long" resultType="com.codeworld.fc.goods.param.entity.Param">
+        select
+        t_param_name AS name
+        from
+        codeworld_param
+        where
+        t_param_id = #{id}
+    </select>
+
     <!-- 添加参数 -->
     <insert id="addParam" parameterType="com.codeworld.fc.goods.param.entity.Param">
         insert into codeworld_param

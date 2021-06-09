@@ -1,5 +1,7 @@
 package com.codeworld.fc.goods.product.response;
 
+import com.codeworld.fc.goods.product.entity.ProductDetail;
+import com.codeworld.fc.goods.product.entity.ProductSku;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,6 +9,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName ProductResponse
@@ -51,4 +54,15 @@ public class ProductResponse {
     private Long storeId;
     @ApiModelProperty("审核状态")
     private Integer approveStatus;
+    @ApiModelProperty("审核备注信息")
+    private String approveRemark;
+    @ApiModelProperty("商户名称")
+    private String merchantName;
+    @ApiModelProperty("门店名称")
+    private String storeName;
+    @ApiModelProperty("商品详情")
+    private ProductDetail productDetail;
+    @ApiModelProperty("商品Sku")
+    private List<ProductSku> productSkus;
+
 }

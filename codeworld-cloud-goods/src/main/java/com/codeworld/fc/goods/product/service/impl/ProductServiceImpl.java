@@ -13,6 +13,7 @@ import com.codeworld.fc.goods.attribute.mapper.AttributeMapper;
 import com.codeworld.fc.goods.category.mapper.CategoryMapper;
 import com.codeworld.fc.goods.client.SearchClient;
 import com.codeworld.fc.goods.interceptor.AuthInterceptor;
+import com.codeworld.fc.goods.param.entity.Param;
 import com.codeworld.fc.goods.param.mapper.ParamMapper;
 import com.codeworld.fc.goods.param.response.ParamResponse;
 import com.codeworld.fc.goods.product.domain.ElProductStatusDTO;
@@ -62,6 +63,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductSkuMapper productSkuMapper;
     @Autowired(required = false)
     private StockMapper stockMapper;
+    @Autowired(required = false)
+    private ParamMapper paramMapper;
 
     @Autowired(required = false)
     private AmqpTemplate amqpTemplate;
@@ -339,10 +342,65 @@ public class ProductServiceImpl implements ProductService {
             product.setId(productId);
             product.setApproveStatus(approveStatus);
             this.productMapper.examineProduct(product);
-            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(),"审核成功");
+            return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), "审核成功");
         } catch (Exception e) {
             e.printStackTrace();
             throw new FCException("系统错误");
         }
+    }
+
+    /**
+     * 获取商品详细信息，用于审核商品专用
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public FCResponse<ProductResponse> getProductInfoById(Long id) {
+        if (ObjectUtils.isEmpty(id)) {
+            return FCResponse.dataResponse(HttpFcStatus.PARAMSERROR.getCode(), "商品ID为空");
+        }
+        ProductResponse productResponse = this.productMapper.getProductResponseById(id);
+        if (ObjectUtils.isEmpty(productResponse)) {
+            return FCResponse.dataResponse(HttpFcStatus.DATAEMPTY.getCode(), "商品为空");
+        }
+        // 获取商品详情
+        ProductDetail productDetail = this.productDetailMapper.getProductDetailByProductId(id);
+        Map<String, Object> genericParamMap = new HashMap<>();
+        // 将商品通用参数和特有参数转换
+        Map<Long, Object> map = JsonUtils.parseMap(productDetail.getGenericParam(), Long.class, Object.class);
+        assert map != null;
+        Set<Long> longs = map.keySet();
+        // 获取通用参数的名称
+        for (Long paramId : longs) {
+            Param param = this.paramMapper.getParamNameById(paramId);
+            if (ObjectUtils.isNotEmpty(param)) {
+                genericParamMap.put(param.getName(), map.get(paramId));
+            }
+        }
+        productDetail.setGenericParamMap(genericParamMap);
+        productResponse.setProductDetail(productDetail);
+        // 获取商品Sku
+        List<ProductSku> productSkus = this.productSkuMapper.getProductSkuByProductId(id);
+        // 将sku中的自有参数进行转换获取参数信息
+        productSkus = productSkus.stream().peek(productSku -> {
+            StringBuilder ownSpec = new StringBuilder();
+            Map<Long, String> parseMap = JsonUtils.parseMap(productSku.getOwnSpec(), Long.class, String.class);
+            // 获取map中的值
+            assert parseMap != null;
+            Set<Long> keys = parseMap.keySet();
+            for (Long key : keys) {
+                // 获取值
+                String value = parseMap.get(key);
+                ownSpec.append(value);
+                ownSpec.append(" ");
+            }
+            productSku.setOwnSpec(ownSpec.toString());
+            // 获取商品库存
+            Integer stock = this.stockMapper.getStockByProductSkuId(productSku.getId());
+            productSku.setStock(stock);
+        }).collect(Collectors.toList());
+        productResponse.setProductSkus(productSkus);
+        return FCResponse.dataResponse(HttpFcStatus.DATASUCCESSGET.getCode(), "查询成功", productResponse);
     }
 }

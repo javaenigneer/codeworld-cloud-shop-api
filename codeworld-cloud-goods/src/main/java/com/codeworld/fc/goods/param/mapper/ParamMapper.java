@@ -44,4 +44,11 @@ public interface ParamMapper {
      * @param attributeIds
      */
     void deleteParamByAttributeIds(List<Long> attributeIds);
+
+    /**
+     * 获取参数名称
+     * @param id
+     * @return
+     */
+    Param getParamNameById(Long id);
 }

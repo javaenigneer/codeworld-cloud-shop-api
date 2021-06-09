@@ -50,7 +50,8 @@
         cds.t_product_sku_id AS id,
         cds.t_product_sku_title AS title,
         cds.t_product_sku_price AS price,
-        cds.t_product_sku_images AS images
+        cds.t_product_sku_images AS images,
+        cds.t_product_sku_own_spec AS ownSpec
         from
         codeworld_product_sku AS cds
         where cds.t_product_id = #{productId}

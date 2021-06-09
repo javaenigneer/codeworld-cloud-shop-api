@@ -75,7 +75,6 @@ public class ProductController {
         return this.productService.getPageProductTime(productSearchRequest);
     }
 
-
     @PostMapping("/product/delete-goods/{id}")
     @ApiOperation("删除商品")
     public FCResponse<Void> deleteGoods(@PathVariable("id") Long id){
@@ -94,5 +93,11 @@ public class ProductController {
     public FCResponse<Void> examineProduct(@RequestParam("productId") Long productId,
                                            @RequestParam("approveStatus") Integer approveStatus){
         return this.productService.examineProduct(productId,approveStatus);
+    }
+
+    @GetMapping("/product/get-product-info-id")
+    @ApiOperation("获取商品详细信息，用于审核商品")
+    public FCResponse<ProductResponse> getProductInfoById(@RequestParam("id") Long id){
+        return this.productService.getProductInfoById(id);
     }
 }

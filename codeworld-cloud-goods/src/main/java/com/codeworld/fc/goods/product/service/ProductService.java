@@ -71,4 +71,6 @@ public interface ProductService {
     FCResponse<ProductResponse> getProductResponseById(Long id);
 
     FCResponse<Void> examineProduct(Long productId, Integer approveStatus);
+
+    FCResponse<ProductResponse> getProductInfoById(Long id);
 }
