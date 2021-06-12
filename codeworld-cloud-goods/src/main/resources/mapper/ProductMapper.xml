@@ -31,6 +31,7 @@
         cp.t_product_update_time AS updateTime,
         cp.t_product_merchant_id AS merchantId,
         cp.t_product_approve_status AS approveStatus,
+        cp.t_product_approve_remark AS approveRemark,
         cc.t_category_name AS categoryName,
         cpd.t_product_view AS view,
         cp.t_store_id AS storeId
@@ -57,6 +58,7 @@
             <if test="merchantId != null">
                 and t_product_merchant_id = #{merchantId}
             </if>
+            and cp.t_product_saleable != -1
         </where>
         order by cp.t_product_create_time DESC
     </select>
