@@ -11,7 +11,7 @@
  Target Server Version : 50640
  File Encoding         : 65001
 
- Date: 26/03/2021 13:53:01
+ Date: 12/06/2021 14:00:26
 */
 
 SET NAMES utf8mb4;
@@ -3603,6 +3603,7 @@ CREATE TABLE `codeworld_attribute`  (
 -- ----------------------------
 -- Records of codeworld_attribute
 -- ----------------------------
+INSERT INTO `codeworld_attribute` VALUES (21299, '基本信息', 279618, '2021-05-12 17:32:49', '2021-05-12 17:32:49');
 INSERT INTO `codeworld_attribute` VALUES (225185, '主体', 500117, '2020-12-18 10:31:03', '2020-12-18 10:31:03');
 INSERT INTO `codeworld_attribute` VALUES (513162, '基本信息', 500117, '2020-12-18 10:31:03', '2020-12-18 10:31:03');
 INSERT INTO `codeworld_attribute` VALUES (709554, '基本信息', 500117, '2020-12-18 10:30:57', '2020-12-18 10:30:57');
@@ -3734,6 +3735,7 @@ CREATE TABLE `codeworld_category_attribute`  (
 INSERT INTO `codeworld_category_attribute` VALUES (128070, 500117, 709554, '2020-12-18 10:30:57', '2020-12-18 10:30:57');
 INSERT INTO `codeworld_category_attribute` VALUES (232737, 500117, 513162, '2020-12-18 10:31:03', '2020-12-18 10:31:03');
 INSERT INTO `codeworld_category_attribute` VALUES (368983, 500117, 225185, '2020-12-18 10:31:03', '2020-12-18 10:31:03');
+INSERT INTO `codeworld_category_attribute` VALUES (439826, 279618, 21299, '2021-05-12 17:32:49', '2021-05-12 17:32:49');
 
 -- ----------------------------
 -- Table structure for codeworld_collection
@@ -3934,6 +3936,7 @@ INSERT INTO `codeworld_menu` VALUES (741955, 906682, '/codeworld-merchant/transf
 INSERT INTO `codeworld_menu` VALUES (751273, 183517, '/codeworld-marketing/carouse/add-carouse', 'carouse:add', '添加轮播图', 'button', '添加轮播图', 1, '2021-01-13 15:41:25', '2021-01-13 15:41:25');
 INSERT INTO `codeworld_menu` VALUES (759155, 1000, '/systemManage-chat', 'chat', '聊天室', 'menu', '聊天室', 1, '2020-09-25 11:04:05', '2020-09-25 11:04:05');
 INSERT INTO `codeworld_menu` VALUES (767865, 1001, '/system-role/update-role', 'role:edit', '编辑角色', 'button', '编辑角色', 2, '2020-09-18 17:53:37', '2020-09-18 17:53:37');
+INSERT INTO `codeworld_menu` VALUES (773916, 422057, '/codeworld-search/goods/import-goods-to-elasticsearch', 'goods:import', '导入商品到索引库', 'button', '将添加的商品导入到索引库', 4, '2021-05-26 10:55:21', '2021-05-26 10:55:21');
 INSERT INTO `codeworld_menu` VALUES (789006, 431133, '/system-user/update-user', 'user:edit', '编辑用户', 'button', '编辑用户', 4, '2020-09-19 22:22:35', '2020-09-19 22:22:35');
 INSERT INTO `codeworld_menu` VALUES (806101, 911538, '/codeworld-order/delete-order', 'order:delete', '删除订单', 'button', '删除订单', 1, '2021-01-08 17:07:55', '2021-01-08 17:07:55');
 INSERT INTO `codeworld_menu` VALUES (854257, 1001, '/system-role/add-role', 'role:add', '添加角色', 'button', '添加角色', 1, '2020-09-18 17:51:28', '2020-09-18 17:51:28');
@@ -4184,8 +4187,11 @@ CREATE TABLE `codeworld_param`  (
 -- ----------------------------
 -- Records of codeworld_param
 -- ----------------------------
+INSERT INTO `codeworld_param` VALUES (401772, '包装类型', 0, 21299, '2021-05-12 17:47:20', '2021-05-12 17:47:20');
 INSERT INTO `codeworld_param` VALUES (671913, 'CPU型号', 0, 513162, '2020-12-18 10:32:01', '2020-12-18 10:32:01');
+INSERT INTO `codeworld_param` VALUES (747205, '颜色', 1, 21299, '2021-05-12 17:36:17', '2021-05-12 17:36:17');
 INSERT INTO `codeworld_param` VALUES (833900, '操作系统', 0, 513162, '2020-12-18 10:32:08', '2020-12-18 10:32:08');
+INSERT INTO `codeworld_param` VALUES (862276, '容量', 1, 21299, '2021-05-12 17:33:32', '2021-05-12 17:33:32');
 INSERT INTO `codeworld_param` VALUES (878010, '颜色', 1, 513162, '2020-12-18 10:31:43', '2020-12-18 10:31:43');
 INSERT INTO `codeworld_param` VALUES (879798, '内存', 1, 513162, '2020-12-18 10:31:54', '2020-12-18 10:31:54');
 
@@ -4199,21 +4205,33 @@ CREATE TABLE `codeworld_product`  (
   `t_product_sub_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品二级标题',
   `t_product_category_id` bigint(20) NULL DEFAULT NULL COMMENT '商品分类id',
   `t_product_brand_id` bigint(20) NULL DEFAULT NULL COMMENT '商品品牌id',
-  `t_product_saleable` int(1) NULL DEFAULT NULL COMMENT '商品状态 1-上架 0-下架',
+  `t_product_saleable` int(1) NULL DEFAULT NULL COMMENT '商品状态 1-上架 0-下架 -1--删除',
   `t_product_merchant_id` bigint(20) NULL DEFAULT NULL COMMENT '商户Id',
   `t_product_create_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
   `t_product_update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `t_store_id` bigint(20) NULL DEFAULT NULL COMMENT '门店id',
+  `t_product_approve_status` int(1) NULL DEFAULT NULL COMMENT '审核状态 1--审核通过 0--审核不通过 -1--未审核',
+  `t_product_approve_remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核备注信息',
   PRIMARY KEY (`t_product_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of codeworld_product
 -- ----------------------------
-INSERT INTO `codeworld_product` VALUES (234364, '小米MIX5', NULL, 500117, NULL, 1, 1608851327, '2021-02-06 15:56:22', '2021-03-12 16:35:50', NULL);
-INSERT INTO `codeworld_product` VALUES (668339, 'Iphone20', NULL, 500117, NULL, 1, 1609046703, '2021-01-06 15:53:36', '2021-01-06 15:53:41', NULL);
-INSERT INTO `codeworld_product` VALUES (711211, 'VivoX100', NULL, 500117, NULL, 1, 1608851327, '2021-01-07 17:10:59', '2021-01-08 16:59:27', NULL);
-INSERT INTO `codeworld_product` VALUES (897175, '小米MIX2', NULL, 500117, NULL, 1, 1609046703, '2020-12-18 10:33:54', '2020-12-18 10:33:56', NULL);
+INSERT INTO `codeworld_product` VALUES (104648, '1111111', NULL, 279618, NULL, 0, 1608851327, '2021-05-13 15:47:32', '2021-05-13 15:47:32', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (187719, '儿童大礼包', NULL, 279618, NULL, 0, 1608851327, '2021-05-12 17:58:02', '2021-05-12 17:58:02', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (194356, '礼品大礼包', NULL, 279618, NULL, 1, 1608851327, '2021-05-13 15:15:42', '2021-05-13 15:25:30', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (222445, '111', NULL, 279618, NULL, -1, 1608851327, '2021-05-13 16:04:07', NULL, NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (409612, '华为Mate50Pro', NULL, 500117, NULL, 1, 1608851327, '2021-05-11 20:38:24', '2021-05-12 16:14:41', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (411496, '112333', NULL, 279618, NULL, 0, 1608851327, '2021-05-13 16:09:19', '2021-05-13 16:09:19', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (412740, '111', NULL, 279618, NULL, -1, 1608851327, '2021-05-13 16:00:51', NULL, NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (473177, 'Iphone11Pro', NULL, 500117, NULL, 0, 1608851327, '2021-05-26 10:35:22', '2021-05-26 10:35:22', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (656069, 'Iphone11Pro', NULL, 500117, NULL, 0, 1608851327, '2021-05-26 10:34:41', '2021-05-26 10:34:41', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (770789, '【满199减120】每日坚果礼盒600g\\/30袋 干果炒货核桃孕妇零食大礼包端午节礼盒', NULL, 279618, NULL, 0, 1608851327, '2021-06-09 20:11:58', '2021-06-12 13:45:28', NULL, 0, '不通过，商品描述有问题');
+INSERT INTO `codeworld_product` VALUES (805011, '1234556', NULL, 279618, NULL, 0, 1608851327, '2021-05-13 16:24:03', '2021-05-13 16:24:03', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (854754, '大礼包', NULL, 279618, NULL, 0, 1608851327, '2021-05-12 18:03:22', '2021-05-12 18:03:22', NULL, 1, NULL);
+INSERT INTO `codeworld_product` VALUES (868644, 'Iphone11Pro', NULL, 500117, NULL, 0, 1608851327, '2021-05-26 10:40:06', '2021-05-26 10:40:06', NULL, 1, '通过');
+INSERT INTO `codeworld_product` VALUES (953142, '111', NULL, 279618, NULL, 0, 1608851327, '2021-05-13 15:48:23', '2021-05-13 15:48:23', NULL, -1, NULL);
 
 -- ----------------------------
 -- Table structure for codeworld_product_detail
@@ -4235,10 +4253,20 @@ CREATE TABLE `codeworld_product_detail`  (
 -- ----------------------------
 -- Records of codeworld_product_detail
 -- ----------------------------
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000234364, '终身包换', '{\"671913\":\"\",\"833900\":\"\",\"878010\":\"\",\"879798\":\"\"}', '{\"878010\":[\"黑色\",\"红色\"],\"879798\":[\"1000G\",\"2000G\"]}', '一个小米MIX5', '终生包换', '2021-02-06 15:56:22', '2021-02-06 15:56:22', 2);
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000668339, 'iPhone20又大又好看，还终身包换', '{\"671913\":\"A20\",\"833900\":\"iPhone\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"1000G\",\"2000G\"]}', '1个IPhone20手机', '终生包换', '2021-01-06 15:53:36', '2021-01-06 15:53:36', 0);
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000711211, 'Vivo手机终生包换', '{\"671913\":\"骁龙1000\",\"833900\":\"Android\"}', '{\"878010\":[\"红色\"],\"879798\":[\"1000G\"]}', '一个手机', '终生包换', '2021-01-07 17:10:59', '2021-01-07 17:10:59', 0);
-INSERT INTO `codeworld_product_detail` VALUES (00000000000000897175, '小米值得信赖', '{\"671913\":\"骁龙10000\",\"833900\":\"Android\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"10G\",\"20G\"]}', '一个手机', '终身包换', '2020-12-18 10:33:54', '2020-12-18 10:33:54', 0);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000104648, '1111', '{\"401772\":\"\",\"747205\":\"\",\"862276\":\"\"}', '{\"747205\":[\"11\"],\"862276\":[\"111\"]}', '1111', '1111', '2021-05-13 15:47:32', '2021-05-13 15:47:32', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000187719, '1', '{\"401772\":\"精品礼盒\"}', '{\"747205\":[\"红色\"],\"862276\":[\"100L\",\"200L\"]}', '1', '1', '2021-05-12 17:58:02', '2021-05-12 17:58:02', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000194356, '1', '{\"401772\":\"精装\"}', '{\"747205\":[\"红色\"],\"862276\":[\"100L\"]}', '1', '11', '2021-05-13 15:15:42', '2021-05-13 15:15:42', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000222445, '11', '{\"401772\":\"\",\"747205\":\"\",\"862276\":\"\"}', '{\"747205\":[\"1\"],\"862276\":[\"1\"]}', '11', '11', '2021-05-13 16:04:07', '2021-05-13 16:04:07', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000409612, '终生包换', '{\"671913\":\"\",\"833900\":\"\",\"878010\":\"\",\"879798\":\"\"}', '{\"878010\":[\"红色\",\"绿色\"],\"879798\":[\"1000G\"]}', '一个华为手机、一个华为电脑', '终生包换1', '2021-05-11 20:38:24', '2021-05-11 20:38:24', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000411496, '1122', '{\"401772\":\"\",\"747205\":\"\",\"862276\":\"\"}', '{\"747205\":[\"1\"],\"862276\":[\"1\"]}', '111111', '111111', '2021-05-13 16:09:19', '2021-05-13 16:09:19', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000412740, '11', '{\"401772\":\"\",\"747205\":\"\",\"862276\":\"\"}', '{\"747205\":[\"1\"],\"862276\":[\"1\"]}', '11', '11', '2021-05-13 16:00:51', '2021-05-13 16:00:51', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000473177, '<p>苹果手机终生包换</p>\n', '{\"671913\":\"A13\",\"833900\":\"IOS\"}', '{\"878010\":[\"红色\"],\"879798\":[\"100G\"]}', '一个Iphone11Pro手机', '终生包换', '2021-05-26 10:35:22', '2021-05-26 10:35:22', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000656069, '<p>苹果手机终生包换</p>\n', '{\"671913\":\"A13\",\"833900\":\"IOS\"}', '{\"878010\":[\"红色\"],\"879798\":[\"100G\"]}', '一个Iphone11Pro手机', '终生包换', '2021-05-26 10:34:41', '2021-05-26 10:34:41', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000770789, '![坚果](https://img12.360buyimg.com/n1/s160x160_jfs/t1/166456/40/7107/168462/6033126fEc87faaba/1b070a40afecc699.jpg)', '{\"401772\":\"整箱装\"}', '{\"747205\":[\"红色\"],\"862276\":[\"600g\"]}', '暂无', '暂无', '2021-06-09 20:11:58', '2021-06-09 20:11:58', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000805011, '1111111', '{\"401772\":\"111\"}', '{\"747205\":[\"1\"],\"862276\":[\"1\"]}', '111', '111', '2021-05-13 16:24:03', '2021-05-13 16:24:03', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000854754, '1', '{\"401772\":\"精装\"}', '{\"747205\":[\"红色\"],\"862276\":[\"1000L\"]}', '1', '1', '2021-05-12 18:03:22', '2021-05-12 18:03:22', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000868644, '<p>苹果手机终生包换</p>\n', '{\"671913\":\"A13\",\"833900\":\"IOS\"}', '{\"878010\":[\"红色\"],\"879798\":[\"100G\"]}', '一个Iphone11Pro手机', '终生包换', '2021-05-26 10:40:06', '2021-05-26 10:40:06', NULL);
+INSERT INTO `codeworld_product_detail` VALUES (00000000000000953142, '<p>苹果手机终生包换</p>\n', '{\"401772\":\"\",\"747205\":\"\",\"862276\":\"\"}', '{\"747205\":[\"1\"],\"862276\":[\"1\"]}', '11', '11', '2021-05-13 15:48:23', '2021-05-13 15:48:23', NULL);
 
 -- ----------------------------
 -- Table structure for codeworld_product_sku
@@ -4259,19 +4287,22 @@ CREATE TABLE `codeworld_product_sku`  (
 -- ----------------------------
 -- Records of codeworld_product_sku
 -- ----------------------------
-INSERT INTO `codeworld_product_sku` VALUES (31914, 234364, '小米MIX5 黑色 2000G', 11, '{\"878010\":\"黑色\",\"879798\":\"2000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/77881612598154251.jpg', '2021-02-06 15:56:22', '2021-02-06 15:56:22');
-INSERT INTO `codeworld_product_sku` VALUES (86869, 668339, 'Iphone20 红色 1000G', 1, '{\"878010\":\"红色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/06/96101609919575712.jpg', '2021-01-06 15:53:36', '2021-01-06 15:53:36');
-INSERT INTO `codeworld_product_sku` VALUES (129735, 711211, 'VivoX100 红色 1000G', 1, '{\"878010\":\"红色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/07/8381610010655296.jpg', '2021-01-07 17:10:59', '2021-01-07 17:10:59');
-INSERT INTO `codeworld_product_sku` VALUES (177905, 668339, 'Iphone20 绿色 2000G', 4, '{\"878010\":\"绿色\",\"879798\":\"2000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/06/76471609919611150.jpg', '2021-01-06 15:53:36', '2021-01-06 15:53:36');
-INSERT INTO `codeworld_product_sku` VALUES (185457, 668339, 'Iphone20 绿色 1000G', 3, '{\"878010\":\"绿色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/06/58571609919598472.jpg', '2021-01-06 15:53:36', '2021-01-06 15:53:36');
-INSERT INTO `codeworld_product_sku` VALUES (189609, 897175, '小米MIX2 绿色 20G', 9999, '{\"878010\":\"绿色\",\"879798\":\"20G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/20121608258832021.jpg', '2020-12-18 10:33:54', '2020-12-18 10:33:54');
-INSERT INTO `codeworld_product_sku` VALUES (430732, 897175, '小米MIX2 绿色 10G', 999, '{\"878010\":\"绿色\",\"879798\":\"10G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/95801608258823988.jpg', '2020-12-18 10:33:54', '2020-12-18 10:33:54');
-INSERT INTO `codeworld_product_sku` VALUES (451278, 897175, '小米MIX2 红色 10G', 9, '{\"878010\":\"红色\",\"879798\":\"10G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/39141608258804944.jpg', '2020-12-18 10:33:54', '2020-12-18 10:33:54');
-INSERT INTO `codeworld_product_sku` VALUES (465882, 668339, 'Iphone20 红色 2000G', 2, '{\"878010\":\"红色\",\"879798\":\"2000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/01/06/87311609919589441.jpg', '2021-01-06 15:53:36', '2021-01-06 15:53:36');
-INSERT INTO `codeworld_product_sku` VALUES (652896, 234364, '小米MIX5 黑色 1000G', 1, '{\"878010\":\"黑色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/80291612598147777.jpg', '2021-02-06 15:56:22', '2021-02-06 15:56:22');
-INSERT INTO `codeworld_product_sku` VALUES (743942, 234364, '小米MIX5 红色 2000G', 1111, '{\"878010\":\"红色\",\"879798\":\"2000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/94471612598179777.jpg', '2021-02-06 15:56:22', '2021-02-06 15:56:22');
-INSERT INTO `codeworld_product_sku` VALUES (751491, 234364, '小米MIX5 红色 1000G', 111, '{\"878010\":\"红色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/02/06/43181612598161912.jpg', '2021-02-06 15:56:22', '2021-02-06 15:56:22');
-INSERT INTO `codeworld_product_sku` VALUES (756668, 897175, '小米MIX2 红色 20G', 99, '{\"878010\":\"红色\",\"879798\":\"20G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2020/12/18/39601608258814803.jpg', '2020-12-18 10:33:54', '2020-12-18 10:33:54');
+INSERT INTO `codeworld_product_sku` VALUES (189371, 770789, '【满199减120】每日坚果礼盒600g\\/30袋 干果炒货核桃孕妇零食大礼包端午节礼盒 红色 600g', 299, '{\"747205\":\"红色\",\"862276\":\"600g\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/06/09/25861623240477724.jpg', '2021-06-09 20:11:58', '2021-06-09 20:11:58');
+INSERT INTO `codeworld_product_sku` VALUES (213453, 222445, '111 1 1', 111, '{\"747205\":\"1\",\"862276\":\"1\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/42421620892098068.jpg', '2021-05-13 16:04:07', '2021-05-13 16:04:07');
+INSERT INTO `codeworld_product_sku` VALUES (273275, 854754, '大礼包 红色 1000L', 111, '{\"747205\":\"红色\",\"862276\":\"1000L\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/12/80151620813799249.jpg', '2021-05-12 18:03:22', '2021-05-12 18:03:22');
+INSERT INTO `codeworld_product_sku` VALUES (422736, 868644, 'Iphone11Pro 红色 100G', 1000, '{\"878010\":\"红色\",\"879798\":\"100G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/26/56231621996341905.jpg', '2021-05-26 10:40:06', '2021-05-26 10:40:06');
+INSERT INTO `codeworld_product_sku` VALUES (523176, 104648, '1111111 11 111', 11111, '{\"747205\":\"11\",\"862276\":\"111\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/59431620892049152.jpg', '2021-05-13 15:47:32', '2021-05-13 15:47:32');
+INSERT INTO `codeworld_product_sku` VALUES (556549, 412740, '111 1 1', 111, '{\"747205\":\"1\",\"862276\":\"1\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/42421620892098068.jpg', '2021-05-13 16:00:51', '2021-05-13 16:00:51');
+INSERT INTO `codeworld_product_sku` VALUES (612877, 194356, '礼品大礼包 红色 100L', 99, '{\"747205\":\"红色\",\"862276\":\"100L\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/92111620890138134.jpg', '2021-05-13 15:15:42', '2021-05-13 15:15:42');
+INSERT INTO `codeworld_product_sku` VALUES (628037, 473177, 'Iphone11Pro 红色 100G', 1000, '{\"878010\":\"红色\",\"879798\":\"100G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/26/56231621996341905.jpg', '2021-05-26 10:35:22', '2021-05-26 10:35:22');
+INSERT INTO `codeworld_product_sku` VALUES (647076, 656069, 'Iphone11Pro 红色 100G', 1000, '{\"878010\":\"红色\",\"879798\":\"100G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/26/56231621996341905.jpg', '2021-05-26 10:34:41', '2021-05-26 10:34:41');
+INSERT INTO `codeworld_product_sku` VALUES (647966, 187719, '儿童大礼包 红色 200L', 999, '{\"747205\":\"红色\",\"862276\":\"200L\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/12/6211620813479395.jpg', '2021-05-12 17:58:02', '2021-05-12 17:58:02');
+INSERT INTO `codeworld_product_sku` VALUES (656958, 187719, '儿童大礼包 红色 100L', 99, '{\"747205\":\"红色\",\"862276\":\"100L\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/12/3741620813475105.jpg', '2021-05-12 17:58:02', '2021-05-12 17:58:02');
+INSERT INTO `codeworld_product_sku` VALUES (672718, 953142, '111 1 1', 111, '{\"747205\":\"1\",\"862276\":\"1\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/42421620892098068.jpg', '2021-05-13 15:48:23', '2021-05-13 15:48:23');
+INSERT INTO `codeworld_product_sku` VALUES (830018, 411496, '112333 1 1', 11, '{\"747205\":\"1\",\"862276\":\"1\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/90701620893356037.jpg', '2021-05-13 16:09:19', '2021-05-13 16:09:19');
+INSERT INTO `codeworld_product_sku` VALUES (869867, 409612, '华为Mate50Pro 绿色 1000G', 99, '{\"878010\":\"绿色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/11/16141620736700167.jpg', '2021-05-11 20:38:24', '2021-05-11 20:38:24');
+INSERT INTO `codeworld_product_sku` VALUES (878859, 409612, '华为Mate50Pro 红色 1000G', 999, '{\"878010\":\"红色\",\"879798\":\"1000G\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/11/59981620736692392.jpg', '2021-05-11 20:38:24', '2021-05-11 20:38:24');
+INSERT INTO `codeworld_product_sku` VALUES (948811, 805011, '1234556 1 1', 123, '{\"747205\":\"1\",\"862276\":\"1\"}', 'https://codeworld-cloud-shop-1300450814.cos.ap-chengdu.myqcloud.com/2021/05/13/2781620893896600.jpg', '2021-05-13 16:24:03', '2021-05-13 16:24:03');
 
 -- ----------------------------
 -- Table structure for codeworld_role
@@ -4314,62 +4345,83 @@ CREATE TABLE `codeworld_role_menu`  (
 -- ----------------------------
 -- Records of codeworld_role_menu
 -- ----------------------------
-INSERT INTO `codeworld_role_menu` VALUES (25900, 853858, 712174, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (22215, 853858, 911538, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (61297, 127341, 1002, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (74871, 1, 506283, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (75708, 853858, 1003, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (73539, 1, 192975, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (76346, 853858, 192975, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (81222, 1, 982791, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (88458, 853858, 789006, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (104192, 127341, 1001, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
 INSERT INTO `codeworld_role_menu` VALUES (105330, 422935, 426104, '2021-02-24 16:40:39', '2021-02-24 16:40:39');
-INSERT INTO `codeworld_role_menu` VALUES (147864, 853858, 523925, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (133776, 853858, 453077, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (139199, 1, 773916, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (171569, 853858, 183517, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (172130, 31845, 906682, '2021-02-26 15:15:01', '2021-02-26 15:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (176437, 853858, 422057, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (179762, 1, 789006, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (208103, 853858, 911538, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (228644, 1, 1003, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
+INSERT INTO `codeworld_role_menu` VALUES (175596, 1, 453077, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (204355, 853858, 1000, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (225404, 1, 854257, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (259565, 853858, 652906, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (263160, 31845, 125441, '2021-02-26 15:15:01', '2021-02-26 15:15:01');
 INSERT INTO `codeworld_role_menu` VALUES (270713, 31845, 674600, '2021-02-26 15:15:01', '2021-02-26 15:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (270723, 1, 1002, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (288399, 853858, 482527, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (317529, 853858, 373292, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (331294, 853858, 453077, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (295385, 853858, 767865, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (297560, 1, 399716, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (302938, 853858, 854257, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (324745, 853858, 113173, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (326133, 1, 414011, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (329583, 853858, 399716, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (333328, 853858, 373292, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (340388, 853858, 482527, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (342954, 982301, 1003, '2021-02-01 09:28:04', '2021-02-01 09:28:04');
-INSERT INTO `codeworld_role_menu` VALUES (343752, 1, 414011, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
+INSERT INTO `codeworld_role_menu` VALUES (350135, 853858, 431133, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (353700, 127341, 759155, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
+INSERT INTO `codeworld_role_menu` VALUES (357799, 1, 506283, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
 INSERT INTO `codeworld_role_menu` VALUES (366230, 982301, 436112, '2021-02-01 09:28:04', '2021-02-01 09:28:04');
-INSERT INTO `codeworld_role_menu` VALUES (384495, 1, 399716, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (391763, 853858, 192975, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (400758, 853858, 586170, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (383287, 853858, 718023, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (406957, 31845, 741955, '2021-02-26 15:15:01', '2021-02-26 15:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (423147, 1, 759155, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
+INSERT INTO `codeworld_role_menu` VALUES (427886, 1, 1000, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (431499, 853858, 759155, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (431674, 422935, 934228, '2021-02-24 16:40:39', '2021-02-24 16:40:39');
-INSERT INTO `codeworld_role_menu` VALUES (487448, 1, 639590, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (501202, 1, 767865, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
+INSERT INTO `codeworld_role_menu` VALUES (438095, 1, 431133, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (439182, 853858, 639590, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (467225, 1, 759155, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (473853, 853858, 248235, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (480990, 1, 948807, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (480994, 853858, 751273, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (497159, 853858, 422057, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (533556, 853858, 586170, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (541459, 1, 1003, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (550454, 1, 1002, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
 INSERT INTO `codeworld_role_menu` VALUES (551139, 31845, 940513, '2021-02-26 15:15:01', '2021-02-26 15:15:01');
-INSERT INTO `codeworld_role_menu` VALUES (568690, 853858, 934228, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (580802, 853858, 436112, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (582495, 853858, 806101, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (583364, 853858, 1001, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (594079, 853858, 934228, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (594825, 127341, 506283, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
 INSERT INTO `codeworld_role_menu` VALUES (624546, 422935, 183517, '2021-02-24 16:40:39', '2021-02-24 16:40:39');
-INSERT INTO `codeworld_role_menu` VALUES (626120, 853858, 751273, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (632621, 1, 982791, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (642704, 1, 431133, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (714013, 1, 1000, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (776476, 1, 887057, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (787729, 853858, 948807, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (795282, 853858, 414011, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (808083, 1, 854257, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (816422, 1, 1001, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (817089, 853858, 142731, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (821927, 853858, 248235, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (842479, 853858, 652906, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (880650, 1, 948807, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
+INSERT INTO `codeworld_role_menu` VALUES (655520, 853858, 887057, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (684093, 853858, 1003, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (699668, 853858, 142731, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (715759, 853858, 85834, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (718386, 1, 652906, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (730498, 1, 85834, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (732855, 853858, 652737, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (741264, 853858, 712174, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (796055, 853858, 948807, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (825185, 853858, 506283, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (838950, 853858, 414011, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (846395, 1, 1001, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (856542, 853858, 436112, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (887038, 422935, 609293, '2021-02-24 16:40:39', '2021-02-24 16:40:39');
+INSERT INTO `codeworld_role_menu` VALUES (899419, 853858, 1002, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (908414, 853858, 982791, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
+INSERT INTO `codeworld_role_menu` VALUES (911444, 853858, 523925, '2021-05-26 10:55:33', '2021-05-26 10:55:33');
 INSERT INTO `codeworld_role_menu` VALUES (920762, 127341, 431133, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
-INSERT INTO `codeworld_role_menu` VALUES (921461, 1, 85834, '2021-02-24 14:21:14', '2021-02-24 14:21:14');
-INSERT INTO `codeworld_role_menu` VALUES (923843, 853858, 806101, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
-INSERT INTO `codeworld_role_menu` VALUES (931526, 853858, 113173, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (937425, 1, 639590, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (944978, 1, 767865, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
 INSERT INTO `codeworld_role_menu` VALUES (949335, 127341, 1000, '2020-11-06 09:26:38', '2020-11-06 09:26:38');
 INSERT INTO `codeworld_role_menu` VALUES (950904, 982301, 854257, '2021-02-01 09:28:04', '2021-02-01 09:28:04');
-INSERT INTO `codeworld_role_menu` VALUES (989503, 853858, 183517, '2021-03-02 09:23:46', '2021-03-02 09:23:46');
+INSERT INTO `codeworld_role_menu` VALUES (966785, 1, 422057, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (971623, 1, 789006, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
+INSERT INTO `codeworld_role_menu` VALUES (992175, 1, 887057, '2021-05-28 11:26:15', '2021-05-28 11:26:15');
 
 -- ----------------------------
 -- Table structure for codeworld_stock
@@ -4384,10 +4436,26 @@ CREATE TABLE `codeworld_stock`  (
 -- ----------------------------
 -- Records of codeworld_stock
 -- ----------------------------
-INSERT INTO `codeworld_stock` VALUES (31914, 1);
-INSERT INTO `codeworld_stock` VALUES (652896, 1);
-INSERT INTO `codeworld_stock` VALUES (743942, 4);
-INSERT INTO `codeworld_stock` VALUES (751491, 3);
+INSERT INTO `codeworld_stock` VALUES (189371, 100);
+INSERT INTO `codeworld_stock` VALUES (213453, 111);
+INSERT INTO `codeworld_stock` VALUES (216491, 1000);
+INSERT INTO `codeworld_stock` VALUES (273275, 110);
+INSERT INTO `codeworld_stock` VALUES (422736, 1000);
+INSERT INTO `codeworld_stock` VALUES (523176, 11111);
+INSERT INTO `codeworld_stock` VALUES (556549, 111);
+INSERT INTO `codeworld_stock` VALUES (612877, 100);
+INSERT INTO `codeworld_stock` VALUES (628037, 1000);
+INSERT INTO `codeworld_stock` VALUES (647076, 1000);
+INSERT INTO `codeworld_stock` VALUES (647966, 10);
+INSERT INTO `codeworld_stock` VALUES (656958, 10);
+INSERT INTO `codeworld_stock` VALUES (672718, 111);
+INSERT INTO `codeworld_stock` VALUES (830018, 11);
+INSERT INTO `codeworld_stock` VALUES (837477, 1000);
+INSERT INTO `codeworld_stock` VALUES (869867, 10);
+INSERT INTO `codeworld_stock` VALUES (878859, 100);
+INSERT INTO `codeworld_stock` VALUES (928517, 1000);
+INSERT INTO `codeworld_stock` VALUES (936068, 10000);
+INSERT INTO `codeworld_stock` VALUES (948811, 123);
 
 -- ----------------------------
 -- Table structure for codeworld_store
