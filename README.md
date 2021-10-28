@@ -1,4 +1,4 @@
-# 项目已迁移到Gitee上  [前往Gitee](https://gitee.com/codeworld1314/codeworld-cloud-shop)
+# 项目已迁移到Gitee上，GitHub不再更新  [前往Gitee](https://gitee.com/codeworld1314/codeworld-cloud-shop)
 ### Codeworld-Cloud-Shop
 ### Welcome Lady And 乡亲们
 扫码加入我们吧
